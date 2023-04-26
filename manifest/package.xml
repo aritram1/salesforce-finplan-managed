@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>SavingsAccountTransactionEmailService</members>
+        <members>SavingsAccountTransactionEmailHandler</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>FinPlan__Savings_Account_Transaction__c</members>
+        <members>FinPlan__System_Log__c</members>
+        <members>FinPlan__SmallCase_Portfolio__c</members>
+        <members>FinPlan__SmallCase__c</members>
+        <members>FinPlan__ULIP__c</members>
+        <members>FinPlan__SIP_Installment__c</members>
+        <members>FinPlan__PPF__c</members>
+        <members>FinPlan__EPF__c</members>
+        <members>FinPlan__Fund__c</members>
+        <members>FinPlan__SIP__c</members>
+        <members>FinPlan__Income_Source__c</members>
+        <members>FinPlan__Savings_Account__c</members>
+        <members>FinPlan__Fixed_Deposit__c</members>
+        <members>FinPlan__Fund_Portfolio__c</members>
+        <members>FinPlan__Investment__c</members>
+        <members>FinPlan__Investment_Instrument__c</members>
+        <members>FinPlan__Stock__c</members>
+        <members>FinPlan__Bank__c</members>
+        <members>FinPlan__Investment_Transaction__c</members>
+        <members>FinPlan__Savings_Account_Transaction_Email__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>triggerOnSavingsAccountTransactionEmail</members>
+        <name>ApexTrigger</name>
+    </types>
+    <version>56.0</version>
+</Package>

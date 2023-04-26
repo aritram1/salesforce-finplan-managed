@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>MF_Investment_Transaction_Validation</fullName>
+    <active>true</active>
+    <description>Validation for MF type investments.</description>
+    <errorConditionFormula>AND(
+OR(
+ISBLANK( Units__c ),
+Units__c &lt;= 0
+)
+)</errorConditionFormula>
+    <errorDisplayField>Units__c</errorDisplayField>
+    <errorMessage>Fill in MF related section.</errorMessage>
+</ValidationRule>

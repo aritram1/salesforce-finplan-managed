@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SmallCase__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>SmallCase</label>
+    <referenceTo>SmallCase__c</referenceTo>
+    <relationshipLabel>SmallCase Portfolios</relationshipLabel>
+    <relationshipName>SmallCase_Portfolios</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>
