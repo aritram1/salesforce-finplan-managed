@@ -34,6 +34,25 @@
         <name>ApexTrigger</name>
     </types>
     <types>
+        <members>FinPlan__PPF__c-PPF Layout</members>
+        <members>FinPlan__EPF__c-EPF Layout</members>
+        <members>FinPlan__Fund__c-Fund Layout</members>
+        <members>FinPlan__Fund_Portfolio__c-Fund Portfolio Layout</members>
+        <members>FinPlan__SIP__c-SIP Layout</members>
+        <members>FinPlan__SIP_Installment__c-SIP Installment Layout</members>
+        <members>FinPlan__Income_Source__c-Income Source Layout</members>
+        <members>FinPlan__Fixed_Deposit__c-Fixed Deposit Layout</members>
+        <members>FinPlan__Stock__c-Stock Layout</members>
+        <members>FinPlan__Bank__c-Bank Layout</members>
+        <members>FinPlan__ULIP__c-ULIP Layout</members>
+        <members>FinPlan__ULIP_Portfolio__c-ULIP Portfolio Layout</members>
+        <members>FinPlan__SmallCase__c-SmallCase Layout</members>
+        <members>FinPlan__SmallCase_Portfolio__c-SmallCase Portfolio Layout</members>
+        <members>FinPlan__Investment__c-Investment Layout</members>
+        <members>FinPlan__Savings_Account__c-Savings Account Layout</members>
+        <members>FinPlan__Savings_Account_Transaction__c-Savings Account Transaction Layout</members>
+        <members>FinPlan__Savings_Account_Transaction_Email__c-Savings Account Transaction Email Layout</members>
+        <members>FinPlan__System_Log__c-System Log Layout</members>
         <members>FinPlan__Investment_Transaction__c-Bond Layout</members>
         <members>FinPlan__Investment_Transaction__c-EPF Layout</members>
         <members>FinPlan__Investment_Transaction__c-FD Layout</members>
