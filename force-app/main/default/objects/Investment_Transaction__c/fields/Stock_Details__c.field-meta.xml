@@ -5,7 +5,8 @@
     <externalId>false</externalId>
     <label>Stock Details</label>
     <referenceTo>Stock__c</referenceTo>
-    <relationshipName>Investment_Instruments</relationshipName>
+    <relationshipLabel>Investment Transactions</relationshipLabel>
+    <relationshipName>Investment_Transactions</relationshipName>
     <required>false</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

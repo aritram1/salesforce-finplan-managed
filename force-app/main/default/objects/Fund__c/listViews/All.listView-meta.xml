@@ -5,6 +5,8 @@
     <columns>Risk__c</columns>
     <columns>TER__c</columns>
     <columns>Type__c</columns>
+    <columns>Fund_Type__c</columns>
+    <columns>Total_Invested_Amount__c</columns>
     <filterScope>Everything</filterScope>
     <label>All</label>
 </ListView>

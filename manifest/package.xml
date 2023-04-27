@@ -3,6 +3,9 @@
     <types>
         <members>SavingsAccountTransactionEmailService</members>
         <members>SavingsAccountTransactionEmailHandler</members>
+        <members>InvestmentTransactionTriggerHandler</members>
+        <members>RefreshInvestmentDataController</members>
+        <members>Logger</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -36,7 +39,7 @@
     <types>
         <members>FinPlan__PPF__c-PPF Layout</members>
         <members>FinPlan__EPF__c-EPF Layout</members>
-        <members>FinPlan__Fund__c-Fund Layout</members>
+        <members>FinPlan__Fund__c-Mutual Fund Layout</members>
         <members>FinPlan__Fund_Portfolio__c-Fund Portfolio Layout</members>
         <members>FinPlan__SIP__c-SIP Layout</members>
         <members>FinPlan__SIP_Installment__c-SIP Installment Layout</members>

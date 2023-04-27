@@ -16,7 +16,7 @@
                 <field>EPF_Details__c</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
+                <behavior>Required</behavior>
                 <field>Amount__c</field>
             </layoutItems>
         </layoutColumns>

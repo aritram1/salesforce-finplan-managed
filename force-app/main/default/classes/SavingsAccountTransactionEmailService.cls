@@ -16,18 +16,10 @@ global class SavingsAccountTransactionEmailService implements Messaging.InboundE
 
         try{
             insert sate;
-
-            insert new FinPlan__System_Log__c(
-                FinPlan__Type__c = 'Info',
-                FinPlan__Message__c = 'Success!',
-                FinPlan__Record_Id__c = sate.id
-            );
+            Logger.logSuccess(sate.id);
         }
         catch(Exception e){
-            insert new FinPlan__System_Log__c(
-                FinPlan__Type__c = 'Error',
-                FinPlan__Message__c = e.getMessage()
-            );
+            Logger.logError(e);
         }
         finally{}
 

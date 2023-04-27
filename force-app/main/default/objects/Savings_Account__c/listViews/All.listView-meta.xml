@@ -6,6 +6,7 @@
     <columns>Last_Balance__c</columns>
     <columns>Emergency_Fund__c</columns>
     <columns>Investable_Fund__c</columns>
+    <columns>LAST_UPDATE</columns>
     <filterScope>Everything</filterScope>
     <label>All</label>
 </ListView>
