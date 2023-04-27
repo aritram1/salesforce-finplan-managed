@@ -15,7 +15,6 @@
         <members>FinPlan__Fund_Portfolio__c</members>
         <members>FinPlan__SIP__c</members>
         <members>FinPlan__SIP_Installment__c</members>
-        <members>FinPlan__Income_Source__c</members>
         <members>FinPlan__Fixed_Deposit__c</members>
         <members>FinPlan__Stock__c</members>
         <members>FinPlan__Bank__c</members>
@@ -43,7 +42,6 @@
         <members>FinPlan__Fund_Portfolio__c-Fund Portfolio Layout</members>
         <members>FinPlan__SIP__c-SIP Layout</members>
         <members>FinPlan__SIP_Installment__c-SIP Installment Layout</members>
-        <members>FinPlan__Income_Source__c-Income Source Layout</members>
         <members>FinPlan__Fixed_Deposit__c-Fixed Deposit Layout</members>
         <members>FinPlan__Stock__c-Stock Layout</members>
         <members>FinPlan__Bank__c-Bank Layout</members>

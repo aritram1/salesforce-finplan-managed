@@ -4,7 +4,7 @@
     <columns>NAME</columns>
     <columns>Type__c</columns>
     <columns>Message__c</columns>
-    <columns>Record_Id__c</columns>
+    <columns>Related_Record_Id__c</columns>
     <columns>Exception_Type__c</columns>
     <columns>CREATEDBY_USER</columns>
     <columns>LAST_UPDATE</columns>

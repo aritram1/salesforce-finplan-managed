@@ -5,7 +5,8 @@ public with sharing class Logger {
         insert new FinPlan__System_Log__c(
             FinPlan__Type__c = 'Error',
             FinPlan__Message__c = e.getMessage(),
-            FinPlan__Stack_Trace__c = e.getStackTraceString()
+            FinPlan__Stack_Trace__c = e.getStackTraceString(),
+            FinPlan__Exception_Type__c = e.getTypeName()
         );
     }
 
@@ -14,7 +15,8 @@ public with sharing class Logger {
             FinPlan__Type__c = 'Error',
             FinPlan__Message__c = e.getMessage(),
             FinPlan__Stack_Trace__c = e.getStackTraceString(),
-            FinPlan__Record_Id__c = recordId
+            FinPlan__Exception_Type__c = e.getTypeName(),
+            FinPlan__Related_Record_Id__c = recordId
         );
     }
 
@@ -29,7 +31,7 @@ public with sharing class Logger {
         insert new FinPlan__System_Log__c(
             FinPlan__Type__c = 'Success',
             FinPlan__Message__c = 'Success : ' + DateTime.now(),
-            FinPlan__Record_Id__c = recordId
+            FinPlan__Related_Record_Id__c = recordId
         );
     }
 }
