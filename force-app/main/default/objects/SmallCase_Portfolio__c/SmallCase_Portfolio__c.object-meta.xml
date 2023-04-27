@@ -155,8 +155,9 @@
     <externalSharingModel>Private</externalSharingModel>
     <label>SmallCase Portfolio</label>
     <nameField>
+        <displayFormat>SCP-{000000}</displayFormat>
         <label>SmallCase Portfolio Name</label>
-        <type>Text</type>
+        <type>AutoNumber</type>
     </nameField>
     <pluralLabel>SmallCase Portfolios</pluralLabel>
     <searchLayouts></searchLayouts>

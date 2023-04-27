@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Amount__c</fullName>
+    <fullName>FD_Details__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
     <externalId>false</externalId>
-    <label>Amount</label>
-    <precision>18</precision>
+    <label>FD Details</label>
+    <referenceTo>Fixed_Deposit__c</referenceTo>
+    <relationshipName>Investment_Instruments</relationshipName>
     <required>false</required>
-    <scale>2</scale>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
-    <type>Number</type>
-    <unique>false</unique>
+    <type>Lookup</type>
 </CustomField>

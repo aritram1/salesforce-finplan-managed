@@ -6,31 +6,46 @@
         <name>ApexClass</name>
     </types>
     <types>
-        <members>FinPlan__Savings_Account_Transaction__c</members>
-        <members>FinPlan__System_Log__c</members>
-        <members>FinPlan__SmallCase_Portfolio__c</members>
-        <members>FinPlan__SmallCase__c</members>
-        <members>FinPlan__ULIP__c</members>
-        <members>FinPlan__SIP_Installment__c</members>
         <members>FinPlan__PPF__c</members>
         <members>FinPlan__EPF__c</members>
         <members>FinPlan__Fund__c</members>
-        <members>FinPlan__SIP__c</members>
-        <members>FinPlan__Income_Source__c</members>
-        <members>FinPlan__Savings_Account__c</members>
-        <members>FinPlan__Fixed_Deposit__c</members>
         <members>FinPlan__Fund_Portfolio__c</members>
-        <members>FinPlan__Investment__c</members>
-        <members>FinPlan__Investment_Instrument__c</members>
+        <members>FinPlan__SIP__c</members>
+        <members>FinPlan__SIP_Installment__c</members>
+        <members>FinPlan__Income_Source__c</members>
+        <members>FinPlan__Fixed_Deposit__c</members>
         <members>FinPlan__Stock__c</members>
         <members>FinPlan__Bank__c</members>
+        <members>FinPlan__ULIP__c</members>
+        <members>FinPlan__ULIP_Portfolio__c</members>
+        <members>FinPlan__SmallCase__c</members>
+        <members>FinPlan__SmallCase_Portfolio__c</members>
+        <members>FinPlan__Investment__c</members>
         <members>FinPlan__Investment_Transaction__c</members>
+        <members>FinPlan__Savings_Account__c</members>
+        <members>FinPlan__Savings_Account_Transaction__c</members>
         <members>FinPlan__Savings_Account_Transaction_Email__c</members>
+        <members>FinPlan__System_Log__c</members>
         <name>CustomObject</name>
     </types>
     <types>
         <members>triggerOnSavingsAccountTransactionEmail</members>
+        <members>triggerOnInvestmentTransaction</members>
         <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>FinPlan__Investment_Transaction__c-Bond Layout</members>
+        <members>FinPlan__Investment_Transaction__c-EPF Layout</members>
+        <members>FinPlan__Investment_Transaction__c-FD Layout</members>
+        <members>FinPlan__Investment_Transaction__c-Metal Layout</members>
+        <members>FinPlan__Investment_Transaction__c-MF Layout</members>
+        <members>FinPlan__Investment_Transaction__c-NPS Layout</members>
+        <members>FinPlan__Investment_Transaction__c-PPF Layout</members>
+        <members>FinPlan__Investment_Transaction__c-SmallCase Layout</members>
+        <members>FinPlan__Investment_Transaction__c-Stock Layout</members>
+        <members>FinPlan__Investment_Transaction__c-TreasuryBill Layout</members>
+        <members>FinPlan__Investment_Transaction__c-ULIP Layout</members>
+        <name>Layout</name>
     </types>
     <version>56.0</version>
 </Package>
