@@ -4,6 +4,10 @@ public with sharing class RefreshInvestmentDataController {
         try{
             refreshMFData();
             refreshStockData();
+
+            // Future, Async
+            FutureController.updateMFLatestPrices();
+            FutureController.updateStockLatestPrices();
         }
         catch(Exception e){
             Logger.logError(e);
@@ -12,7 +16,7 @@ public with sharing class RefreshInvestmentDataController {
 
     public static void refreshMFData(){
         List<FinPlan__Fund__c> toBeUpdatedFunds = new List<FinPlan__Fund__c>();
-        List<FinPlan__Fund__c> allMF = [SELECT Id, Name, FinPlan__Total_Units__c, FinPlan__Total_Invested_Amount__c, (SELECT Id, FinPlan__MF_Buy_Units__c, FinPlan__Amount__c from Investment_Transactions__r) from FinPlan__Fund__c];
+        List<FinPlan__Fund__c> allMF = [SELECT Id, Name, FinPlan__Google_Code__c, FinPlan__Total_Units__c, FinPlan__Total_Invested_Amount__c, (SELECT Id, FinPlan__MF_Buy_Units__c, FinPlan__Amount__c from Investment_Transactions__r) from FinPlan__Fund__c];
         for(FinPlan__Fund__c mf : allMF){
             Double totalAmount = 0;
             Double totalUnits = 0;

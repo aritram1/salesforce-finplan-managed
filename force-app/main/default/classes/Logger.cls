@@ -4,8 +4,8 @@ public with sharing class Logger {
     public static void logError(Exception e){
         insert new FinPlan__System_Log__c(
             FinPlan__Type__c = 'Error',
-            FinPlan__Message__c = e.getMessage(),
-            FinPlan__Stack_Trace__c = e.getStackTraceString(),
+            FinPlan__Message__c = e.getMessage().left(255),
+            FinPlan__Stack_Trace__c = e.getStackTraceString().left(255),
             FinPlan__Exception_Type__c = e.getTypeName()
         );
     }
@@ -13,8 +13,8 @@ public with sharing class Logger {
     public static void logError(Exception e, String recordId){
         insert new FinPlan__System_Log__c(
             FinPlan__Type__c = 'Error',
-            FinPlan__Message__c = e.getMessage(),
-            FinPlan__Stack_Trace__c = e.getStackTraceString(),
+            FinPlan__Message__c = e.getMessage().left(255),
+            FinPlan__Stack_Trace__c = e.getStackTraceString().left(255),
             FinPlan__Exception_Type__c = e.getTypeName(),
             FinPlan__Related_Record_Id__c = recordId
         );

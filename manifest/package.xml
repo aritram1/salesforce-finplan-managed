@@ -5,6 +5,10 @@
         <members>SavingsAccountTransactionEmailHandler</members>
         <members>InvestmentTransactionTriggerHandler</members>
         <members>RefreshInvestmentDataController</members>
+        <members>WebServiceManager</members>
+        <members>StockPriceService</members>
+        <members>MutualFundPriceService</members>
+        <members>YahooStockPriceResponseParser</members>
         <members>Logger</members>
         <name>ApexClass</name>
     </types>
