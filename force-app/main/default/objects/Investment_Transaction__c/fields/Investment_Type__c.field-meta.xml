@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>Investment_Type__c</fullName>
+    <description>Gets populated by Trigger based on what investment this transaction is for.</description>
     <externalId>false</externalId>
     <label>Investment Type</label>
     <length>255</length>

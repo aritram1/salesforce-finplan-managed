@@ -153,14 +153,14 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <externalSharingModel>ReadWrite</externalSharingModel>
-    <label>Investment</label>
+    <label>Investment Portfolio</label>
     <nameField>
         <displayFormat>INV-{000000}</displayFormat>
-        <label>Investment Name</label>
+        <label>Investment Portfolio Name</label>
         <trackHistory>false</trackHistory>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Investments</pluralLabel>
+    <pluralLabel>Investment Portfolios</pluralLabel>
     <searchLayouts></searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>

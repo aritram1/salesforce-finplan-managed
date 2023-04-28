@@ -22,7 +22,7 @@
         <members>FinPlan__ULIP_Portfolio__c</members>
         <members>FinPlan__SmallCase__c</members>
         <members>FinPlan__SmallCase_Portfolio__c</members>
-        <members>FinPlan__Investment__c</members>
+        <members>FinPlan__Investment_Portfolio__c</members>
         <members>FinPlan__Investment_Transaction__c</members>
         <members>FinPlan__Savings_Account__c</members>
         <members>FinPlan__Savings_Account_Transaction__c</members>
@@ -49,7 +49,7 @@
         <members>FinPlan__ULIP_Portfolio__c-ULIP Portfolio Layout</members>
         <members>FinPlan__SmallCase__c-SmallCase Layout</members>
         <members>FinPlan__SmallCase_Portfolio__c-SmallCase Portfolio Layout</members>
-        <members>FinPlan__Investment__c-Investment Layout</members>
+        <members>FinPlan__Investment_Portfolio__c-Investment Portfolio Layout</members>
         <members>FinPlan__Savings_Account__c-Savings Account Layout</members>
         <members>FinPlan__Savings_Account_Transaction__c-Savings Account Transaction Layout</members>
         <members>FinPlan__Savings_Account_Transaction_Email__c-Savings Account Transaction Email Layout</members>

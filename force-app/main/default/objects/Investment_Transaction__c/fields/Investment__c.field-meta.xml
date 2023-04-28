@@ -3,7 +3,7 @@
     <fullName>Investment__c</fullName>
     <externalId>false</externalId>
     <label>Investment</label>
-    <referenceTo>Investment__c</referenceTo>
+    <referenceTo>Investment_Portfolio__c</referenceTo>
     <relationshipLabel>Investment Transactions</relationshipLabel>
     <relationshipName>Investment_Transactions</relationshipName>
     <relationshipOrder>0</relationshipOrder>
