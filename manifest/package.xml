@@ -10,6 +10,7 @@
         <members>MutualFundPriceService</members>
         <members>YahooStockPriceResponseParser</members>
         <members>Logger</members>
+        <members>FinPlanException</members>
         <name>ApexClass</name>
     </types>
     <types>
