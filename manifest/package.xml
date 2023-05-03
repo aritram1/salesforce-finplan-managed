@@ -38,7 +38,7 @@
     </types>
     <types>
         <members>Investment_Transaction_Stock_Record_Page</members>
-        <name>LightningPage</name>
+        <name>FlexiPage</name>
     </types>
     <types>
         <members>triggerOnSavingsAccountTransactionEmail</members>
