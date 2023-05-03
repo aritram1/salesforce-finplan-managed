@@ -8,7 +8,7 @@
         <operation>equals</operation>
         <value>FD</value>
     </summaryFilterItems>
-    <summaryForeignKey>Investment_Transaction__c.Investment__c</summaryForeignKey>
+    <summaryForeignKey>Investment_Transaction__c.Investment_Portfolio__c</summaryForeignKey>
     <summaryOperation>count</summaryOperation>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>

@@ -37,6 +37,10 @@
         <name>CustomObject</name>
     </types>
     <types>
+        <members>Investment_Transaction_Stock_Record_Page</members>
+        <name>LightningPage</name>
+    </types>
+    <types>
         <members>triggerOnSavingsAccountTransactionEmail</members>
         <members>triggerOnInvestmentTransaction</members>
         <members>triggerOnStock</members>
