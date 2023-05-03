@@ -3,19 +3,19 @@ public with sharing class FutureController {
     @future (callout = true)
     public static void updateMFLatestPrices(){
         System.debug('Inside updateMFLatestPrices');
-        // List<FinPlan__Fund__c> toBeUpdatedMFs = new List<FinPlan__Fund__c>();
-        // List<FinPlan__Fund__c> allMFs = [SELECT Id, Name, FinPlan__Latest_NAV__c, FinPlan__Fund_Code__c from FinPlan__Fund__c];
-        // for(FinPlan__Fund__c mf : allMFs){
-        //     System.debug('Inside MF Loop!');
-        //     Decimal nav = MutualFundPriceService.getLatestNAV(stock.FinPlan__Fund_Code__c);//('HINDUNILVR.NS');
-        //     System.debug('NAV => ' + mf.Name + '=>' + nav);
-        //     toBeUpdatedMFs.add(new FinPlan__Fund__c(
-        //         Id = mf.Id,
-        //         FinPlan__Latest_NAV__c = nav
-        //     ));
-        // }
-        // update toBeUpdatedMFs;
-        // System.debug('toBeUpdatedMFs=>' + toBeUpdatedMFs);
+        List<FinPlan__Fund__c> toBeUpdatedMFs = new List<FinPlan__Fund__c>();
+        List<FinPlan__Fund__c> allMFs = [SELECT Id, Name, FinPlan__Latest_NAV__c, FinPlan__Fund_Code__c from FinPlan__Fund__c];
+        for(FinPlan__Fund__c mf : allMFs){
+            System.debug('Inside MF Loop!');
+            Decimal nav = MutualFundPriceService.getLatestNAV(stock.FinPlan__Fund_Code__c);//('HINDUNILVR.NS');
+            System.debug('NAV => ' + mf.Name + '=>' + nav);
+            toBeUpdatedMFs.add(new FinPlan__Fund__c(
+                Id = mf.Id,
+                FinPlan__Latest_NAV__c = nav
+            ));
+        }
+        update toBeUpdatedMFs;
+        System.debug('toBeUpdatedMFs=>' + toBeUpdatedMFs);
     }
 
     @Future(callout=true)

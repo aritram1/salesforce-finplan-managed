@@ -57,5 +57,4 @@ public with sharing class RefreshInvestmentDataController {
     }
 
     // public static void refreshData(){}
-
 }
