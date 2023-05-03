@@ -1,14 +1,15 @@
 public with sharing class FutureController {
     
+    // This method is used to get the latest mutual fund prices for all the mutual funds
     @future (callout = true)
     public static void updateMFLatestPrices(){
         System.debug('Inside updateMFLatestPrices');
         List<FinPlan__Fund__c> toBeUpdatedMFs = new List<FinPlan__Fund__c>();
-        List<FinPlan__Fund__c> allMFs = [SELECT Id, Name, FinPlan__Latest_NAV__c, FinPlan__Fund_Code__c from FinPlan__Fund__c];
+        List<FinPlan__Fund__c> allMFs = [SELECT Id, Name, FinPlan__Latest_NAV__c, FinPlan__Fund_Code__c from FinPlan__Fund__c WHERE FinPlan__Fund_Code__c != null];
         for(FinPlan__Fund__c mf : allMFs){
             System.debug('Inside MF Loop!');
-            Decimal nav = MutualFundPriceService.getLatestNAV(stock.FinPlan__Fund_Code__c);//('HINDUNILVR.NS');
-            System.debug('NAV => ' + mf.Name + '=>' + nav);
+            Decimal nav = MutualFundPriceService.getLatestNAV(mf.FinPlan__Fund_Code__c);//axis-focused-25-fund-direct-plan
+            System.debug('Latest NAV => ' + mf.Name + '=>' + nav);
             toBeUpdatedMFs.add(new FinPlan__Fund__c(
                 Id = mf.Id,
                 FinPlan__Latest_NAV__c = nav
@@ -18,6 +19,7 @@ public with sharing class FutureController {
         System.debug('toBeUpdatedMFs=>' + toBeUpdatedMFs);
     }
 
+    // This method is used to get the latest stock prices for all the stocks
     @Future(callout=true)
     public static void updateStockLatestPrices(){
         System.debug('Inside updateStockLatestPrices');

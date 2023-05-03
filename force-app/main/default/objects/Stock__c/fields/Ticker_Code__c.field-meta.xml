@@ -3,7 +3,7 @@
     <fullName>Ticker_Code__c</fullName>
     <caseSensitive>false</caseSensitive>
     <externalId>false</externalId>
-    <label>Ticker Code</label>
+    <label>Yahoo Ticker Code</label>
     <length>20</length>
     <required>true</required>
     <trackTrending>false</trackTrending>
