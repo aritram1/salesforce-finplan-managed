@@ -30,7 +30,7 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
-                <field>Google_Code__c</field>
+                <field>Fund_Code__c</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>

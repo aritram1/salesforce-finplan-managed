@@ -9,7 +9,9 @@
         <members>StockPriceService</members>
         <members>MutualFundPriceService</members>
         <members>YahooStockPriceResponseParser</members>
+        <members>FutureController</members>
         <members>Logger</members>
+        <members>FinPlanException</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -37,6 +39,8 @@
     <types>
         <members>triggerOnSavingsAccountTransactionEmail</members>
         <members>triggerOnInvestmentTransaction</members>
+        <members>triggerOnStock</members>
+        <members>triggerOnFund</members>
         <name>ApexTrigger</name>
     </types>
     <types>

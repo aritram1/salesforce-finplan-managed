@@ -65,7 +65,11 @@
         <fields>NAME</fields>
         <fields>Type__c</fields>
         <fields>Amount__c</fields>
+        <fields>IMPS_Referene__c</fields>
+        <fields>CREATED_DATE</fields>
         <relatedList>Savings_Account_Transaction__c.Savings_Account__c</relatedList>
+        <sortField>CREATED_DATE</sortField>
+        <sortOrder>Desc</sortOrder>
     </relatedLists>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>
