@@ -12,6 +12,7 @@
         <members>FutureController</members>
         <members>Logger</members>
         <members>FinPlanException</members>
+        <members>Scheduler</members>
         <name>ApexClass</name>
     </types>
     <types>
