@@ -9,7 +9,7 @@
         <layoutColumns>
             <layoutItems>
                 <behavior>Required</behavior>
-                <field>Investment__c</field>
+                <field>Investment_Portfolio__c</field>
             </layoutItems>
             <layoutItems>
                 <behavior>Required</behavior>
@@ -66,7 +66,7 @@
         <style>CustomLinks</style>
     </layoutSections>
     <miniLayout>
-        <fields>Investment__c</fields>
+        <fields>Investment_Portfolio__c</fields>
     </miniLayout>
     <relatedLists>
         <fields>TASK.SUBJECT</fields>

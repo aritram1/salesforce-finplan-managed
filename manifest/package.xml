@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>FinPlan__Finance_Planner</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>Bank__c</members>
+        <members>Bond__c</members>
+        <members>EPF__c</members>
+        <members>Fixed_Deposit__c</members>
+        <members>Fund__c</members>
+        <members>Fund_Portfolio__c</members>
+        <members>Investment_Portfolio__c</members>
+        <members>Investment_Transaction__c</members>
+        <members>Metal__c</members>
+        <members>NPS__c</members>
+        <members>PPF__c</members>
+        <members>Savings_Account__c</members>
+        <members>Savings_Account_Transaction__c</members>
+        <members>Savings_Account_Transaction_Email__c</members>
+        <members>SIP__c</members>
+        <members>SIP_Installment__c</members>
+        <members>SmallCase__c</members>
+        <members>SmallCase_Portfolio__c</members>
+        <members>Stock__c</members>
+        <members>System_Log__c</members>
+        <members>Treasury_Bill__c</members>
+        <members>ULIP__c</members>
+        <members>ULIP_Portfolio__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
         <members>SavingsAccountTransactionEmailService</members>
         <members>SavingsAccountTransactionEmailHandler</members>
         <members>InvestmentTransactionTriggerHandler</members>
@@ -12,9 +42,19 @@
         <members>FutureController</members>
         <members>Logger</members>
         <members>FinPlanException</members>
+        <members>Scheduler</members>
         <name>ApexClass</name>
     </types>
     <types>
+        <members>FinPlan__PPF__c</members>
+        <members>FinPlan__Bond__c</members>
+        <members>FinPlan__Fund_Portfolio__c</members>
+        <members>FinPlan__SIP__c</members>
+        <members>FinPlan__SIP_Installment__c</members>
+        <members>FinPlan__SmallCase__c</members>
+        <members>FinPlan__SmallCase_Portfolio__c</members>
+        <members>FinPlan__Treasury_Bill__c</members>
+        <members>FinPlan__ULIP_Portfolio__c</members>
         <members>FinPlan__PPF__c</members>
         <members>FinPlan__EPF__c</members>
         <members>FinPlan__Fund__c</members>
@@ -35,6 +75,10 @@
         <members>FinPlan__Savings_Account_Transaction_Email__c</members>
         <members>FinPlan__System_Log__c</members>
         <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Investment_Transaction_Stock_Record_Page</members>
+        <name>FlexiPage</name>
     </types>
     <types>
         <members>triggerOnSavingsAccountTransactionEmail</members>

@@ -32,6 +32,10 @@
                 <behavior>Edit</behavior>
                 <field>Fund_Code__c</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>Fund_URL__c</field>
+            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>

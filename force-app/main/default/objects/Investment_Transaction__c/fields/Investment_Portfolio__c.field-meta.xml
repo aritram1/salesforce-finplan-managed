@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Investment__c</fullName>
+    <fullName>Investment_Portfolio__c</fullName>
     <externalId>false</externalId>
-    <label>Investment</label>
+    <label>Investment Portfolio</label>
     <referenceTo>Investment_Portfolio__c</referenceTo>
     <relationshipLabel>Investment Transactions</relationshipLabel>
     <relationshipName>Investment_Transactions</relationshipName>
