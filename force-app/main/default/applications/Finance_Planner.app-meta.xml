@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomApplication xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>Investment_Transaction_Stock_Record_Page</content>
+        <formFactor>Small</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+        <pageOrSobjectType>Investment_Transaction__c</pageOrSobjectType>
+    </actionOverrides>
+    <actionOverrides>
+        <actionName>View</actionName>
+        <comment>Action override created by Lightning App Builder during activation.</comment>
+        <content>Investment_Transaction_Stock_Record_Page</content>
+        <formFactor>Large</formFactor>
+        <skipRecordTypeSelect>false</skipRecordTypeSelect>
+        <type>Flexipage</type>
+        <pageOrSobjectType>Investment_Transaction__c</pageOrSobjectType>
+    </actionOverrides>
+    <brand>
+        <headerColor>#0070D2</headerColor>
+        <logo>Screenshot_20230423_at_84210_PM</logo>
+        <logoVersion>1</logoVersion>
+        <shouldOverrideOrgTheme>false</shouldOverrideOrgTheme>
+    </brand>
+    <formFactors>Small</formFactors>
+    <formFactors>Large</formFactors>
+    <isNavAutoTempTabsDisabled>false</isNavAutoTempTabsDisabled>
+    <isNavPersonalizationDisabled>false</isNavPersonalizationDisabled>
+    <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
+    <label>Finance Planner</label>
+    <navType>Standard</navType>
+    <tabs>Investment_Transaction__c</tabs>
+    <tabs>Investment_Portfolio__c</tabs>
+    <tabs>Bank__c</tabs>
+    <tabs>Savings_Account__c</tabs>
+    <tabs>Stock__c</tabs>
+    <tabs>Fund__c</tabs>
+    <tabs>Savings_Account_Transaction__c</tabs>
+    <tabs>System_Log__c</tabs>
+    <tabs>Savings_Account_Transaction_Email__c</tabs>
+    <tabs>Fixed_Deposit__c</tabs>
+    <tabs>EPF__c</tabs>
+    <tabs>PPF__c</tabs>
+    <tabs>NPS__c</tabs>
+    <tabs>ULIP__c</tabs>
+    <tabs>Metal__c</tabs>
+    <uiType>Lightning</uiType>
+    <utilityBar>Finance_Planner_UtilityBar</utilityBar>
+</CustomApplication>

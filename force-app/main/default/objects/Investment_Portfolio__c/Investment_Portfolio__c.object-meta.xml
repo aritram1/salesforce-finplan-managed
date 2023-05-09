@@ -155,10 +155,9 @@
     <externalSharingModel>ReadWrite</externalSharingModel>
     <label>Investment Portfolio</label>
     <nameField>
-        <displayFormat>INV-{000000}</displayFormat>
-        <label>Investment Portfolio Name</label>
+        <label>Investment Portfolio For</label>
         <trackHistory>false</trackHistory>
-        <type>AutoNumber</type>
+        <type>Text</type>
     </nameField>
     <pluralLabel>Investment Portfolios</pluralLabel>
     <searchLayouts></searchLayouts>

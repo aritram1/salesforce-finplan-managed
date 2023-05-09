@@ -9,7 +9,7 @@
         <operation>equals</operation>
         <value>Bond</value>
     </summaryFilterItems>
-    <summaryForeignKey>Investment_Transaction__c.Investment__c</summaryForeignKey>
+    <summaryForeignKey>Investment_Transaction__c.Investment_Portfolio__c</summaryForeignKey>
     <summaryOperation>sum</summaryOperation>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
