@@ -2,7 +2,7 @@ import { LightningElement, api } from 'lwc';
 import { loadScript } from 'lightning/platformResourceLoader';
 import chartjs from '@salesforce/ChartJS';
 import getPortfolioOverviewData from '@salesforce/apex/LWCPortFolioOverViewController.getPortfolioOverviewData';
-
+import logError from '@salesforce/apex/Logger.logError';
 export default class LwcPortfolioOverview extends LightningElement {
     chart;
     @api recordId;
@@ -13,48 +13,50 @@ export default class LwcPortfolioOverview extends LightningElement {
         try{
             let {data, error} = await getPortfolioOverviewData({ portfolioId : this.recordId});
             if(error) throw Error(`Error encountered while getting data from getPortfolioOverviewData : ${error}`);
-            this.portfolioData = [...this.processData(data)];
-            this.chartLabels = [...this.getChartLabels(this.portfolioData)];
+            this.processDataAndLabels(data);
         }
         catch(error){
-            console.log(`Error encountered while getting data in connectedCallback:' + ${error}`);
+            const err = `Error encountered while getting data in connectedCallback:' + ${error}`;
+            console.log(err);
+            await logError(err);
         }
         finally{}
-
-        // getPortfolioOverviewData({ portfolioId : this.recordId})
-        // .then((data, error)=>{
-        //     if(error) throw Error('Error received:' + error);
-        //     this.portfolioData = [...this.processData(data)];
-        // })
-        // .catch(error => {
-        //     console.log(`Error encountered while getting data in connectedCallback:' + ${error}`);
-        // });
     }
 
-    processData(data){
+    // connectedCallback(){
+    //     getPortfolioOverviewData({ portfolioId : this.recordId})
+    //     .then((data, error)=>{
+    //         if(error) throw Error('Error received:' + error);
+    //         this.portfolioData = [...this.processData(data)];
+    //     })
+    //     .catch(error => {
+    //         console.log(`Error encountered while getting data in connectedCallback:' + ${error}`);
+    //     });
+    // }
+
+    processDataAndLabels(data){
         let _portfolioData = [];
+        let _chartLabels = ['Id', 'SmallCase', 'Bond', 'Stock', 'T-Bills', 'ULIP', 'MF', 'EPF', 'PPF', 'FD', 'Metal'];
         for(let each of data){
             _portfolioData.push({
-                id : each.Id,
-                smallCase : each.FinPlan__SmallCase_Invested_Amount__c,
-                bond: FinPlan__Bond_Investment_Amount__c,
-                stock : FinPlan__Stock_Invested_Amount__c,
-                tBills : FinPlan__Treasury_Bills_Invested_Amount__c,
-                ulip : FinPlan__Ulip_Invested_Amount__c,
-                mf : FinPlan__MF_Invested_Amount__c,
-                epf : FinPlan__EPF_Invested_Amount__c,
-                ppf : FinPlan__PPF_Invested_Amount__c,
-                fd : FinPlan__FD_Invested_Amount__c,
-                metal: FinPlan__Metal_Invested_Amount__c
+                'id' : each.Id,
+                'smallCase' : each.FinPlan__SmallCase_Invested_Amount__c,
+                'bond' : FinPlan__Bond_Investment_Amount__c,
+                'stock' : FinPlan__Stock_Invested_Amount__c,
+                'tBills' : FinPlan__Treasury_Bills_Invested_Amount__c,
+                'ulip' : FinPlan__Ulip_Invested_Amount__c,
+                'mf' : FinPlan__MF_Invested_Amount__c,
+                'epf' : FinPlan__EPF_Invested_Amount__c,
+                'ppf' : FinPlan__PPF_Invested_Amount__c,
+                'fd' : FinPlan__FD_Invested_Amount__c,
+                'metal': FinPlan__Metal_Invested_Amount__c
             });
         }
-        return _portfolioData;
+        this.portfolioData = [..._portfolioData];
+        this.chartLabels = [..._chartLabels];
     }
 
-    getChartLabels(processedData){
-        return ['SmallCase', 'Bond', 'Stock', 'T-Bills', 'ULIP', 'MF', 'EPF', 'PPF', 'FD', 'Metal'];
-    }
-
+    // async renderedCallback loads the scripts asynchronously with data (if not loaded yet)
     async renderedCallback() {
         if(this.chartLoaded) return;
         try{
