@@ -1,3 +1,5 @@
+// The main controller class for Portfolio OVerview LWC
+
 public with sharing class LWCPortFolioOverViewController {
     
     @AuraEnabled
@@ -8,7 +10,7 @@ public with sharing class LWCPortFolioOverViewController {
                                     FinPlan__Stock_Invested_Amount__c, FinPlan__Treasury_Bills_Invested_Amount__c,
                                     FinPlan__Ulip_Invested_Amount__c, FinPlan__MF_Invested_Amount__c, FinPlan__EPF_Invested_Amount__c, 
                                     FinPlan__PPF_Invested_Amount__c, FinPlan__FD_Invested_Amount__c, FinPlan__Metal_Invested_Amount__c 
-                                    FROM FinPlan__Investment_Portfolio__c 
+                                    FROM FinPlan__Investment_Portfolio__c // Add the running mode
                                     WHERE Id = :portfolioId];
             return allPortfolios;
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 public with sharing class Logger {
-    public Logger() {}
+    
+    // The following methods/overloaded methods serve the purpose of logging success/errors scenarios
 
     public static void logError(Exception e){
         insert new FinPlan__System_Log__c(
