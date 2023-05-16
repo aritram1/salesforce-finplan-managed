@@ -87,6 +87,9 @@
     </types>
     <types>
         <members>Investment_Transaction_Stock_Record_Page</members>
+        <members>Portfolio_Overview</members>
+        <members>Investment_Portfolio_Record_Page</members>
+        <members>Investment_Portfolio_Record_Page1</members>
         <name>FlexiPage</name>
     </types>
     <types>
