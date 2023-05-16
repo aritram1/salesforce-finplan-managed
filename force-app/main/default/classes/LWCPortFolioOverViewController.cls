@@ -27,102 +27,101 @@ public with sharing class LWCPortFolioOverViewController {
         List<PortfolioOverviewDataWrapper> wrapperRecords = new List<PortfolioOverviewDataWrapper>();
         for(FinPlan__Investment_Portfolio__c portfolio : allPortfolios){
             
-                if(portfolio.FinPlan__Bond_Investment_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.BOND;
-                    wrapper.value = portfolio.FinPlan__Bond_Investment_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__Bond_Investment_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.BOND;
+                wrapper.value = portfolio.FinPlan__Bond_Investment_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__EPF_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.EPF;
-                    wrapper.value = portfolio.FinPlan__EPF_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__EPF_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.EPF;
+                wrapper.value = portfolio.FinPlan__EPF_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__FD_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.FD;
-                    wrapper.value = portfolio.FinPlan__FD_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__FD_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.FD;
+                wrapper.value = portfolio.FinPlan__FD_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__MF_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.MF;
-                    wrapper.value = portfolio.FinPlan__MF_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__MF_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.MF;
+                wrapper.value = portfolio.FinPlan__MF_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__Metal_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.METAL;
-                    wrapper.value = portfolio.FinPlan__Metal_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__Metal_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.METAL;
+                wrapper.value = portfolio.FinPlan__Metal_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__PPF_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.PPF;
-                    wrapper.value = portfolio.FinPlan__PPF_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__PPF_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.PPF;
+                wrapper.value = portfolio.FinPlan__PPF_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__SmallCase_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.SMALLCASE;
-                    wrapper.value = portfolio.FinPlan__SmallCase_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__SmallCase_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.SMALLCASE;
+                wrapper.value = portfolio.FinPlan__SmallCase_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__SIP_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.SIP;
-                    wrapper.value = portfolio.FinPlan__SIP_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__SIP_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.SIP;
+                wrapper.value = portfolio.FinPlan__SIP_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__Stock_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.STOCK;
-                    wrapper.value = portfolio.FinPlan__Stock_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__Stock_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.STOCK;
+                wrapper.value = portfolio.FinPlan__Stock_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__NPS_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.NPS;
-                    wrapper.value = portfolio.FinPlan__NPS_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__NPS_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.NPS;
+                wrapper.value = portfolio.FinPlan__NPS_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__Ulip_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.ULIP;
-                    wrapper.value = portfolio.FinPlan__Ulip_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
+            if(portfolio.FinPlan__Ulip_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.ULIP;
+                wrapper.value = portfolio.FinPlan__Ulip_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
 
-                if(portfolio.FinPlan__Treasury_Bills_Invested_Amount__c > 0){
-                    PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
-                    wrapper.id = portfolio.Id;
-                    wrapper.name = GlobalConstants.TREASURYBILL;
-                    wrapper.value = portfolio.FinPlan__Treasury_Bills_Invested_Amount__c;
-                    wrapperRecords.add(wrapper);
-                }
-            
+            if(portfolio.FinPlan__Treasury_Bills_Invested_Amount__c > 0){
+                PortfolioOverviewDataWrapper wrapper = new PortfolioOverviewDataWrapper();
+                wrapper.id = portfolio.Id;
+                wrapper.name = GlobalConstants.TREASURYBILL;
+                wrapper.value = portfolio.FinPlan__Treasury_Bills_Invested_Amount__c;
+                wrapperRecords.add(wrapper);
+            }
         }
         return wrapperRecords;
     }
