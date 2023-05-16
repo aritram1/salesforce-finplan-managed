@@ -1,126 +1,147 @@
 import { LightningElement, api } from 'lwc';
-import { loadScript } from 'lightning/platformResourceLoader';
-import chartjs from '@salesforce/ChartJS';
+import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
+import chartjs from '@salesforce/resourceUrl/ChartJs1';
 import getPortfolioOverviewData from '@salesforce/apex/LWCPortFolioOverViewController.getPortfolioOverviewData';
 import logError from '@salesforce/apex/Logger.logError';
 export default class LwcPortfolioOverview extends LightningElement {
-    chart;
+    componentName = 'LwcPortfolioOverview';
+    
     @api recordId;
+    chart; chartConfig;
     chartLoaded = false;
     portfolioData = [];
+    chartLabels = [];
 
-    async connectedCallback(){
-        try{
-            let {data, error} = await getPortfolioOverviewData({ portfolioId : this.recordId});
-            if(error) throw Error(`Error encountered while getting data from getPortfolioOverviewData : ${error}`);
-            this.processDataAndLabels(data);
+    getConfig(){
+        let config = {
+            type: 'pie',
+            data: {
+                labels: [...this.chartLabels],
+                //labels: ['Bond','EPF','FD','MF','Metal','PPF','SIP','SmallCase','Stock','TreasuryBill','ULIP','NPS'],
+                datasets: [
+                    {
+                        data: [...this.portfolioData], //[0,0,0,3093000,0,0,0,0,1632.2,0,0,0],//
+                        backgroundColor: [
+                            'rgb(255, 99, 132)','rgb(255, 159, 64)','rgb(255, 205, 86)','rgb(75, 192, 192)',
+                            'rgb(54, 162, 235)','rgb(54, 162, 230)','rgb(54, 162, 222)','rgb(54, 162, 56)',
+                            'rgb(54, 162, 12)','rgb(54, 162, 222)','rgb(54, 162, 134)','rgb(54, 162, 1)'
+                        ],
+                        label: 'My Portfolio'
+                    }
+                ]
+            },
+            options: {
+                responsive: false,
+                plugins:{
+                    legend: {
+                        position: 'right'
+                    }
+                },
+                animation: {
+                    animateScale: true,
+                    animateRotate: true
+                }
+            }
         }
-        catch(error){
-            const err = `Error encountered while getting data in connectedCallback:' + ${error}`;
-            console.log(err);
-            await logError(err);
-        }
-        finally{}
+        return config;
     }
 
-    // connectedCallback(){
-    //     getPortfolioOverviewData({ portfolioId : this.recordId})
-    //     .then((data, error)=>{
-    //         if(error) throw Error('Error received:' + error);
-    //         this.portfolioData = [...this.processData(data)];
-    //     })
-    //     .catch(error => {
-    //         console.log(`Error encountered while getting data in connectedCallback:' + ${error}`);
-    //     });
-    // }
-
     processDataAndLabels(data){
+        console.log('inside processdata');
+        console.log('data=>' + JSON.stringify(data));
         let _portfolioData = [];
-        let _chartLabels = ['Id', 'SmallCase', 'Bond', 'Stock', 'T-Bills', 'ULIP', 'MF', 'EPF', 'PPF', 'FD', 'Metal'];
+        let _chartLabels = [];
         for(let each of data){
-            _portfolioData.push({
-                'id' : each.Id,
-                'smallCase' : each.FinPlan__SmallCase_Invested_Amount__c,
-                'bond' : FinPlan__Bond_Investment_Amount__c,
-                'stock' : FinPlan__Stock_Invested_Amount__c,
-                'tBills' : FinPlan__Treasury_Bills_Invested_Amount__c,
-                'ulip' : FinPlan__Ulip_Invested_Amount__c,
-                'mf' : FinPlan__MF_Invested_Amount__c,
-                'epf' : FinPlan__EPF_Invested_Amount__c,
-                'ppf' : FinPlan__PPF_Invested_Amount__c,
-                'fd' : FinPlan__FD_Invested_Amount__c,
-                'metal': FinPlan__Metal_Invested_Amount__c
-            });
+            _portfolioData.push(each.value);
+            _chartLabels.push(each.name);
         }
         this.portfolioData = [..._portfolioData];
         this.chartLabels = [..._chartLabels];
     }
 
-    // async renderedCallback loads the scripts asynchronously with data (if not loaded yet)
-    async renderedCallback() {
+    // Lifecycle methods
+    // ConnectedCallback
+    // RenderedCallback
+
+    connectedCallback(){
+        // console.log('ConnectedCallback started');
+        // getPortfolioOverviewData({ portfolioId : this.recordId })
+        // .then((data, error)=>{
+        //     if(error) throw Error('Error received:' + error);
+        //     if(!data) throw Error('No data received');
+        //     console.log('ConnectedCallback after getting data' + data);
+        //     this.processDataAndLabels(data);
+            
+        //     loadScript(this, chartjs + '/Chart.min.js')
+        //     .then(() =>{
+        //         window.Chart.platform.disableCSSInjection = true;
+        //         const ctx = this.template.querySelector('canvas.myChart').getContext('2d');
+        //         console.log('Config In renderedcallback:' + JSON.stringify(this.getConfig());
+        //         this.chart = new window.Chart(ctx, this.getConfig());
+        //         this.chartLoaded = true;
+        //         console.log('ConnectedCallback finished');
+        //     })
+        //     .catch(error => console.log(`Error encountered while showing chart in renderedCallback ${error}`));
+
+        // })
+        // .catch(error => {
+        //     console.log('Error: ' + error);
+        //     const err = `Error encountered while getting data in connectedCallback:' ${error}`;
+            
+        //     logError({ error : JSON.stringify(err), componentName: this.componentName })
+        //     .then(()=> console.log('Error occurred while logging!'))
+        //     .catch(error=> console.log(`Error caught while logging! ${error}`));
+        // });
+    }
+
+    // renderedCallback loads the scripts asynchronously with data (if not loaded yet)
+    renderedCallback() {
         if(this.chartLoaded) return;
-        try{
-            await loadScript(this, chartjs);
-            this.generateChart();
-            this.chartLoaded = true;
-        }
-        catch(error){
-            console.log(`Error encountered while showing chart in renderedCallback ${error}`);
-        }
-        finally{}
-    }
-
+        console.log('renderedcallback started');
+        getPortfolioOverviewData({ portfolioId : this.recordId })
+        .then((data, error)=>{
+            if(error) throw Error('Error received:' + error);
+            if(!data) throw Error('No data received');
+            console.log('renderedcallback after getting data' + data);
+            this.processDataAndLabels(data);
+            console.log('this.lwcPortfolioData->' + JSON.stringify(this.portfolioData));
+            console.log('this.chartLabels->' + this.chartLabels);
     
+            loadScript(this, chartjs + '/Chart.min.js')
+            .then(() =>{
+                window.Chart.platform.disableCSSInjection = true;
+                const ctx = this.template.querySelector('canvas.myChart').getContext('2d');
+                console.log('Config In renderedcallback:' + JSON.stringify(this.getConfig()));
+                this.chart = new window.Chart(ctx, this.getConfig());
+                this.chartLoaded = true;
+                console.log('renderedcallback finished');
+            })
+            .catch(error => console.log(`Error encountered while showing chart in renderedCallback ${error}`));
 
-    generateChart(){
-        const ctx = this.template.querySelector('canvas').getContext('2d');
-        const chartData = {
-            labels: this.chartLabels,
-            datasets: [{
-                label: 'Investment Dataset',
-                data: this.portfolioData,
-                /*
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                ],
-                */
-                borderWidth: 1
-            }]
-        };
-        
-        // Generate the chart from processed data
-        this.chart = new window.Chart(ctx, {
-            type: this.getChartType(),
-            data: chartData,
-            options: this.getChartOptions()
+        })
+        .catch(error => {
+            console.log('Error: ' + error);
+            const err = `Error encountered while getting data in connectedCallback:' ${error}`;
+            
+            logError({ error : JSON.stringify(err), componentName: this.componentName })
+            .then(()=> console.log('Error occurred while logging!'))
+            .catch(error=> console.log(`Error caught while logging! ${error}`));
         });
+
+        // console.log('start renderedCallback');
+
+        // //if(this.chartLoaded) return;
+        
+        // loadScript(this, chartjs + '/Chart.min.js')
+        // .then(() =>{
+        //     window.Chart.platform.disableCSSInjection = true;
+        //     const ctx = this.template.querySelector('canvas.myChart').getContext('2d');
+        //     console.log('Config In renderedcallback:' + JSON.stringify(this.chartConfig));
+        //     this.chart = new window.Chart(ctx, this.chartConfig);
+        //     this.chartLoaded = true;
+        //     console.log('end renderedCallback');
+        // })
+        // .catch(error => console.log(`Error encountered while showing chart in renderedCallback ${error}`));
     }
 
-
-    getChartOptions(){
-        const options = {
-            responsive: true,
-            maintainAspectRatio: false,
-            title: {
-                display: true,
-                text: 'Investment Portfolio'
-            }
-        };
-        return options;
-    }
-
-    getChartType(){
-        return 'pie';
-    }
 }

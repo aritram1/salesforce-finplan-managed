@@ -2,6 +2,15 @@ public with sharing class Logger {
     
     // The following methods/overloaded methods serve the purpose of logging success/errors scenarios
 
+    @AuraEnabled
+    public static void logError(String error, String componentName){
+        insert new FinPlan__System_Log__c(
+            FinPlan__Type__c = 'Error',
+            FinPlan__Message__c = error?.left(255),
+            FinPlan__Exception_Type__c = componentName
+        );
+    }
+
     public static void logError(Exception e){
         insert new FinPlan__System_Log__c(
             FinPlan__Type__c = 'Error',
