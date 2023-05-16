@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
-import chartjs from '@salesforce/resourceUrl/ChartJs1';
+import chartjs from '@salesforce/resourceUrl/ChartJS';
 import getPortfolioOverviewData from '@salesforce/apex/LWCPortFolioOverViewController.getPortfolioOverviewData';
 import logError from '@salesforce/apex/Logger.logError';
 export default class LwcPortfolioOverview extends LightningElement {
@@ -63,36 +63,7 @@ export default class LwcPortfolioOverview extends LightningElement {
     // ConnectedCallback
     // RenderedCallback
 
-    connectedCallback(){
-        // console.log('ConnectedCallback started');
-        // getPortfolioOverviewData({ portfolioId : this.recordId })
-        // .then((data, error)=>{
-        //     if(error) throw Error('Error received:' + error);
-        //     if(!data) throw Error('No data received');
-        //     console.log('ConnectedCallback after getting data' + data);
-        //     this.processDataAndLabels(data);
-            
-        //     loadScript(this, chartjs + '/Chart.min.js')
-        //     .then(() =>{
-        //         window.Chart.platform.disableCSSInjection = true;
-        //         const ctx = this.template.querySelector('canvas.myChart').getContext('2d');
-        //         console.log('Config In renderedcallback:' + JSON.stringify(this.getConfig());
-        //         this.chart = new window.Chart(ctx, this.getConfig());
-        //         this.chartLoaded = true;
-        //         console.log('ConnectedCallback finished');
-        //     })
-        //     .catch(error => console.log(`Error encountered while showing chart in renderedCallback ${error}`));
-
-        // })
-        // .catch(error => {
-        //     console.log('Error: ' + error);
-        //     const err = `Error encountered while getting data in connectedCallback:' ${error}`;
-            
-        //     logError({ error : JSON.stringify(err), componentName: this.componentName })
-        //     .then(()=> console.log('Error occurred while logging!'))
-        //     .catch(error=> console.log(`Error caught while logging! ${error}`));
-        // });
-    }
+    connectedCallback(){}
 
     // renderedCallback loads the scripts asynchronously with data (if not loaded yet)
     renderedCallback() {
@@ -127,21 +98,6 @@ export default class LwcPortfolioOverview extends LightningElement {
             .then(()=> console.log('Error occurred while logging!'))
             .catch(error=> console.log(`Error caught while logging! ${error}`));
         });
-
-        // console.log('start renderedCallback');
-
-        // //if(this.chartLoaded) return;
-        
-        // loadScript(this, chartjs + '/Chart.min.js')
-        // .then(() =>{
-        //     window.Chart.platform.disableCSSInjection = true;
-        //     const ctx = this.template.querySelector('canvas.myChart').getContext('2d');
-        //     console.log('Config In renderedcallback:' + JSON.stringify(this.chartConfig));
-        //     this.chart = new window.Chart(ctx, this.chartConfig);
-        //     this.chartLoaded = true;
-        //     console.log('end renderedCallback');
-        // })
-        // .catch(error => console.log(`Error encountered while showing chart in renderedCallback ${error}`));
     }
 
 }
