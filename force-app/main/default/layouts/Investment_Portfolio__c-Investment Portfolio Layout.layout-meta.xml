@@ -39,6 +39,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Readonly</behavior>
+                <field>NPS_Invested_Amount__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
                 <field>MF_Invested_Amount__c</field>
             </layoutItems>
         </layoutColumns>
@@ -62,6 +66,10 @@
             <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>Ulip_Invested_Amount__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>SIP_Invested_Amount__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>

@@ -1,20 +1,23 @@
 public with sharing class MutualFundPriceService {
-    
+
+    public static final String INVESTING_FUND_BASE_URL = GlobalConstants.INVESTING_FUND_BASE_URL; // 'https://www.investing.com/funds/'
+    public static final String INVESTING_FUND_MATCHING_TEXT = GlobalConstants.INVESTING_FUND_MATCHING_TEXT; // '<span class="arial_26 inlineblock pid-'
+    public static final String HTTP_GET = GlobalConstants.HTTP_GET; //'GET'
+
     public static Decimal getLatestNAV(String code){
-        String endpoint = 'https://www.investing.com/funds/' + code;
+        String endpoint = INVESTING_FUND_BASE_URL + code;
         Http h = new Http();
         HttpRequest req = new HttpRequest();
         req.setEndpoint(endpoint);
-        req.setMethod('GET');
+        req.setMethod(HTTP_GET);
         Httpresponse res = h.send(req);
         String responseBody = res.getBody();
-        String textToMatch = '<span class="arial_26 inlineblock pid-';
         String strNav = '';
-        if(!responseBody.contains(textToMatch)){
+        if(!responseBody.contains(INVESTING_FUND_MATCHING_TEXT)){
             throw new FinPlanException('Price matching tag not present in Payload for MF - ' + code);
         }
         else{
-            Integer start = responseBody.indexOf(textToMatch) + textToMatch.length() + 39;
+            Integer start = responseBody.indexOf(INVESTING_FUND_MATCHING_TEXT) + INVESTING_FUND_MATCHING_TEXT.length() + 39;
             strNav = responseBody.substring(start, start + 6);
             System.debug('strNav=>' + strNav);
         }

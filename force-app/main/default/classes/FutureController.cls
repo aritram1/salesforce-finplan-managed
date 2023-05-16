@@ -1,7 +1,7 @@
 public with sharing class FutureController {
     
     // This method is used to get the latest mutual fund prices for all the mutual funds
-    @future (callout = true)
+    @future (callout=true)
     public static void updateMFLatestPrices(){
         System.debug('Inside updateMFLatestPrices');
         List<FinPlan__Fund__c> toBeUpdatedMFs = new List<FinPlan__Fund__c>();

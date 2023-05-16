@@ -43,7 +43,16 @@
         <members>Logger</members>
         <members>FinPlanException</members>
         <members>Scheduler</members>
+        <members>LWCPortFolioOverViewController</members>
         <name>ApexClass</name>
+    </types>
+    <types>
+        <members>lwcPortfolioOverview</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>ChartJS</members>
+        <name>StaticResource</name>
     </types>
     <types>
         <members>FinPlan__PPF__c</members>
@@ -78,6 +87,9 @@
     </types>
     <types>
         <members>Investment_Transaction_Stock_Record_Page</members>
+        <members>Portfolio_Overview</members>
+        <members>Investment_Portfolio_Record_Page</members>
+        <members>Investment_Portfolio_Record_Page1</members>
         <name>FlexiPage</name>
     </types>
     <types>

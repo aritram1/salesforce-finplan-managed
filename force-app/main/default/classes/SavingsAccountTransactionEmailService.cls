@@ -1,3 +1,6 @@
+// A global class to handle the incoming email from gmail to extract info and 
+// record in FinPlan__Savings_Account_Transaction_Email__c object
+
 global class SavingsAccountTransactionEmailService implements Messaging.InboundEmailHandler {
  
     global Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail email, Messaging.InboundEnvelope envelope) {
@@ -23,7 +26,6 @@ global class SavingsAccountTransactionEmailService implements Messaging.InboundE
         }
         finally{}
 
-       
         return result;
     }
 }
