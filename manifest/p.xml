@@ -1,17 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
-
-    <types>
-        <members>Investment_Asset_Record_Page</members>
-        <members>Investment_Record_Page</members>
-        <name>FlexiPage</name>
-    </types>
     <types>
         <members>FinPlanFlow_Investment_After_Save</members>
         <name>Flows</name>
     </types>
-    
-    
+    <types>
+        <members>FinPlan__Finance_Planner</members>
+        <name>CustomApplication</name>
+    </types>
+    <types>
+        <members>Savings_Account__c</members>
+        <members>Savings_Account_Transaction__c</members>
+        <members>Savings_Account_Transaction_Email__c</members>
+        <members>System_Log__c</members>
+        <members>Investment__c</members>
+        <members>Investment_Asset__c</members>
+        <name>CustomTab</name>
+    </types>
+    <types>
+        <members>SavingsAccountTransactionEmailService</members>
+        <members>SavingsAccountTransactionEmailHandler</members>
+        <members>InvestmentTransactionTriggerHandler</members>
+        <members>RefreshInvestmentDataController</members>
+        <members>WebServiceManager</members>
+        <members>StockPriceService</members>
+        <members>MutualFundPriceService</members>
+        <members>YahooStockPriceResponseParser</members>
+        <members>FutureController</members>
+        <members>Logger</members>
+        <members>FinPlanException</members>
+        <members>Scheduler</members>
+        <members>LWCPortFolioOverViewController</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>lwcPortfolioOverview</members>
+        <name>LightningComponentBundle</name>
+    </types>
+    <types>
+        <members>ChartJS</members>
+        <name>StaticResource</name>
+    </types>
+    <types>
+        <members>FinPlan__Bank__c</members>
+        <members>FinPlan__Savings_Account__c</members>
+        <members>FinPlan__Savings_Account_Transaction__c</members>
+        <members>FinPlan__Savings_Account_Transaction_Email__c</members>
+        <members>FinPlan__System_Log__c</members>
+        <members>Investment__c</members>
+        <members>Investment_Asset__c</members>
+        <name>CustomObject</name>
+    </types>
+    <types>
+        <members>Investment_Record_Page</members>
+        <members>Investment_Asset_Record_Page</members>
+        <name>FlexiPage</name>
+    </types>
+    <types>
+        <members>triggerOnSavingsAccountTransactionEmail</members>
+        <name>ApexTrigger</name>
+    </types>
+    <types>
+        <members>FinPlan__Bank__c-Bank Layout</members>
+        <members>FinPlan__Savings_Account__c-Savings Account Layout</members>
+        <members>FinPlan__Savings_Account_Transaction__c-Savings Account Transaction Layout</members>
+        <members>FinPlan__Savings_Account_Transaction_Email__c-Savings Account Transaction Email Layout</members>
+        <members>FinPlan__System_Log__c-System Log Layout</members>
+        <name>Layout</name>
+    </types>
     <version>56.0</version>
     <!--
     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
