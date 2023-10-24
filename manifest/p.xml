@@ -2,12 +2,16 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 
     <types>
-        <members>Investment_Transaction_Stock_Record_Page</members>
-        <members>Portfolio_Overview</members>
-        <members>Investment_Portfolio_Record_Page</members>
-        <members>Investment_Portfolio_Record_Page1</members>
+        <members>Investment_Asset_Record_Page</members>
+        <members>Investment_Record_Page</members>
         <name>FlexiPage</name>
     </types>
+    <types>
+        <members>FinPlanFlow_Investment_After_Save</members>
+        <name>Flows</name>
+    </types>
+    
+    
     <version>56.0</version>
     <!--
     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
