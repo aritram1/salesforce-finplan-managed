@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+	<types>
+		<members>FinPlanException</members>
+		<members>FutureController</members>
+		<members>InvestmentTransactionTriggerHandler</members>
+		<members>LWCPortFolioOverViewController</members>
+		<members>Logger</members>
+		<members>MutualFundPriceService</members>
+		<members>RefreshInvestmentDataController</members>
+		<members>SavingsAccountTransactionEmailHandler</members>
+		<members>SavingsAccountTransactionEmailService</members>
+		<members>Scheduler</members>
+		<members>StockPriceService</members>
+		<members>WebServiceManager</members>
+		<members>YahooStockPriceResponseParser</members>
+		<name>ApexClass</name>
+	</types>
+	<types>
+		<members>triggerOnFund</members>
+		<members>triggerOnInvestmentTransaction</members>
+		<members>triggerOnSavingsAccountTransactionEmail</members>
+		<members>triggerOnStock</members>
+		<name>ApexTrigger</name>
+	</types>
+	<types>
+		<members>FinPlan__Finance_Planner</members>
+		<name>CustomApplication</name>
+	</types>
+	<types>
+		<members>FinPlan__Bank__c</members>
+		<members>FinPlan__Bond__c</members>
+		<members>FinPlan__EPF__c</members>
+		<members>FinPlan__Fixed_Deposit__c</members>
+		<members>FinPlan__Fund_Portfolio__c</members>
+		<members>FinPlan__Fund_Portfolio__c</members>
+		<members>FinPlan__Fund__c</members>
+		<members>FinPlan__Investment_Portfolio__c</members>
+		<members>FinPlan__Investment_Transaction__c</members>
+		<members>FinPlan__PPF__c</members>
+		<members>FinPlan__PPF__c</members>
+		<members>FinPlan__SIP_Installment__c</members>
+		<members>FinPlan__SIP_Installment__c</members>
+		<members>FinPlan__SIP__c</members>
+		<members>FinPlan__SIP__c</members>
+		<members>FinPlan__Savings_Account_Transaction_Email__c</members>
+		<members>FinPlan__Savings_Account_Transaction__c</members>
+		<members>FinPlan__Savings_Account__c</members>
+		<members>FinPlan__SmallCase_Portfolio__c</members>
+		<members>FinPlan__SmallCase_Portfolio__c</members>
+		<members>FinPlan__SmallCase__c</members>
+		<members>FinPlan__SmallCase__c</members>
+		<members>FinPlan__Stock__c</members>
+		<members>FinPlan__System_Log__c</members>
+		<members>FinPlan__Treasury_Bill__c</members>
+		<members>FinPlan__ULIP_Portfolio__c</members>
+		<members>FinPlan__ULIP_Portfolio__c</members>
+		<members>FinPlan__ULIP__c</members>
+		<name>CustomObject</name>
+	</types>
+	<types>
+		<members>Bank__c</members>
+		<members>Bond__c</members>
+		<members>EPF__c</members>
+		<members>Fixed_Deposit__c</members>
+		<members>Fund_Portfolio__c</members>
+		<members>Fund__c</members>
+		<members>Investment_Portfolio__c</members>
+		<members>Investment_Transaction__c</members>
+		<members>Metal__c</members>
+		<members>NPS__c</members>
+		<members>PPF__c</members>
+		<members>SIP_Installment__c</members>
+		<members>SIP__c</members>
+		<members>Savings_Account_Transaction_Email__c</members>
+		<members>Savings_Account_Transaction__c</members>
+		<members>Savings_Account__c</members>
+		<members>SmallCase_Portfolio__c</members>
+		<members>SmallCase__c</members>
+		<members>Stock__c</members>
+		<members>System_Log__c</members>
+		<members>Treasury_Bill__c</members>
+		<members>ULIP_Portfolio__c</members>
+		<members>ULIP__c</members>
+		<name>CustomTab</name>
+	</types>
+	<types>
+		<members>Investment_Portfolio_Record_Page</members>
+		<members>Investment_Portfolio_Record_Page1</members>
+		<members>Investment_Transaction_Stock_Record_Page</members>
+		<members>Portfolio_Overview</members>
+		<name>FlexiPage</name>
+	</types>
+	<types>
+		<members>FinPlan__Bank__c-Bank Layout</members>
+		<members>FinPlan__EPF__c-EPF Layout</members>
+		<members>FinPlan__Fixed_Deposit__c-Fixed Deposit Layout</members>
+		<members>FinPlan__Fund_Portfolio__c-Fund Portfolio Layout</members>
+		<members>FinPlan__Fund__c-Mutual Fund Layout</members>
+		<members>FinPlan__Investment_Portfolio__c-Investment Portfolio Layout</members>
+		<members>FinPlan__Investment_Transaction__c-Bond Layout</members>
+		<members>FinPlan__Investment_Transaction__c-EPF Layout</members>
+		<members>FinPlan__Investment_Transaction__c-FD Layout</members>
+		<members>FinPlan__Investment_Transaction__c-MF Layout</members>
+		<members>FinPlan__Investment_Transaction__c-Metal Layout</members>
+		<members>FinPlan__Investment_Transaction__c-NPS Layout</members>
+		<members>FinPlan__Investment_Transaction__c-PPF Layout</members>
+		<members>FinPlan__Investment_Transaction__c-SmallCase Layout</members>
+		<members>FinPlan__Investment_Transaction__c-Stock Layout</members>
+		<members>FinPlan__Investment_Transaction__c-TreasuryBill Layout</members>
+		<members>FinPlan__Investment_Transaction__c-ULIP Layout</members>
+		<members>FinPlan__PPF__c-PPF Layout</members>
+		<members>FinPlan__SIP_Installment__c-SIP Installment Layout</members>
+		<members>FinPlan__SIP__c-SIP Layout</members>
+		<members>FinPlan__Savings_Account_Transaction_Email__c-Savings Account Transaction Email Layout</members>
+		<members>FinPlan__Savings_Account_Transaction__c-Savings Account Transaction Layout</members>
+		<members>FinPlan__Savings_Account__c-Savings Account Layout</members>
+		<members>FinPlan__SmallCase_Portfolio__c-SmallCase Portfolio Layout</members>
+		<members>FinPlan__SmallCase__c-SmallCase Layout</members>
+		<members>FinPlan__Stock__c-Stock Layout</members>
+		<members>FinPlan__System_Log__c-System Log Layout</members>
+		<members>FinPlan__ULIP_Portfolio__c-ULIP Portfolio Layout</members>
+		<members>FinPlan__ULIP__c-ULIP Layout</members>
+		<name>Layout</name>
+	</types>
+	<types>
+		<members>lwcPortfolioOverview</members>
+		<name>LightningComponentBundle</name>
+	</types>
+	<types>
+		<members>ChartJS</members>
+		<name>StaticResource</name>
+	</types>
+	<version>58.0</version>
+</Package>
