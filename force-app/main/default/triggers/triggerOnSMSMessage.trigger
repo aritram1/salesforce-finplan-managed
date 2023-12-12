@@ -163,6 +163,7 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
 
         // handle all type scenarios
         if(sms.Type__c == 'balance_update'){
+            // sms.addError('test');
             lastBalanceUpdateSMS = sms;
         }
     }

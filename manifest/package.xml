@@ -3,6 +3,8 @@
 	<types>
 		<members>FinPlanApproveSMSAPIController</members>
 		<members>FinPlanDeleteSMSAPIController</members>
+		<members>FinPlanSyncSMSAPIController</members>
+		<members>FinPlanSMSHandler</members>
 		<members>FinPlanException</members>
 		<members>Logger</members>
 		<name>ApexClass</name>
