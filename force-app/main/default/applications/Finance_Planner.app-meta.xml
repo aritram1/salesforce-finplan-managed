@@ -31,21 +31,17 @@
     <isNavTabPersistenceDisabled>false</isNavTabPersistenceDisabled>
     <label>Finance Planner</label>
     <navType>Standard</navType>
-    <tabs>Investment_Transaction__c</tabs>
-    <tabs>Investment_Portfolio__c</tabs>
+    <tabs>Investment_Asset__c</tabs>
+    <tabs>Investment__c</tabs>
     <tabs>Bank__c</tabs>
-    <tabs>Savings_Account__c</tabs>
-    <tabs>Stock__c</tabs>
-    <tabs>Fund__c</tabs>
+    <tabs>Bank_Account__c</tabs>
     <tabs>Savings_Account_Transaction__c</tabs>
-    <tabs>System_Log__c</tabs>
-    <tabs>Savings_Account_Transaction_Email__c</tabs>
-    <tabs>Fixed_Deposit__c</tabs>
-    <tabs>EPF__c</tabs>
-    <tabs>PPF__c</tabs>
-    <tabs>NPS__c</tabs>
-    <tabs>ULIP__c</tabs>
-    <tabs>Metal__c</tabs>
+    <tabs>Card__c</tabs>
+    <tabs>Card_Transaction__c</tabs>
+    <tabs>SMS_Message__c</tabs>
+    <tabs>Bank_Transaction__c</tabs>
+    <tabs>Beneficiary__c</tabs>
+    <tabs>Investment_Instituition__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Finance_Planner_UtilityBar</utilityBar>
 </CustomApplication>

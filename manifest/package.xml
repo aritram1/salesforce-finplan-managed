@@ -1,18 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
+		<members>FinPlanApproveSMSAPIController</members>
+		<members>FinPlanDeleteSMSAPIController</members>
+		<members>FinPlanException</members>
+		<members>Logger</members>
+		<name>ApexClass</name>
+	</types>
+	<types>
+		<members>triggerOnSMSMessage</members>
+		<name>ApexTrigger</name>
+	</types>
+	<types>
+		<members>Investment_Asset_Record_Page</members>
+		<members>Investment_Record_Page3</members>
+		<name>FlexiPage</name>
+	</types>
+	<types>
+		<members>*</members>
+		<name>ConnectedApp</name>
+	</types>
+	<types>
 		<members>Finance_Planner</members>
 		<name>CustomApplication</name>
 	</types>
 	<types>
+		<members>Investment_Asset_Product__c</members>
+		<members>Bank_Account__c</members>
+		<members>Bank_Transaction__c</members>
 		<members>Bank__c</members>
+		<members>Beneficiary__c</members>
 		<members>Investment_Asset__c</members>
+		<members>Investment_Instituition__c</members>
 		<members>Investment_Portfolio__c</members>
 		<members>Investment_Transaction__c</members>
 		<members>Investment__c</members>
 		<members>SMS_Message__c</members>
-		<members>Transaction__c</members>
 		<name>CustomObject</name>
+	</types>
+	<types>
+		<members>Bank_Account__c</members>
+		<members>Bank_Transaction__c</members>
+		<members>Bank__c</members>
+		<members>Beneficiary__c</members>
+		<members>Investment_Asset__c</members>
+		<members>Investment_Instituition__c</members>
+		<members>Investment_Portfolio__c</members>
+		<members>Investment_Transaction__c</members>
+		<members>Investment__c</members>
+		<members>SMS_Message__c</members>
+		<name>CustomTab</name>
 	</types>
 	<version>58.0</version>
 </Package>

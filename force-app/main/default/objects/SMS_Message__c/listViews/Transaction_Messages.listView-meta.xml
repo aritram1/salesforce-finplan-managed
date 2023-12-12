@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Transaction_Messages</fullName>
+    <columns>NAME</columns>
+    <columns>Amount_Value__c</columns>
+    <columns>Content__c</columns>
+    <columns>Beneficiary__c</columns>
+    <columns>Create_Transaction__c</columns>
+    <columns>Formula_Amount__c</columns>
+    <columns>Approved__c</columns>
+    <columns>Received_At__c</columns>
+    <filterScope>Mine</filterScope>
+    <filters>
+        <field>Formula_Amount__c</field>
+        <operation>greaterThan</operation>
+        <value>0</value>
+    </filters>
+    <label>Transaction Messages</label>
+</ListView>
