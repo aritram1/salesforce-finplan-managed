@@ -32,7 +32,6 @@
 		<members>Bank_Transaction__c</members>
 		<members>Bank__c</members>
 		<members>Beneficiary__c</members>
-		<members>Investment_Asset__c</members>
 		<members>Investment_Instituition__c</members>
 		<members>Investment_Portfolio__c</members>
 		<members>Investment_Transaction__c</members>
