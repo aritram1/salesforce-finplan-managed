@@ -11,13 +11,6 @@
 		<members>triggerOnSMSMessage</members>
 		<name>ApexTrigger</name>
 	</types>
-	<!--
-	<types>
-		<members>Investment_Asset_Record_Page</members>
-		<members>Investment_Record_Page3</members>
-		<name>FlexiPage</name>
-	</types>
-	-->
 	<types>
 		<members>*</members>
 		<name>ConnectedApp</name>
@@ -27,11 +20,11 @@
 		<name>CustomApplication</name>
 	</types>
 	<types>
-		<members>Investment_Asset_Product__c</members>
 		<members>Bank_Account__c</members>
 		<members>Bank_Transaction__c</members>
 		<members>Bank__c</members>
 		<members>Beneficiary__c</members>
+		<members>Investment_Asset_Product__c</members>
 		<members>Investment_Instituition__c</members>
 		<members>Investment_Portfolio__c</members>
 		<members>Investment_Transaction__c</members>
@@ -51,6 +44,22 @@
 		<members>Investment__c</members>
 		<members>SMS_Message__c</members>
 		<name>CustomTab</name>
+	</types>
+	<types>
+		<members>FinPlanDashboards/QVGgPepEvVtAdaxPIxiZihdLeSZpba</members>
+		<name>Dashboard</name>
+	</types>
+	<types>
+		<members>Bank_Record_Page</members>
+		<members>Home_Page_Default1</members>
+		<members>SMS_Message_Record_Page</members>
+		<members>Savings_Account_Record_Page</members>
+		<name>FlexiPage</name>
+	</types>
+	<types>
+		<members>FinPlanReports/New_SMS_Messages_Report</members>
+		<members>FinPlanReports/Savings_Account_Balance_Report</members>
+		<name>Report</name>
 	</types>
 	<version>58.0</version>
 </Package>

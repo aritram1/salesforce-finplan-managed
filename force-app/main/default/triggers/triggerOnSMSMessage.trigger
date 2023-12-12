@@ -1,22 +1,23 @@
 trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before update) {
 
+   
+    // Standard lists to do further actions
+    List<FinPlan__SMS_Message__c> listToCreateBankAccountTransacations = new List<FinPlan__SMS_Message__c>();
+    List<FinPlan__SMS_Message__c> listToCreateInvestmentTransacations = new List<FinPlan__SMS_Message__c>();
+    List<FinPlan__SMS_Message__c> listOfRejectedRecords = new List<FinPlan__SMS_Message__c>();
+    List<FinPlan__SMS_Message__c> listOfAllowedRecords = new List<FinPlan__SMS_Message__c>();
+    FinPlan__SMS_Message__c lastBalanceUpdateSMS;
     
-    List<Bank_Account__c> allAccounts = [SELECT id, name from Bank_Account__c];
-    Map<String, String> allSavingsAccountsMap = new Map<String, String>();
-    
-    for(Bank_Account__c sa : allAccounts){
-        String name = '';
-        if(sa.name == 'ICICI Bank Credit Card Account') name = 'ICICI-CC';
-        else if(sa.name == 'SBI Savings Account') name = 'SBI';
-        else if(sa.name == 'ICICI Bank Savings Account') name = 'ICICI';
-        else if(sa.name == 'HDFC Bank Savings Account') name = 'HDFC';
-        allSavingsAccountsMap.put(name, sa.id);
+    // Make a map of code vs Id to set Bank account info later
+    Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
+    for(Bank_Account__c ba : [SELECT Id, Finplan__Account_Code__c, FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, FinPlan__CC_Max_Limit__c from Bank_Account__c]){
+        allBankAccountsMap.put(ba.Finplan__Account_Code__c, ba);
     }
     
-    // String CONST_NA = 'n/a';
-    
+    // The main loop starts
     for(FinPlan__SMS_Message__c sms : Trigger.new){
-    
+        
+        // set the date;
         String rawDateString = sms.FinPlan__Received_At__c?.split(' ')[0];
         Integer yyyy = Integer.valueOf(rawDateString.split('-')[0]);
         Integer mm = Integer.valueOf(rawDateString.split('-')[1]);
@@ -26,15 +27,26 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
         // get the splitted content
         List<String> contentArray = new List<String>();
         contentArray = sms.content__c?.split(' ');
+
         
-        // OTP
-        if(sms.content__c?.contains('OTP') || sms.sender__c?.contains('OTP') || sms.content__c?.contains('Verification')){
+        // set personal type
+        ////////////////////////////////////////////////////////////////////////////////////////
+        if(sms.sender__c.startsWith('+')){
+            sms.type__c = 'personal';
+        }
+        
+        // set OTP type
+        ////////////////////////////////////////////////////////////////////////////////////////
+        if(sms.content__c?.contains('OTP') || sms.sender__c?.contains('OTP') || sms.content__c?.contains('Verification') || sms.content__c?.contains('verification')){
             sms.Type__c = 'otp';
         }
+
+        //set credit debit balance_update types
+        ////////////////////////////////////////////////////////////////////////////////////////
         else{ 
             // HDFC
             if(sms.Sender__c.contains('HDFC')){
-                sms.savings_or_cc_account__c = allSavingsAccountsMap.get('HDFC');
+                sms.savings_or_cc_account__c = allBankAccountsMap.get('HDFC-SA').Id;
                 // credit
                 if(sms.content__c.contains('deposited')){
                     sms.amount_value__c = contentArray[2];
@@ -85,79 +97,115 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
                     sms.Payment_Via__c = 'UPI';
                     sms.Payment_Reference__c = sms.content__c.split('UPI:')[1].split('Not you?')[0];
                     sms.Beneficiary__c = sms.content__c.split('UPI')[0].split('to')[1];
-                    // sms.SA_available_balance__c = CONST_NA;
                 }
                 // balance update
-                else if(sms.content__c.startsWith('Available Bal in HDFC Bank')){
-                    // sms.amount_value__c = CONST_NA;
+                else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
                     sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);
+                    sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
                     sms.type__c = 'balance_update';
-                    // sms.Beneficiary__c = CONST_NA;
                 }
-                else{
-                    sms.Type__c = 'promotional';
+                else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 on')){
+                    sms.SA_available_balance__c = contentArray[10].substring(0, contentArray[10].length()-1);
+                    sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
+                    sms.type__c = 'balance_update';
                 }
             }
             // SBI
             else if(sms.Sender__c.contains('SBI')){
-                sms.savings_or_cc_account__c = allSavingsAccountsMap.get('SBI');
+                sms.savings_or_cc_account__c = allBankAccountsMap.get('SBI-SA').Id;
+
                 // balance update
                 if(sms.content__c.startsWith('Available Bal in HDFC Bank')){
                     sms.amount_value__c = contentArray[12];
                     sms.type__c = 'balance_update';
                 }
-                else{
-                    sms.Type__c = 'promotional';
-                }
             }
             // ICICI
             else if(sms.Sender__c.contains('ICICI')){
-                sms.savings_or_cc_account__c = allSavingsAccountsMap.get('ICICI');
                 if(sms.content__c.contains('spent on ICICI Credit Card XX9006')){
-                    // sms.savings_or_cc_account__c = allSavingsAccountsMap.get('ICICI-Card');//to be implemented
                     // billed limit is to be implemented
+                    sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
                     sms.amount_value__c = contentArray[1];
                     sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('To dispute')[0];
                     sms.type__c = 'debit';
                     sms.beneficiary__c = sms.content__c.split('at')[1].split('Avl Lmt')[0];
-                    sms.savings_or_cc_account__c = allSavingsAccountsMap.get('ICICI-CC');
                 }
                 else if(sms.content__c.startsWith('ICICI Bank Acct XX360 debited with')){
+                    sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
                     sms.type__c = 'debit';
                     sms.amount_value__c = contentArray[7];
-                    // sms.SA_available_balance__c = CONST_NA;
-                    if(sms.content__c.contains('UPI')) sms.Payment_Via__c = 'UPI';
+                    if(sms.content__c.contains('UPI')){
+                        sms.Payment_Via__c = 'UPI';
+                    }
                     if(sms.content__c.contains('IMPS')){
                         sms.Payment_Via__c = 'IMPS';
                         sms.Payment_Reference__c = sms.content__c.split('IMPS:')[1].split('. Call ')[0];
                         sms.beneficiary__c = sms.content__c.split('credited.')[0].split('&')[1];
                     }
-                    if(sms.content__c.contains('RTGS')) sms.Payment_Via__c = 'RTGS';
+                    if(sms.content__c.contains('RTGS')){
+                        sms.Payment_Via__c = 'RTGS';
+                    }
                 }
-                else{
-                    sms.Type__c = 'promotional';
-                }
-                
-                
-            }
-            // Other - Something that is not a financial message, mark personal__c as true
-            else{
-                sms.type__c = 'personal';
             }
         }
-        
+
+        // setting promotional
+        ////////////////////////////////////////////////////////////////////////////////////////
+        if(sms.type__c == null || sms.type__c == ''){
+            sms.type__c = 'promotional';
+        }
+
         // A final check to see if this sms is related to a financial transaction
-        if(sms.amount_value__c != null) sms.Create_Transaction__c = true;
-        
-        // if(!sms.Create_Transaction__c) sms.addError('Not a Txn message!');
-        
-        // Not required
-        // if(sms.Type__c == 'otp' || sms.Type__c == 'personal'){
-        //     sms.SA_available_balance__c = CONST_NA;
-        //     sms.beneficiary__c = CONST_NA;
-        //     //sms.amount_value__c = CONST_NA;
-        // }
-        
+        ////////////////////////////////////////////////////////////////////////////////////////
+        if(sms.amount_value__c != null){
+            sms.Create_Transaction__c = true;
+        }
+
+        // handle all type scenarios
+        if(sms.Type__c == 'balance_update'){
+            lastBalanceUpdateSMS = sms;
+        }
+    }
+
+    if(lastBalanceUpdateSMS != null){
+        handleBalanceUpdate(lastBalanceUpdateSMS);
+    }
+
+    // This method updates the balance for savigns account or credit card account from the last balanace update sms
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void handleBalanceUpdate(FinPlan__SMS_Message__c latestBalanceUpdateSMS){
+        Bank_Account__c bankAccountRecord = new Bank_Account__c();
+
+        // Get Bank Account Record from the Map
+        String sender = latestBalanceUpdateSMS.sender__c != null ? latestBalanceUpdateSMS.sender__c : '';
+        if(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != null && latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != ''){
+            if(sender.contains('HDFC')){ 
+                //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
+                bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
+            }
+            else if(sender.contains('ICICI')){
+                bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
+            }
+            else if(sender.contains('SBI')){
+                bankAccountRecord = allBankAccountsMap.get('SBI-SA');
+            }
+            bankAccountRecord.FinPlan__Last_Balance__c = Double.valueOf(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c.replace(',', '').replace(' ', '')); //to avoid values like 12,34,45.00
+        }
+        else if(latestBalanceUpdateSMS.CC_Available_Balance__c != null && latestBalanceUpdateSMS.CC_Available_Balance__c != ''){
+            if(sender.contains('HDFC')){ 
+                //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
+                bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
+            }
+            else if(sender.contains('ICICI')){
+                bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
+            }
+            else if(sender.contains('SBI')){
+                bankAccountRecord = allBankAccountsMap.get('SBI-SA');
+            }
+            bankAccountRecord.FinPlan__CC_Available_Limit__c = Double.valueOf(latestBalanceUpdateSMS.CC_Available_Balance__c.replace(',', '').replace(' ', ''));
+        }
+        update bankAccountRecord;
     }
     
 }

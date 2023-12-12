@@ -3,12 +3,13 @@
     <fullName>Transaction_Messages</fullName>
     <columns>NAME</columns>
     <columns>Amount_Value__c</columns>
-    <columns>Content__c</columns>
     <columns>Beneficiary__c</columns>
-    <columns>Create_Transaction__c</columns>
+    <columns>Type__c</columns>
     <columns>Formula_Amount__c</columns>
     <columns>Approved__c</columns>
-    <columns>Received_At__c</columns>
+    <columns>Content__c</columns>
+    <columns>Transaction_Date__c</columns>
+    <columns>Create_Transaction__c</columns>
     <filterScope>Mine</filterScope>
     <filters>
         <field>Formula_Amount__c</field>
