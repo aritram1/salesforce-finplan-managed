@@ -11,11 +11,13 @@
 		<members>triggerOnSMSMessage</members>
 		<name>ApexTrigger</name>
 	</types>
+	<!--
 	<types>
 		<members>Investment_Asset_Record_Page</members>
 		<members>Investment_Record_Page3</members>
 		<name>FlexiPage</name>
 	</types>
+	-->
 	<types>
 		<members>*</members>
 		<name>ConnectedApp</name>

@@ -5,7 +5,6 @@
     <externalId>false</externalId>
     <label>Issuing Bank</label>
     <referenceTo>Bank__c</referenceTo>
-    <relationshipLabel>Bank FDs</relationshipLabel>
     <relationshipName>Investment_Assets</relationshipName>
     <required>false</required>
     <trackHistory>false</trackHistory>
