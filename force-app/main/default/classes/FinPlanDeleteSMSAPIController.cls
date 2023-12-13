@@ -5,7 +5,7 @@ global with sharing class FinPlanDeleteSMSAPIController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @HttpPost
     global static String processPostRequests() {
-        String response = FinPlanSMSHandler.deleteSMSAndEmptyRecycleBin();
+        String response = FinPlanSMSHandler.deleteSMSAndClearRecycleBin();
         return response;
     }
     

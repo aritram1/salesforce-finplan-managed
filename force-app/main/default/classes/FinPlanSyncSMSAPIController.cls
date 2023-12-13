@@ -7,6 +7,9 @@ global with sharing class FinPlanSyncSMSAPIController {
     global static Map<String, String> apiResponse;
     global static String balanceUpdateResponse;
     global static String messageDeleteResponse;
+    global static String afterTransactionsCreatedMessageDeleteResponse;
+    global static String transactionDeleteResponse;
+    
     global static String transactionCreateResponse;
     // global static String bankTransactionResponse;
     // global static String investmentTransactionResponse;
@@ -17,6 +20,7 @@ global with sharing class FinPlanSyncSMSAPIController {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @HttpPost
     global static Map<String, String> processPostRequests(List<Map<String, String>> records) {
+        apiResponse = new Map<String, String>();
         apiResponse = syncMessages(records);
         return apiResponse;
     }
@@ -31,17 +35,25 @@ global with sharing class FinPlanSyncSMSAPIController {
     global static Map<String, String> syncMessages(List<Map<String, String>> records) {
         try{
             messageDeleteResponse = deleteAllMessagesAndClearRecycleBin(); // null denotes no specific message but all existing messages need to be deleted
+            transactionDeleteResponse = deleteAllTransactionsAndClearRecycleBin();
             processedMessages = insertMessages(records);
+            String insertMessagesResponse = 'SUCCESS : ' + processedMessages.size() + ' messages are processed. ';
             balanceUpdateResponse = updateBankBalance(FinPlanSMSHandler.lastBalanceUpdateSMS);
-            // transactionCreateResponse = createTransactions(processedMessages);
+            transactionCreateResponse = createTransactions(processedMessages);
             // investmentTransactionResponse = createInvestmentTransactions(processedMessages);
-            // messageDeleteResponse = deleteMessages(processedMessages);
+            afterTransactionsCreatedMessageDeleteResponse = deleteAllMessagesAndClearRecycleBin();
             
             apiResponse.put('statusCode', '200');
-            apiResponse.put('data', 'SUCCESS : ' + processedMessages.size() + ' messages are processed. ');
+            apiResponse.put('data', '');
+            apiResponse.put('data', apiResponse.get('data') + messageDeleteResponse);
+            apiResponse.put('data', apiResponse.get('data') + transactionDeleteResponse);
+            apiResponse.put('data', apiResponse.get('data') + insertMessagesResponse);
             apiResponse.put('data', apiResponse.get('data') + balanceUpdateResponse);
             apiResponse.put('data', apiResponse.get('data') + transactionCreateResponse);
-            apiResponse.put('data', apiResponse.get('data') + messageDeleteResponse);
+            apiResponse.put('data', apiResponse.get('data') + afterTransactionsCreatedMessageDeleteResponse);
+
+            // apiResponse.put('data', apiResponse.get('data') + transactionCreateResponse);
+            
             // apiResponse.put('data', apiResponse.get('data') + bankTransactionResponse);
             // apiResponse.put('data', apiResponse.get('data') + investmentTransactionResponse);
             // apiResponse.put('error', '');
@@ -84,10 +96,11 @@ global with sharing class FinPlanSyncSMSAPIController {
         for(FinPlan__SMS_Message__c sms : messageList){
             if(sms.FinPlan__Beneficiary__c?.contains('Fund')){
                 FinPlan__Investment_Transaction__c ivt = new FinPlan__Investment_Transaction__c();
-                
+                ivt.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c);
             }
             else{
                 FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
+                tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c);
                 bankTransactionsList.add(tr);
             }
         }
@@ -97,7 +110,7 @@ global with sharing class FinPlanSyncSMSAPIController {
         if(investmentTransactionsList != null && investmentTransactionsList.size() > 0){
             insert investmentTransactionsList;
         }
-        return bankTransactionsList.size() + ' Bank Transactions and ' + investmentTransactionsList.size() + ' investment transactions are created';
+        return bankTransactionsList.size() + ' Bank Transactions and ' + investmentTransactionsList.size() + ' investment transactions are created. ';
     }
 
     // global static void createInvestmentTransactions(List<FinPlan__SMS_Message__c> messageList){
@@ -110,7 +123,12 @@ global with sharing class FinPlanSyncSMSAPIController {
     // }
 
     global static String deleteAllMessagesAndClearRecycleBin(){
-        String response = FinPlanSMSHandler.deleteSMSAndEmptyRecycleBin();
+        String response = FinPlanSMSHandler.deleteSMSAndClearRecycleBin();
+        return response;
+    }
+
+    global static String deleteAllTransactionsAndClearRecycleBin(){
+        String response = FinPlanSMSHandler.deleteAllTransactionsAndClearRecycleBin();
         return response;
     }
     

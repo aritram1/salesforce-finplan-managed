@@ -12,7 +12,7 @@ public with sharing class FinPlanSMSHandler {
     
     // Get all Bank accounts, make a map of code vs Id to set Bank account info later
     public static void getAllBankAccounts(){
-        for(Bank_Account__c ba : [SELECT Id, Finplan__Account_Code__c, FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, FinPlan__CC_Max_Limit__c from Bank_Account__c]){
+        for(Bank_Account__c ba : [SELECT Id, Finplan__Account_Code__c, FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, FinPlan__CC_Max_Limit__c, Name from Bank_Account__c]){
             allBankAccountsMap.put(ba.Finplan__Account_Code__c, ba);
         }
     }
@@ -129,7 +129,7 @@ public with sharing class FinPlanSMSHandler {
                 bankAccountRecord.FinPlan__CC_Available_Limit__c = Double.valueOf(latestBalanceUpdateSMS.CC_Available_Balance__c.replace(',', '').replace(' ', ''));
             }
             update bankAccountRecord;
-            balanceUpdateResponse = 'Balance updated to ' + bankAccountRecord.FinPlan__Last_Balance__c + ' for ' + bankAccountRecord.name;
+            balanceUpdateResponse = 'Balance updated to ' + bankAccountRecord.FinPlan__Last_Balance__c + ' for ' + bankAccountRecord.name + '. ';
         }
         catch(Exception ex){
             balanceUpdateResponse = 'Error occurred inside handleBankAccountBalanceUpdate : ' + ex.getMessage();
@@ -262,19 +262,48 @@ public with sharing class FinPlanSMSHandler {
 
     // This method updates the balance for savings account or credit card account from the last balanace update sms
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String deleteSMSAndEmptyRecycleBin() {
+    public static String deleteSMSAndClearRecycleBin() {
         try {
             List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c];
             if(messagesToDelete != null && messagesToDelete.size() > 0){
                 Database.DeleteResult[] deleteResults = Database.delete(messagesToDelete, false);
                 Database.emptyRecycleBin(messagesToDelete);
-                return 'SUCCESS : ' + messagesToDelete.size() + ' records deleted successfully.';
+                return 'SUCCESS : ' + messagesToDelete.size() + ' message records deleted successfully. ';
             }
             else{
-                return 'SUCCESS : Nothing to delete';
+                return 'SUCCESS : No messages available to delete. ';
             }
         } catch (Exception e) {
             return 'Failed : Error deleting messages: ' + e.getMessage();
         }
+    }
+
+    // This method updates the balance for savings account or credit card account from the last balanace update sms
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String deleteAllTransactionsAndClearRecycleBin() {
+        String response = '';
+        try {
+            List<FinPlan__Bank_Transaction__c> bankTxntoDelete = [SELECT Id FROM FinPlan__Bank_Transaction__c];
+            List<FinPlan__Investment_Transaction__c> invTxntoDelete = [SELECT Id FROM FinPlan__Investment_Transaction__c];
+            if(bankTxntoDelete != null && bankTxntoDelete.size() > 0){
+                Database.DeleteResult[] deleteResults = Database.delete(bankTxntoDelete, false);
+                Database.emptyRecycleBin(bankTxntoDelete);
+                response = 'SUCCESS : ' + bankTxntoDelete.size() + ' bank transaction records deleted successfully. ';
+            }
+            else{
+                response = 'SUCCESS : No bank transactions are available to delete. ';
+            }
+            if(invTxntoDelete != null && invTxntoDelete.size() > 0){
+                Database.DeleteResult[] deleteResults = Database.delete(invTxntoDelete, false);
+                Database.emptyRecycleBin(invTxntoDelete);
+                response = 'SUCCESS : ' + invTxntoDelete.size() + ' investment records deleted successfully. ';
+            }
+            else{
+                response = 'SUCCESS : No investment transactions available to delete. ';
+            }
+        } catch (Exception e) {
+            response = 'Failed : Error deleting transactions : ' + e.getMessage();
+        }
+        return response;
     }
 }
