@@ -26,11 +26,11 @@ global with sharing class FinPlanSyncSMSAPIController {
     }
 
     // This method does more than one actions
-    // 1 - Deletes existing messages
+    // 1 - Deletes existing messages and transactions
     // 2 - Inserts the New Messages
     // 3 - Updates Balances
     // 4 - Creates Transaction records
-    // 5 - Deletes existing messages again (if required, TBD)
+    // 5 - Deletes existing messages again [to save sf storage ;)]
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     global static Map<String, String> syncMessages(List<Map<String, String>> records) {
         try{

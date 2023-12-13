@@ -29,10 +29,19 @@ public with sharing class FinPlanSMSHandler {
             
             // set the date;
             String rawDateString = sms.FinPlan__Received_At__c?.split(' ')[0];
-            Integer yyyy = Integer.valueOf(rawDateString.split('-')[0]);
-            Integer mm = Integer.valueOf(rawDateString.split('-')[1]);
-            Integer dd = Integer.valueOf(rawDateString.split('-')[2]);
-            sms.FinPlan__Transaction_Date__c = Date.newInstance(yyyy, mm, dd);
+            if(rawDateString?.contains('-')){
+                Integer yyyy = Integer.valueOf(rawDateString.split('-')[0]);
+                Integer mm = Integer.valueOf(rawDateString.split('-')[1]);
+                Integer dd = Integer.valueOf(rawDateString.split('-')[2]);
+                sms.FinPlan__Transaction_Date__c = Date.newInstance(yyyy, mm, dd);
+            }
+            else{ //TBD optimization // this will be affected once the flag (to determine whether its bulk sync or single sms insert), is implemented
+                sms.FinPlan__Transaction_Date__c = Date.valueOf(
+                                                        DateTime.newInstance(
+                                                            Long.valueOf(rawDateString)
+                                                        )
+                                                    );
+            }
                 
             // get the splitted content
             List<String> contentArray = new List<String>();

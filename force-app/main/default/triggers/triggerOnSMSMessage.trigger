@@ -1,7 +1,31 @@
+trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before update, after insert, after update) {
+    if(Trigger.isBefore){
+        List<FinPlan__SMS_Message__c> all = FinPlanSMSHandler.enrichData(Trigger.new);
+        FinPlan__SMS_Message__c enrichedMessage = all[0];
+        Trigger.new[0].Amount_Value__c = enrichedMessage.Amount_Value__c;
+        Trigger.new[0].Amount__c = enrichedMessage.Amount__c;
+        Trigger.new[0].Approved__c = enrichedMessage.Approved__c;
+        Trigger.new[0].Beneficiary__c = enrichedMessage.Beneficiary__c;
+        Trigger.new[0].CC_Available_Balance__c = enrichedMessage.CC_Available_Balance__c;
+        Trigger.new[0].Create_Transaction__c = enrichedMessage.Create_Transaction__c;
+        Trigger.new[0].Payment_Reference__c = enrichedMessage.Payment_Reference__c;
+        Trigger.new[0].Payment_Via__c = enrichedMessage.Payment_Via__c;
+        Trigger.new[0].SA_Available_Balance__c = enrichedMessage.SA_Available_Balance__c;
+        Trigger.new[0].Savings_or_CC_Account__c = enrichedMessage.Savings_or_CC_Account__c;
+        Trigger.new[0].Transaction_Date__c = enrichedMessage.Transaction_Date__c;
+        Trigger.new[0].Type__c = enrichedMessage.Type__c;
+        Trigger.new[0].UPI_Reference__c = enrichedMessage.UPI_Reference__c;
+        Trigger.new[0].UPI__c = enrichedMessage.UPI__c;
+    }
+    if(Trigger.isAfter){
+        String response = FinPlanSyncSMSAPIController.createTransactions(Trigger.new);
+        System.debug('Response is => ' + response);
+    }
+}
+/*
 trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before update) {
 
-   
-    // Standard lists to do further actions
+   // Standard lists to do further actions
     List<FinPlan__SMS_Message__c> listToCreateBankAccountTransacations = new List<FinPlan__SMS_Message__c>();
     List<FinPlan__SMS_Message__c> listToCreateInvestmentTransacations = new List<FinPlan__SMS_Message__c>();
     List<FinPlan__SMS_Message__c> listOfRejectedRecords = new List<FinPlan__SMS_Message__c>();
@@ -210,3 +234,4 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
     }
     
 }
+*/
