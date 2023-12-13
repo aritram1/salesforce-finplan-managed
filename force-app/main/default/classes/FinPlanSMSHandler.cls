@@ -1,15 +1,15 @@
 public with sharing class FinPlanSMSHandler {
 
-    static List<FinPlan__SMS_Message__c> processedMessages;
+    public static List<FinPlan__SMS_Message__c> processedMessages;
+    public static FinPlan__SMS_Message__c lastBalanceUpdateSMS;
+    public static Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
 
     // Standard lists to do further actions
     public static List<FinPlan__SMS_Message__c> listToCreateBankAccountTransacations = new List<FinPlan__SMS_Message__c>();
     public static List<FinPlan__SMS_Message__c> listToCreateInvestmentTransacations = new List<FinPlan__SMS_Message__c>();
     public static List<FinPlan__SMS_Message__c> listOfRejectedRecords = new List<FinPlan__SMS_Message__c>();
     public static List<FinPlan__SMS_Message__c> listOfAllowedRecords = new List<FinPlan__SMS_Message__c>();
-    public static FinPlan__SMS_Message__c lastBalanceUpdateSMS;
-    public static Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
-
+    
     // Get all Bank accounts, make a map of code vs Id to set Bank account info later
     public static void getAllBankAccounts(){
         for(Bank_Account__c ba : [SELECT Id, Finplan__Account_Code__c, FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, FinPlan__CC_Max_Limit__c from Bank_Account__c]){
@@ -95,38 +95,46 @@ public with sharing class FinPlanSMSHandler {
 
     // This method updates the balance for savings account or credit card account from the last balanace update sms
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static void handleBankAccountBalanceUpdate(FinPlan__SMS_Message__c latestBalanceUpdateSMS){
-        Bank_Account__c bankAccountRecord = new Bank_Account__c();
+    public static String handleBankAccountBalanceUpdate(FinPlan__SMS_Message__c latestBalanceUpdateSMS){
+        String balanceUpdateResponse = 'Default response';
+        try{
+            Bank_Account__c bankAccountRecord = new Bank_Account__c();
 
-        // Get Bank Account Record from the Map
-        String sender = latestBalanceUpdateSMS.sender__c != null ? latestBalanceUpdateSMS.sender__c : '';
-        if(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != null && latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != ''){
-            if(sender.contains('HDFC')){ 
-                //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
-                bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
+            // Get Bank Account Record from the Map
+            String sender = latestBalanceUpdateSMS.sender__c != null ? latestBalanceUpdateSMS.sender__c : '';
+            if(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != null && latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != ''){
+                if(sender.contains('HDFC')){ 
+                    //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
+                    bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
+                }
+                else if(sender.contains('ICICI')){
+                    bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
+                }
+                else if(sender.contains('SBI')){
+                    bankAccountRecord = allBankAccountsMap.get('SBI-SA');
+                }
+                bankAccountRecord.FinPlan__Last_Balance__c = Double.valueOf(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c.replace(',', '').replace(' ', '')); //to avoid values like 12,34,45.00
             }
-            else if(sender.contains('ICICI')){
-                bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
+            else if(latestBalanceUpdateSMS.CC_Available_Balance__c != null && latestBalanceUpdateSMS.CC_Available_Balance__c != ''){
+                if(sender.contains('HDFC')){ 
+                    //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
+                    bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
+                }
+                else if(sender.contains('ICICI')){
+                    bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
+                }
+                else if(sender.contains('SBI')){
+                    bankAccountRecord = allBankAccountsMap.get('SBI-SA');
+                }
+                bankAccountRecord.FinPlan__CC_Available_Limit__c = Double.valueOf(latestBalanceUpdateSMS.CC_Available_Balance__c.replace(',', '').replace(' ', ''));
             }
-            else if(sender.contains('SBI')){
-                bankAccountRecord = allBankAccountsMap.get('SBI-SA');
-            }
-            bankAccountRecord.FinPlan__Last_Balance__c = Double.valueOf(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c.replace(',', '').replace(' ', '')); //to avoid values like 12,34,45.00
+            update bankAccountRecord;
+            balanceUpdateResponse = 'Balance updated to ' + bankAccountRecord.FinPlan__Last_Balance__c + ' for ' + bankAccountRecord.name;
         }
-        else if(latestBalanceUpdateSMS.CC_Available_Balance__c != null && latestBalanceUpdateSMS.CC_Available_Balance__c != ''){
-            if(sender.contains('HDFC')){ 
-                //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
-                bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
-            }
-            else if(sender.contains('ICICI')){
-                bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
-            }
-            else if(sender.contains('SBI')){
-                bankAccountRecord = allBankAccountsMap.get('SBI-SA');
-            }
-            bankAccountRecord.FinPlan__CC_Available_Limit__c = Double.valueOf(latestBalanceUpdateSMS.CC_Available_Balance__c.replace(',', '').replace(' ', ''));
+        catch(Exception ex){
+            balanceUpdateResponse = 'Error occurred inside handleBankAccountBalanceUpdate : ' + ex.getMessage();
         }
-        update bankAccountRecord;
+        return balanceUpdateResponse;
     }   
     // End method
 
@@ -251,4 +259,22 @@ public with sharing class FinPlanSMSHandler {
         return sms;
     }
     // End method
+
+    // This method updates the balance for savings account or credit card account from the last balanace update sms
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static String deleteSMSAndEmptyRecycleBin() {
+        try {
+            List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c];
+            if(messagesToDelete != null && messagesToDelete.size() > 0){
+                Database.DeleteResult[] deleteResults = Database.delete(messagesToDelete, false);
+                Database.emptyRecycleBin(messagesToDelete);
+                return 'SUCCESS : ' + messagesToDelete.size() + ' records deleted successfully.';
+            }
+            else{
+                return 'SUCCESS : Nothing to delete';
+            }
+        } catch (Exception e) {
+            return 'Failed : Error deleting messages: ' + e.getMessage();
+        }
+    }
 }
