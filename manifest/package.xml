@@ -32,6 +32,7 @@
 		<members>Investment_Transaction__c</members>
 		<members>Investment__c</members>
 		<members>SMS_Message__c</members>
+		<members>System_Log__c</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
@@ -45,6 +46,7 @@
 		<members>Investment_Transaction__c</members>
 		<members>Investment__c</members>
 		<members>SMS_Message__c</members>
+		<members>System_Log__c</members>
 		<name>CustomTab</name>
 	</types>
 	<types>
@@ -57,6 +59,7 @@
 		<members>Bank_Transaction_Record_Page</members>
 		<members>Home_Page_Default1</members>
 		<members>SMS_Message_Record_Page</members>
+		<members>System_Log_Record_Page</members>
 		<name>FlexiPage</name>
 	</types>
 	<types>
