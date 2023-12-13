@@ -53,9 +53,10 @@
 	</types>
 	<types>
 		<members>Bank_Record_Page</members>
+		<members>Bank_Account_Record_Page</members>
+		<members>Bank_Transaction_Record_Page</members>
 		<members>Home_Page_Default1</members>
 		<members>SMS_Message_Record_Page</members>
-		<members>Savings_Account_Record_Page</members>
 		<name>FlexiPage</name>
 	</types>
 	<types>

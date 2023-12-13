@@ -23,7 +23,7 @@
             </value>
             <value>
                 <fullName>Manual</fullName>
-                <default>false</default>
+                <default>true</default>
                 <label>Manual</label>
             </value>
         </valueSetDefinition>

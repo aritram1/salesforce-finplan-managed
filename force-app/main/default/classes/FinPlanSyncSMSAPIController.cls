@@ -96,11 +96,18 @@ global with sharing class FinPlanSyncSMSAPIController {
         for(FinPlan__SMS_Message__c sms : messageList){
             if(sms.FinPlan__Beneficiary__c?.contains('Fund')){
                 FinPlan__Investment_Transaction__c ivt = new FinPlan__Investment_Transaction__c();
-                ivt.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c);
+                ivt.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
+                // To be implemented
             }
             else{
                 FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
-                tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c);
+                tr.FinPlan__Approved__c = sms.Approved__c;
+                tr.FinPlan__Created_From__c = 'SMS';
+                tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;
+                tr.FinPlan__From_Account__c = sms.savings_or_cc_account__c;
+                tr.FinPlan__Transaction_Date__c = sms.FinPlan__Transaction_Date__c;
+                tr.Type__c = sms.Type__c == 'credit' ? 'Credit' : 'Debit';
+                tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
                 bankTransactionsList.add(tr);
             }
         }
