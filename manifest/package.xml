@@ -6,6 +6,7 @@
 		<members>FinPlanSyncSMSAPIController</members>
 		<members>FinPlanSMSHandler</members>
 		<members>FinPlanException</members>
+		<members>FinPlanDeleteTransactionAPIController</members>
 		<members>Logger</members>
 		<name>ApexClass</name>
 	</types>

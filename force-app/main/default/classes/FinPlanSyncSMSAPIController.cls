@@ -102,12 +102,13 @@ global with sharing class FinPlanSyncSMSAPIController {
             else{
                 FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
                 tr.FinPlan__Created_From__c = 'SMS';
-                if(sms.content__c.length <= 255){
-                    tr.FinPlan__SMS_Content__c =  sms.content__c;
-                }
-                else{
-                    tr.FinPlan__SMS_Content__c =  sms.content__c.substring(0,255);
-                }
+                // TBD
+                // if(sms.content__c.length <= 255){
+                //     tr.FinPlan__SMS_Content__c =  sms.content__c;
+                // }
+                // else{
+                //     tr.FinPlan__SMS_Content__c =  sms.content__c.substring(0,255);
+                // }
                 tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;
                 tr.FinPlan__From_Account__c = sms.savings_or_cc_account__c;
                 tr.FinPlan__Transaction_Date__c = sms.FinPlan__Transaction_Date__c;
