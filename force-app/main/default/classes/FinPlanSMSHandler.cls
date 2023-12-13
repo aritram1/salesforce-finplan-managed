@@ -35,12 +35,11 @@ public with sharing class FinPlanSMSHandler {
                 Integer dd = Integer.valueOf(rawDateString.split('-')[2]);
                 sms.FinPlan__Transaction_Date__c = Date.newInstance(yyyy, mm, dd);
             }
-            else{ //TBD optimization // this will be affected once the flag (to determine whether its bulk sync or single sms insert), is implemented
-                sms.FinPlan__Transaction_Date__c = Date.valueOf(
-                                                        DateTime.newInstance(
-                                                            Long.valueOf(rawDateString)
-                                                        )
-                                                    );
+            else{ 
+                //TBD optimization 
+                // this will be affected once the flag (to determine whether its bulk 
+                // sync or single sms insert), is implemented
+                sms.FinPlan__Transaction_Date__c = Date.valueOf(DateTime.newInstance(Long.valueOf(rawDateString))); // String->Long->DateTime->Date
             }
                 
             // get the splitted content

@@ -35,7 +35,7 @@ global with sharing class FinPlanSyncSMSAPIController {
     global static Map<String, String> syncMessages(List<Map<String, String>> records) {
         try{
             messageDeleteResponse = deleteAllMessagesAndClearRecycleBin(); // null denotes no specific message but all existing messages need to be deleted
-            transactionDeleteResponse = deleteAllTransactionsAndClearRecycleBin();
+            // transactionDeleteResponse = deleteAllTransactionsAndClearRecycleBin(); [Not required since we issue that explicitly from flutter app]
             processedMessages = insertMessages(records);
             String insertMessagesResponse = 'SUCCESS : ' + processedMessages.size() + ' messages are processed. ';
             balanceUpdateResponse = updateBankBalance(FinPlanSMSHandler.lastBalanceUpdateSMS);

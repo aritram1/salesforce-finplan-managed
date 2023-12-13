@@ -1,20 +1,28 @@
 @RestResource(urlMapping='/api/sms/approve/*')
 global with sharing class FinPlanApproveSMSAPIController {
 
+    static String apiResponse = 'Default response from /api/sms/approve/*';
+    
+    // This method approves the messages which means transaction records are created from these messages and
+    // to save storage these sms records are deleted from the system. 
     @HttpPost
     global static String updateApprovedField(Map<String, List<String>> input) {
         List<String> recordIds = input.get('data');
-        List<finplan__sms_message__c> recordsToUpdate = [SELECT id, Approved__c from SMS_Message__c where id in :recordIds];
+        List<finplan__sms_message__c> recordsToUpdate = [SELECT id, Approved__c, Amount_Value__c, Beneficiary__c ,CC_Available_Balance__c,
+                        Payment_Reference__c, Payment_Via__c ,SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, Type__c ,UPI_Reference__c, UPI__c
+                        FROM SMS_Message__c WHERE id IN :recordIds];
 
-        for (SMS_Message__c rec : recordsToUpdate) {
-            rec.Approved__c = true;
-        }
-
+        String createTransactionsFromApprovedMessageResponse = '';
         try {
-            update recordsToUpdate;
-            return 'Records updated successfully.' + String.join(recordIds, ' - ');
+            if(recordsToUpdate != null && recordsToUpdate.size() > 0) {
+                createTransactionsFromApprovedMessageResponse = FinPlanSyncSMSAPIController.createTransactions(recordsToUpdate);
+                delete recordsToUpdate;
+                Database.emptyRecycleBin(recordsToUpdate);
+                apiResponse = 'SUCCESS : ' + recordsToUpdate.size() + ' Message Records updated successfully. ' + createTransactionsFromApprovedMessageResponse;
+            }
         } catch (DmlException e) {
-            return 'Error updating records: ' + e.getMessage();
+            apiResponse = 'ERROR : from /api/sms/approve/* : ' + e.getMessage();
         }
+        return apiResponse;
     }
 }
