@@ -2,7 +2,6 @@
 global with sharing class FinPlanSyncSMSAPIController {
     
     global static List<FinPlan__SMS_Message__c> receivedMessages;
-    global static FinPlan__SMS_Message__c lastBalanceUpdateSMS;
     global static List<FinPlan__SMS_Message__c> processedMessages;
     global static Map<String, String> apiResponse;
     global static String balanceUpdateResponse;
@@ -38,7 +37,7 @@ global with sharing class FinPlanSyncSMSAPIController {
             // transactionDeleteResponse = deleteAllTransactionsAndClearRecycleBin(); [Not required since we issue that explicitly from flutter app]
             processedMessages = insertMessages(records);
             String insertMessagesResponse = 'SUCCESS : ' + processedMessages.size() + ' messages are processed. ';
-            balanceUpdateResponse = updateBankBalance(FinPlanSMSHandler.lastBalanceUpdateSMS);
+            balanceUpdateResponse = updateBankBalance(FinPlanSMSHandler.lastBalanceUpdateList);
             transactionCreateResponse = createTransactions(processedMessages);
             // investmentTransactionResponse = createInvestmentTransactions(processedMessages);
             afterTransactionsCreatedMessageDeleteResponse = deleteAllMessagesAndClearRecycleBin();
@@ -66,10 +65,10 @@ global with sharing class FinPlanSyncSMSAPIController {
         return apiResponse;
     }
 
-    global static String updateBankBalance(FinPlan__SMS_Message__c sms){
+    global static String updateBankBalance(List<FinPlan__SMS_Message__c> lastBalanceSMSList){
         String response = null;
-        if(FinPlanSMSHandler.lastBalanceUpdateSMS != null){
-            response = FinPlanSMSHandler.handleBankAccountBalanceUpdate(sms);
+        if(lastBalanceSMSList != null && lastBalanceSMSList.size() > 0){
+            response = FinPlanSMSHandler.handleBankAccountBalanceUpdate(lastBalanceSMSList);
         }
         return response;
     }
@@ -102,18 +101,14 @@ global with sharing class FinPlanSyncSMSAPIController {
             else{
                 FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
                 tr.FinPlan__Created_From__c = 'SMS';
-                // TBD
-                // if(sms.content__c.length <= 255){
-                //     tr.FinPlan__SMS_Content__c =  sms.content__c;
-                // }
-                // else{
-                //     tr.FinPlan__SMS_Content__c =  sms.content__c.substring(0,255);
-                // }
+                tr.FinPlan__SMS_Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
                 tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;
                 tr.FinPlan__From_Account__c = sms.savings_or_cc_account__c;
                 tr.FinPlan__Transaction_Date__c = sms.FinPlan__Transaction_Date__c;
                 tr.Type__c = sms.Type__c == 'credit' ? 'Credit' : 'Debit';
+                System.debug('TR 1 is =>' + tr);
                 tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
+                System.debug('TR 2 is =>' + tr);
                 bankTransactionsList.add(tr);
             }
         }

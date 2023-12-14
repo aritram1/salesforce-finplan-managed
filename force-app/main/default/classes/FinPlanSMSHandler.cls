@@ -1,8 +1,9 @@
 public with sharing class FinPlanSMSHandler {
 
     public static List<FinPlan__SMS_Message__c> processedMessages;
-    public static FinPlan__SMS_Message__c lastBalanceUpdateSMS;
+    public static List<FinPlan__SMS_Message__c> lastBalanceUpdateList;
     public static Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
+    public static Map<String, Bank_Account__c> lastBalanceBankAccountsMap = new Map<String, Bank_Account__c>();
 
     // Standard lists to do further actions
     public static List<FinPlan__SMS_Message__c> listToCreateBankAccountTransacations = new List<FinPlan__SMS_Message__c>();
@@ -14,6 +15,7 @@ public with sharing class FinPlanSMSHandler {
     public static void getAllBankAccounts(){
         for(Bank_Account__c ba : [SELECT Id, Finplan__Account_Code__c, FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, FinPlan__CC_Max_Limit__c, Name from Bank_Account__c]){
             allBankAccountsMap.put(ba.Finplan__Account_Code__c, ba);
+            lastBalanceBankAccountsMap.put(ba.id, ba);
         }
     }
 
@@ -22,6 +24,7 @@ public with sharing class FinPlanSMSHandler {
         
         // initiate variables
         processedMessages = new List<FinPlan__SMS_Message__c>();
+        lastBalanceUpdateList = new List<FinPlan__SMS_Message__c>();
         getAllBankAccounts();
 
         // The main loop starts
@@ -82,11 +85,6 @@ public with sharing class FinPlanSMSHandler {
                 sms.type__c = 'promotional';
             }
     
-            // set the static variable to hold the last sms record in the batch of the "balance_update" type
-            if(sms.Type__c == 'balance_update'){
-                lastBalanceUpdateSMS = sms;
-            }
-
             // A final check to see if this sms is related to a financial transaction
             ////////////////////////////////////////////////////////////////////////////////////////
             if(sms.amount_value__c != null){
@@ -98,52 +96,48 @@ public with sharing class FinPlanSMSHandler {
                 processedMessages.add(sms);
             }
         }
+        System.debug('Processed messages=>' + processedMessages);
         return processedMessages;
     }
 
     // This method updates the balance for savings account or credit card account from the last balanace update sms
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String handleBankAccountBalanceUpdate(FinPlan__SMS_Message__c latestBalanceUpdateSMS){
-        String balanceUpdateResponse = 'Default response';
+    public static String handleBankAccountBalanceUpdate(List<FinPlan__SMS_Message__c> smsList){
+        System.debug('SMS List inside handleBankAccountBalanceUpdate =>' + smsList);
+        System.debug('SMS List inside handleBankAccountBalanceUpdate =>' + smsList.size());
+        String balanceUpdateResponse = '';
+        List<Bank_Account__c> toBeUpdatedBankAccounts = new List<Bank_Account__c>();
         try{
-            Bank_Account__c bankAccountRecord = new Bank_Account__c();
-
-            // Get Bank Account Record from the Map
-            String sender = latestBalanceUpdateSMS.sender__c != null ? latestBalanceUpdateSMS.sender__c : '';
-            if(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != null && latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c != ''){
-                if(sender.contains('HDFC')){ 
-                    //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
-                    bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
+            for(FinPlan__SMS_Message__c sms : smsList){
+                if(sms.savings_or_cc_account__c != null){
+                    Bank_Account__c ba = lastBalanceBankAccountsMap.get(sms.savings_or_cc_account__c);
+                    String availableBalanceString = sms.SA_available_balance__c.replace(',', '');
+                    System.debug('Inside handleBankAccountBalanceUpdate=>' + availableBalanceString);
+                    if(ba != null && sms.SA_available_balance__c != null && sms.SA_available_balance__c != ''){
+                        if(ba.Account_Code__c.endsWith('-SA')){ // Savings Account
+                            ba.FinPlan__Last_Balance__c = Double.valueOf(availableBalanceString);
+                        }
+                        else if(ba.Account_Code__c.endsWith('-CC')){   // Current Account
+                            ba.FinPlan__CC_Available_Limit__c = Double.valueOf(availableBalanceString);
+                        }
+                        toBeUpdatedBankAccounts.add(ba);
+                        
+                        // Also captur  e the updated balance and bank account name for further showing response
+                        String resultText = 'Bank Account Name : ' + ba.Name + ' Updated Balance : ' + sms.SA_available_balance__c + '. ';
+                        balanceUpdateResponse = balanceUpdateResponse + resultText;
+                    }
                 }
-                else if(sender.contains('ICICI')){
-                    bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
-                }
-                else if(sender.contains('SBI')){
-                    bankAccountRecord = allBankAccountsMap.get('SBI-SA');
-                }
-                bankAccountRecord.FinPlan__Last_Balance__c = Double.valueOf(latestBalanceUpdateSMS.FinPlan__SA_Available_Balance__c.replace(',', '').replace(' ', '')); //to avoid values like 12,34,45.00
             }
-            else if(latestBalanceUpdateSMS.CC_Available_Balance__c != null && latestBalanceUpdateSMS.CC_Available_Balance__c != ''){
-                if(sender.contains('HDFC')){ 
-                    //To be implemented Bank_Account__c.Allowed_Senders__c implmentation
-                    bankAccountRecord = allBankAccountsMap.get('HDFC-SA');
-                }
-                else if(sender.contains('ICICI')){
-                    bankAccountRecord = allBankAccountsMap.get('ICICI-SA');
-                }
-                else if(sender.contains('SBI')){
-                    bankAccountRecord = allBankAccountsMap.get('SBI-SA');
-                }
-                bankAccountRecord.FinPlan__CC_Available_Limit__c = Double.valueOf(latestBalanceUpdateSMS.CC_Available_Balance__c.replace(',', '').replace(' ', ''));
+            if(toBeUpdatedBankAccounts.size() > 0){
+                System.debug('toBeUpdatedBankAccounts inside handleBankAccountBalanceUpdate =>' + toBeUpdatedBankAccounts);
+                update toBeUpdatedBankAccounts;
             }
-            update bankAccountRecord;
-            balanceUpdateResponse = 'Balance updated to ' + bankAccountRecord.FinPlan__Last_Balance__c + ' for ' + bankAccountRecord.name + '. ';
         }
         catch(Exception ex){
             balanceUpdateResponse = 'Error occurred inside handleBankAccountBalanceUpdate : ' + ex.getMessage();
         }
         return balanceUpdateResponse;
-    }   
+    }
     // End method
 
     // This method enriches the sms record if it's from HDFC
@@ -209,11 +203,13 @@ public with sharing class FinPlanSMSHandler {
                 sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
                 sms.type__c = 'balance_update';
+                lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
             }
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 on')){
                 sms.SA_available_balance__c = contentArray[10].substring(0, contentArray[10].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
                 sms.type__c = 'balance_update';
+                lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
             }
         }
         return sms;
@@ -230,6 +226,7 @@ public with sharing class FinPlanSMSHandler {
         if(sms.content__c.startsWith('Available Bal in HDFC Bank')){
             sms.amount_value__c = contentArray[12];
             sms.type__c = 'balance_update';
+            lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         return sms;
     }
@@ -240,14 +237,23 @@ public with sharing class FinPlanSMSHandler {
     public static FinPlan__SMS_Message__c processForICICIBank(FinPlan__SMS_Message__c sms){
         List<String> contentArray = new List<String>();
         contentArray = sms.content__c?.split(' ');
+        // Credit card blocks
         if(sms.content__c.contains('spent on ICICI Credit Card XX9006')){
             // billed limit is to be implemented
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
-            sms.amount_value__c = contentArray[1];
-            sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('To dispute')[0];
             sms.type__c = 'debit';
             sms.beneficiary__c = sms.content__c.split('at')[1].split('Avl Lmt')[0];
+            sms.amount_value__c = contentArray[1];
+            sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('To dispute')[0];
+            lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
+        else if(sms.content__c.contains('received on your ICICI Bank Credit Card Account 4xxx9006')){
+            sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
+            sms.type__c = 'credit';
+            sms.amount_value__c = contentArray[5];
+            sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
+        }
+        // Savings account block
         else if(sms.content__c.startsWith('ICICI Bank Acct XX360 debited with')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'debit';

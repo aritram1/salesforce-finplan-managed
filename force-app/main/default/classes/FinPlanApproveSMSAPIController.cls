@@ -18,7 +18,7 @@ global with sharing class FinPlanApproveSMSAPIController {
             createTransactionsFromApprovedMessageResponse = FinPlanSyncSMSAPIController.createTransactions(recordsToUpdate);
                 // delete recordsToUpdate;
                 // Database.emptyRecycleBin(recordsToUpdate);
-                apiResponse = 'SUCCESS : ' + recordsToUpdate.size() + ' Message Records updated successfully. ' + createTransactionsFromApprovedMessageResponse;
+                apiResponse = 'SUCCESS : ' + recordsToUpdate.size() + ' Message Records deleted successfully. ' + createTransactionsFromApprovedMessageResponse;
             }
         } catch (DmlException e) {
             apiResponse = 'ERROR : from /api/sms/approve/* : ' + e.getMessage();
