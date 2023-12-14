@@ -12,8 +12,7 @@ global with sharing class FinPlanSyncSMSAPIController {
     global static String transactionCreateResponse;
     // global static String bankTransactionResponse;
     // global static String investmentTransactionResponse;
-    global static List<FinPlan__Bank_Transaction__c> bankTransactionsList;
-    global static List<FinPlan__Investment_Transaction__c> investmentTransactionsList;
+    
     
     // This method processes the post request and syncs the messages
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,19 +36,19 @@ global with sharing class FinPlanSyncSMSAPIController {
             // transactionDeleteResponse = deleteAllTransactionsAndClearRecycleBin(); [Not required since we issue that explicitly from flutter app]
             processedMessages = insertMessages(records);
             String insertMessagesResponse = 'SUCCESS : ' + processedMessages.size() + ' messages are processed. ';
-            balanceUpdateResponse = updateBankBalance(FinPlanSMSHandler.lastBalanceUpdateList);
-            transactionCreateResponse = createTransactions(processedMessages);
+            balanceUpdateResponse = FinPlanSMSHandler.handleBankAccountBalanceUpdate();
+            transactionCreateResponse = FinPlanTransactionHandler.createTransactions(processedMessages);
             // investmentTransactionResponse = createInvestmentTransactions(processedMessages);
             afterTransactionsCreatedMessageDeleteResponse = deleteAllMessagesAndClearRecycleBin();
             
             apiResponse.put('statusCode', '200');
             apiResponse.put('data', '');
-            apiResponse.put('data', apiResponse.get('data') + messageDeleteResponse);
-            apiResponse.put('data', apiResponse.get('data') + transactionDeleteResponse);
-            apiResponse.put('data', apiResponse.get('data') + insertMessagesResponse);
-            apiResponse.put('data', apiResponse.get('data') + balanceUpdateResponse);
-            apiResponse.put('data', apiResponse.get('data') + transactionCreateResponse);
-            apiResponse.put('data', apiResponse.get('data') + afterTransactionsCreatedMessageDeleteResponse);
+            apiResponse.put('data', apiResponse.get('data') + ' || messageDeleteResponse=>' + messageDeleteResponse);
+            // apiResponse.put('data', apiResponse.get('data') + 'transactionDeleteResponse=>' + transactionDeleteResponse); [Not required since we issue that explicitly from flutter app]
+            apiResponse.put('data', apiResponse.get('data') + '|| insertMessagesResponse=>' + insertMessagesResponse);
+            apiResponse.put('data', apiResponse.get('data') + '|| balanceUpdateResponse=>' + balanceUpdateResponse);
+            apiResponse.put('data', apiResponse.get('data') + '|| transactionCreateResponse=>' + transactionCreateResponse);
+            apiResponse.put('data', apiResponse.get('data') + '|| afterTransactionsCreatedMessageDeleteResponse=>' + afterTransactionsCreatedMessageDeleteResponse);
 
             // apiResponse.put('data', apiResponse.get('data') + transactionCreateResponse);
             
@@ -65,14 +64,6 @@ global with sharing class FinPlanSyncSMSAPIController {
         return apiResponse;
     }
 
-    global static String updateBankBalance(List<FinPlan__SMS_Message__c> lastBalanceSMSList){
-        String response = null;
-        if(lastBalanceSMSList != null && lastBalanceSMSList.size() > 0){
-            response = FinPlanSMSHandler.handleBankAccountBalanceUpdate(lastBalanceSMSList);
-        }
-        return response;
-    }
-
     global static List<FinPlan__SMS_Message__c> insertMessages(List<Map<String, String>> records){
         receivedMessages = new List<FinPlan__SMS_Message__c>();
         for(Map<String, String> messageData : records){
@@ -86,39 +77,6 @@ global with sharing class FinPlanSyncSMSAPIController {
         processedMessages = FinPlanSMSHandler.enrichData(receivedMessages);
         insert processedMessages;
         return processedMessages;
-    }
-
-    global static String createTransactions(List<FinPlan__SMS_Message__c> messageList){
-        bankTransactionsList = new List<FinPlan__Bank_Transaction__c>();
-        investmentTransactionsList = new List<FinPlan__Investment_Transaction__c>();
-        // List<FinPlan__Beneficiary__c> beneficiaries = new List<FinPlan__Beneficiary__c>();
-        for(FinPlan__SMS_Message__c sms : messageList){
-            if(sms.FinPlan__Beneficiary__c?.contains('Fund')){
-                FinPlan__Investment_Transaction__c ivt = new FinPlan__Investment_Transaction__c();
-                ivt.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
-                // To be implemented
-            }
-            else{
-                FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
-                tr.FinPlan__Created_From__c = 'SMS';
-                tr.FinPlan__SMS_Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
-                tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;
-                tr.FinPlan__From_Account__c = sms.savings_or_cc_account__c;
-                tr.FinPlan__Transaction_Date__c = sms.FinPlan__Transaction_Date__c;
-                tr.FinPlan__Payment_Via__c = sms.Payment_Via__c;
-                tr.FinPlan__Payment_Reference__c = sms.Payment_Reference__c;
-                tr.Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
-                tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
-                bankTransactionsList.add(tr);
-            }
-        }
-        if(bankTransactionsList != null && bankTransactionsList.size() > 0){
-            insert bankTransactionsList;
-        }
-        if(investmentTransactionsList != null && investmentTransactionsList.size() > 0){
-            insert investmentTransactionsList;
-        }
-        return bankTransactionsList.size() + ' Bank Transactions and ' + investmentTransactionsList.size() + ' investment transactions are created. ';
     }
 
     // global static void createInvestmentTransactions(List<FinPlan__SMS_Message__c> messageList){

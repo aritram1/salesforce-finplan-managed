@@ -1,7 +1,7 @@
 public with sharing class FinPlanSMSHandler {
 
     public static List<FinPlan__SMS_Message__c> processedMessages;
-    public static List<FinPlan__SMS_Message__c> lastBalanceUpdateList;
+    public static List<FinPlan__SMS_Message__c> lastBalanceUpdateSMSList;
     public static Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
     public static Map<String, Bank_Account__c> lastBalanceBankAccountsMap = new Map<String, Bank_Account__c>();
 
@@ -24,7 +24,7 @@ public with sharing class FinPlanSMSHandler {
         
         // initiate variables
         processedMessages = new List<FinPlan__SMS_Message__c>();
-        lastBalanceUpdateList = new List<FinPlan__SMS_Message__c>();
+        lastBalanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
         getAllBankAccounts();
 
         // The main loop starts
@@ -100,15 +100,21 @@ public with sharing class FinPlanSMSHandler {
         return processedMessages;
     }
 
+    // A simple getter method to get the list of sms that represent balance update ones
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static List<FinPlan__SMS_Message__c> getlastBalanceUpdateSMSList (){
+        return lastBalanceUpdateSMSList;
+    }
+
     // This method updates the balance for savings account or credit card account from the last balanace update sms
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String handleBankAccountBalanceUpdate(List<FinPlan__SMS_Message__c> smsList){
-        System.debug('SMS List inside handleBankAccountBalanceUpdate =>' + smsList);
-        System.debug('SMS List inside handleBankAccountBalanceUpdate =>' + smsList.size());
+    public static String handleBankAccountBalanceUpdate(){
+        System.debug('lastBalanceUpdateSMSList value inside handleBankAccountBalanceUpdate =>' + lastBalanceUpdateSMSList);
+        System.debug('lastBalanceUpdateSMSList value inside handleBankAccountBalanceUpdate size =>' + lastBalanceUpdateSMSList.size());
         String balanceUpdateResponse = '';
         List<Bank_Account__c> toBeUpdatedBankAccounts = new List<Bank_Account__c>();
         try{
-            for(FinPlan__SMS_Message__c sms : smsList){
+            for(FinPlan__SMS_Message__c sms : lastBalanceUpdateSMSList){
                 if(sms.savings_or_cc_account__c != null){
                     Bank_Account__c ba = lastBalanceBankAccountsMap.get(sms.savings_or_cc_account__c);
                     String availableBalanceString = sms.SA_available_balance__c.replace(',', '');
@@ -187,7 +193,9 @@ public with sharing class FinPlanSMSHandler {
                 sms.Payment_Via__c = 'UPI';
                 String content = sms.content__c.replace('(', '').replace(')', '');
                 sms.Beneficiary__c = content.split('to ')[1].split('. Not you?')[0].split('UPI Ref No ')[0];
-                sms.Payment_Reference__c = content.split('(')[1].split(')')[0].replace('UPI Ref No.', '').trim();
+
+                String paymentReferenceString = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
+                sms.Payment_Reference__c = paymentReferenceString.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('UPI Ref No.', '').trim();
             }
             // debit UPI
             else if(sms.content__c.startswith('Money Transfer:Rs') && sms.content__c.contains('UPI')){
@@ -202,13 +210,13 @@ public with sharing class FinPlanSMSHandler {
                 sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
                 sms.type__c = 'balance_update';
-                lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
+                lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
             }
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 on')){
                 sms.SA_available_balance__c = contentArray[10].substring(0, contentArray[10].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
                 sms.type__c = 'balance_update';
-                lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
+                lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
             }
         }
         return sms;
@@ -226,7 +234,7 @@ public with sharing class FinPlanSMSHandler {
             sms.amount_value__c = contentArray[10];
             sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0];
             sms.type__c = 'balance_update';
-            lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
+            lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         // atm withdrawal
         if(sms.content__c.contains('withdrawn at SBI ATM')){
@@ -236,7 +244,7 @@ public with sharing class FinPlanSMSHandler {
             sms.Payment_Reference__c = contentArray[15];
             sms.Payment_Reference__c = contentArray[15];
             sms.Payment_Via__c = 'ATM';
-            lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
+            lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         return sms;
     }
@@ -254,7 +262,7 @@ public with sharing class FinPlanSMSHandler {
             sms.beneficiary__c = sms.content__c.split('at')[1].split('Avl Lmt')[0];
             sms.amount_value__c = contentArray[1];
             sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('To dispute')[0];
-            lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
+            lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         else if(sms.content__c.contains('received on your ICICI Bank Credit Card Account 4xxx9006')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
@@ -283,7 +291,7 @@ public with sharing class FinPlanSMSHandler {
     }
     // End method
 
-    // This method updates the balance for savings account or credit card account from the last balanace update sms
+    // This method deletes the SMS and clear the recycle bin
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String deleteSMSAndClearRecycleBin() {
         try {
@@ -301,7 +309,7 @@ public with sharing class FinPlanSMSHandler {
         }
     }
 
-    // This method updates the balance for savings account or credit card account from the last balanace update sms
+    // This method deletes all transsaction records - This is mostly when syncing / debugging
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String deleteAllTransactionsAndClearRecycleBin() {
         String response = '';

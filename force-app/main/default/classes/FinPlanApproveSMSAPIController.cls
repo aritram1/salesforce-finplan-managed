@@ -15,7 +15,7 @@ global with sharing class FinPlanApproveSMSAPIController {
         String createTransactionsFromApprovedMessageResponse = '';
         try {
             if(recordsToUpdate != null && recordsToUpdate.size() > 0) {
-            createTransactionsFromApprovedMessageResponse = FinPlanSyncSMSAPIController.createTransactions(recordsToUpdate);
+            createTransactionsFromApprovedMessageResponse = FinPlanTransactionHandler.createTransactions(recordsToUpdate);
                 // delete recordsToUpdate;
                 // Database.emptyRecycleBin(recordsToUpdate);
                 apiResponse = 'SUCCESS : ' + recordsToUpdate.size() + ' Message Records deleted successfully. ' + createTransactionsFromApprovedMessageResponse;

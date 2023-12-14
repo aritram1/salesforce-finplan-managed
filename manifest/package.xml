@@ -8,6 +8,7 @@
 		<members>FinPlanException</members>
 		<members>FinPlanDeleteTransactionAPIController</members>
 		<members>Logger</members>
+		<members>FinPlanTransactionHandler</members>
 		<name>ApexClass</name>
 	</types>
 	<types>

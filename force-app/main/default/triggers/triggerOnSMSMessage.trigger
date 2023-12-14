@@ -18,7 +18,7 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
         // firstRecord.Approved__c = enrichedMessage.Approved__c;
     }
     // if(Trigger.isAfter){
-        // String response = FinPlanSyncSMSAPIController.createTransactions(Trigger.new);
+        // String response = FinPlanTransactionHandler.createTransactions(Trigger.new);
         // System.debug('Response is => ' + response);
     // }
 }
