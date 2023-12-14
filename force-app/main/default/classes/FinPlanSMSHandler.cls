@@ -303,6 +303,12 @@ public with sharing class FinPlanSMSHandler {
                 String beneficiaryAndReferenceString = sms.content__c.split('Info')[1].split('Available')[0].replace('.', '');
                 sms.Payment_Reference__c = beneficiaryAndReferenceString.split('-')[1];
                 sms.beneficiary__c = beneficiaryAndReferenceString.split('-')[2];
+
+                if(sms.content__c.contains('Available Balance is Rs.')){
+                    String availableBalanceString = sms.content__c.split('Available Balance is Rs.')[1];
+                    sms.SA_available_balance__c = availableBalanceString.substring(0, availableBalanceString.length()-1).replace(',', '').trim();
+                    lastBalanceUpdateSMSList.add(sms);
+                }
             }
         }
         else if(sms.content__c.startsWith('ICICI Bank Acct XX360 debited with')){
