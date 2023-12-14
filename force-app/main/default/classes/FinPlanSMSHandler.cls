@@ -100,12 +100,6 @@ public with sharing class FinPlanSMSHandler {
         return processedMessages;
     }
 
-    // A simple getter method to get the list of sms that represent balance update ones
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static List<FinPlan__SMS_Message__c> getlastBalanceUpdateSMSList (){
-        return lastBalanceUpdateSMSList;
-    }
-
     // This method updates the balance for savings account or credit card account from the last balanace update sms
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String handleBankAccountBalanceUpdate(List<FinPlan__SMS_Message__c> inputSMSList){
@@ -349,7 +343,7 @@ public with sharing class FinPlanSMSHandler {
         }
     }
 
-    // This method deletes all transsaction records - This is mostly when syncing / debugging
+    // This method deletes all transaction records - This is mostly when syncing / debugging
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static String deleteAllTransactionsAndClearRecycleBin() {
         String response = '';
