@@ -129,6 +129,16 @@
                 <identifier>RecordFinPlan_Transaction_Date_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.SMS_Content__c</fieldItem>
+                <identifier>RecordFinPlan_SMS_Content_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-1ddc7c2a-223a-48b8-94df-a89c7dea46db</name>
         <type>Facet</type>
     </flexiPageRegions>

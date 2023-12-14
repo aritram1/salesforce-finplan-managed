@@ -75,6 +75,16 @@
                 <identifier>RecordFinPlan_Content_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Created_From__c</fieldItem>
+                <identifier>RecordFinPlan_Created_From_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-40b1ebe6-dfd9-4be8-9c81-0984941be2d0</name>
         <type>Facet</type>
     </flexiPageRegions>
