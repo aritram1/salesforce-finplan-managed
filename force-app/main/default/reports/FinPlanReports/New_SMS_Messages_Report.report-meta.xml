@@ -40,9 +40,6 @@
     <columns>
         <field>SMS_Message__c.SA_Available_Balance__c</field>
     </columns>
-    <columns>
-        <field>SMS_Message__c.UPI_Reference__c</field>
-    </columns>
     <format>Summary</format>
     <groupingsDown>
         <dateGranularity>Day</dateGranularity>

@@ -187,8 +187,7 @@ public with sharing class FinPlanSMSHandler {
                 sms.Payment_Via__c = 'UPI';
                 String content = sms.content__c.replace('(', '').replace(')', '');
                 sms.Beneficiary__c = content.split('to ')[1].split('. Not you?')[0].split('UPI Ref No ')[0];
-                // TBC
-                // sms.Payment_Reference__c= content.split('to ')[1].split('. Not you?')[0].split('UPI Ref No ')[1];
+                sms.Payment_Reference__c = content.split('(')[1].split(')')[0].replace('UPI Ref No.', '').trim();
             }
             // debit UPI
             else if(sms.content__c.startswith('Money Transfer:Rs') && sms.content__c.contains('UPI')){
@@ -223,9 +222,20 @@ public with sharing class FinPlanSMSHandler {
         contentArray = sms.content__c?.split(' ');
         sms.savings_or_cc_account__c = allBankAccountsMap.get('SBI-SA').Id;
         // balance update
-        if(sms.content__c.startsWith('Available Bal in HDFC Bank')){
-            sms.amount_value__c = contentArray[12];
+        if(sms.content__c.contains('is debited for')){
+            sms.amount_value__c = contentArray[10];
+            sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0];
             sms.type__c = 'balance_update';
+            lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
+        }
+        // atm withdrawal
+        if(sms.content__c.contains('withdrawn at SBI ATM')){
+            sms.amount_value__c = contentArray[3].replace('Rs.', '');
+            sms.beneficiary__c = 'self';
+            sms.SA_available_balance__c = contentArray[18].replace('Rs.', '');
+            sms.Payment_Reference__c = contentArray[15];
+            sms.Payment_Reference__c = contentArray[15];
+            sms.Payment_Via__c = 'ATM';
             lastBalanceUpdateList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         return sms;
@@ -239,7 +249,6 @@ public with sharing class FinPlanSMSHandler {
         contentArray = sms.content__c?.split(' ');
         // Credit card blocks
         if(sms.content__c.contains('spent on ICICI Credit Card XX9006')){
-            // billed limit is to be implemented
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
             sms.type__c = 'debit';
             sms.beneficiary__c = sms.content__c.split('at')[1].split('Avl Lmt')[0];

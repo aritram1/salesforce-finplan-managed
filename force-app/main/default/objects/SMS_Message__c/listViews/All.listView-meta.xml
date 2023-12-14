@@ -8,8 +8,6 @@
     <columns>SA_Available_Balance__c</columns>
     <columns>Savings_or_CC_Account__c</columns>
     <columns>Beneficiary__c</columns>
-    <columns>UPI__c</columns>
-    <columns>UPI_Reference__c</columns>
     <columns>Sender__c</columns>
     <columns>Received_At__c</columns>
     <columns>Create_Transaction__c</columns>

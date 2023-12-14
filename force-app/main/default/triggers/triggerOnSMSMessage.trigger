@@ -13,8 +13,6 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
         firstRecord.Savings_or_CC_Account__c = enrichedMessage.Savings_or_CC_Account__c;
         firstRecord.Transaction_Date__c = enrichedMessage.Transaction_Date__c;
         firstRecord.Type__c = enrichedMessage.Type__c;
-        firstRecord.UPI_Reference__c = enrichedMessage.UPI_Reference__c;
-        firstRecord.UPI__c = enrichedMessage.UPI__c;
         // firstRecord.Create_Transaction__c = enrichedMessage.Create_Transaction__c;
         // firstRecord.Amount__c = enrichedMessage.Amount__c;
         // firstRecord.Approved__c = enrichedMessage.Approved__c;

@@ -95,6 +95,26 @@
                 <identifier>RecordFinPlan_Beneficiary_Name_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Payment_Via__c</fieldItem>
+                <identifier>RecordFinPlan_Payment_Via_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Payment_Reference__c</fieldItem>
+                <identifier>RecordFinPlan_Payment_Reference_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-00473c38-462b-4995-80d3-cb2fbeaec223</name>
         <type>Facet</type>
     </flexiPageRegions>

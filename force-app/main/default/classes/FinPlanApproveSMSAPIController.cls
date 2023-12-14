@@ -9,7 +9,7 @@ global with sharing class FinPlanApproveSMSAPIController {
     global static String updateApprovedField(Map<String, List<String>> input) {
         List<String> recordIds = input.get('data');
         List<finplan__sms_message__c> recordsToUpdate = [SELECT id, Content__c, Approved__c, Amount_Value__c, Beneficiary__c ,CC_Available_Balance__c,
-                        Payment_Reference__c, Payment_Via__c ,SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, Type__c ,UPI_Reference__c, UPI__c
+                        Payment_Reference__c, Payment_Via__c ,SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, Type__c 
                         FROM SMS_Message__c WHERE id IN :recordIds];
 
         String createTransactionsFromApprovedMessageResponse = '';

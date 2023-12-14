@@ -105,10 +105,10 @@ global with sharing class FinPlanSyncSMSAPIController {
                 tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;
                 tr.FinPlan__From_Account__c = sms.savings_or_cc_account__c;
                 tr.FinPlan__Transaction_Date__c = sms.FinPlan__Transaction_Date__c;
-                tr.Type__c = sms.Type__c == 'credit' ? 'Credit' : 'Debit';
-                System.debug('TR 1 is =>' + tr);
+                tr.FinPlan__Payment_Via__c = sms.Payment_Via__c;
+                tr.FinPlan__Payment_Reference__c = sms.Payment_Reference__c;
+                tr.Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
                 tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
-                System.debug('TR 2 is =>' + tr);
                 bankTransactionsList.add(tr);
             }
         }
