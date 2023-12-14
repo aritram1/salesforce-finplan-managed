@@ -22,9 +22,9 @@
                 <label>IMPS</label>
             </value>
             <value>
-                <fullName>RTGS</fullName>
+                <fullName>NEFT</fullName>
                 <default>false</default>
-                <label>RTGS</label>
+                <label>NEFT</label>
             </value>
             <value>
                 <fullName>ATM</fullName>

@@ -3,6 +3,7 @@ global with sharing class FinPlanSyncSMSAPIController {
     
     global static List<FinPlan__SMS_Message__c> receivedMessages;
     global static List<FinPlan__SMS_Message__c> processedMessages;
+    global static List<FinPlan__SMS_Message__c> balanceUpdateSMSList;
     global static Map<String, String> apiResponse;
     global static String balanceUpdateResponse;
     global static String messageDeleteResponse;
@@ -31,15 +32,15 @@ global with sharing class FinPlanSyncSMSAPIController {
     // 5 - Deletes existing messages again [to save sf storage ;)]
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     global static Map<String, String> syncMessages(List<Map<String, String>> records) {
+        balanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
         try{
-            messageDeleteResponse = deleteAllMessagesAndClearRecycleBin(); // null denotes no specific message but all existing messages need to be deleted
+            messageDeleteResponse = deleteAllMessagesAndClearRecycleBin(); 
             // transactionDeleteResponse = deleteAllTransactionsAndClearRecycleBin(); [Not required since we issue that explicitly from flutter app]
             processedMessages = insertMessages(records);
             String insertMessagesResponse = 'SUCCESS : ' + processedMessages.size() + ' messages are processed. ';
-            balanceUpdateResponse = FinPlanSMSHandler.handleBankAccountBalanceUpdate();
+            balanceUpdateResponse = handleUpdateAccountBalance(balanceUpdateSMSList);
             transactionCreateResponse = FinPlanTransactionHandler.createTransactions(processedMessages);
-            // investmentTransactionResponse = createInvestmentTransactions(processedMessages);
-            afterTransactionsCreatedMessageDeleteResponse = deleteAllMessagesAndClearRecycleBin();
+            // afterTransactionsCreatedMessageDeleteResponse = deleteAllMessagesAndClearRecycleBin();
             
             apiResponse.put('statusCode', '200');
             apiResponse.put('data', '');
@@ -48,13 +49,7 @@ global with sharing class FinPlanSyncSMSAPIController {
             apiResponse.put('data', apiResponse.get('data') + '|| insertMessagesResponse=>' + insertMessagesResponse);
             apiResponse.put('data', apiResponse.get('data') + '|| balanceUpdateResponse=>' + balanceUpdateResponse);
             apiResponse.put('data', apiResponse.get('data') + '|| transactionCreateResponse=>' + transactionCreateResponse);
-            apiResponse.put('data', apiResponse.get('data') + '|| afterTransactionsCreatedMessageDeleteResponse=>' + afterTransactionsCreatedMessageDeleteResponse);
-
-            // apiResponse.put('data', apiResponse.get('data') + transactionCreateResponse);
-            
-            // apiResponse.put('data', apiResponse.get('data') + bankTransactionResponse);
-            // apiResponse.put('data', apiResponse.get('data') + investmentTransactionResponse);
-            // apiResponse.put('error', '');
+            // apiResponse.put('data', apiResponse.get('data') + '|| afterTransactionsCreatedMessageDeleteResponse=>' + afterTransactionsCreatedMessageDeleteResponse);
         }
         catch(Exception ex){
             apiResponse.put('statusCode', '400');
@@ -75,6 +70,7 @@ global with sharing class FinPlanSyncSMSAPIController {
             receivedMessages.add(sms);
         }
         processedMessages = FinPlanSMSHandler.enrichData(receivedMessages);
+        balanceUpdateSMSList = FinPlanSMSHandler.lastBalanceUpdateSMSList;
         insert processedMessages;
         return processedMessages;
     }
@@ -87,6 +83,12 @@ global with sharing class FinPlanSyncSMSAPIController {
 
     //     }
     // }
+
+    public static String handleUpdateAccountBalance(List<FinPlan__SMS_Message__c> msgList){
+        String response = '';
+        response = FinPlanSMSHandler.handleBankAccountBalanceUpdate(msgList);
+        return response;
+    }
 
     global static String deleteAllMessagesAndClearRecycleBin(){
         String response = FinPlanSMSHandler.deleteSMSAndClearRecycleBin();

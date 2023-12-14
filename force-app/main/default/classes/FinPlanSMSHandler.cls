@@ -108,16 +108,30 @@ public with sharing class FinPlanSMSHandler {
 
     // This method updates the balance for savings account or credit card account from the last balanace update sms
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String handleBankAccountBalanceUpdate(){
-        System.debug('lastBalanceUpdateSMSList value inside handleBankAccountBalanceUpdate =>' + lastBalanceUpdateSMSList);
-        System.debug('lastBalanceUpdateSMSList value inside handleBankAccountBalanceUpdate size =>' + lastBalanceUpdateSMSList.size());
+    public static String handleBankAccountBalanceUpdate(List<FinPlan__SMS_Message__c> inputSMSList){
+
+        System.debug('inputSMSList value inside handleBankAccountBalanceUpdate =>' + inputSMSList);
+        System.debug('inputSMSList value inside handleBankAccountBalanceUpdate size =>' + inputSMSList.size());
+        
+        // The input list can contain more than one sms and we need the latest ones for each bank account
+        Map<String, FinPlan__SMS_Message__c> uniqueMap = new Map<String, FinPlan__SMS_Message__c>();
+        for(FinPlan__SMS_Message__c message : inputSMSList){
+            uniqueMap.put(message.savings_or_cc_account__c, message);
+        }
+        List<FinPlan__SMS_Message__c> uniqueSMSList = uniqueMap.values();
+
+        System.debug('uniqueSMSList value inside handleBankAccountBalanceUpdate =>' + uniqueSMSList);
+        System.debug('uniqueSMSList value inside handleBankAccountBalanceUpdate size =>' + uniqueSMSList.size());
         String balanceUpdateResponse = '';
         List<Bank_Account__c> toBeUpdatedBankAccounts = new List<Bank_Account__c>();
         try{
-            for(FinPlan__SMS_Message__c sms : lastBalanceUpdateSMSList){
+            for(FinPlan__SMS_Message__c sms : uniqueSMSList){
                 if(sms.savings_or_cc_account__c != null){
                     Bank_Account__c ba = lastBalanceBankAccountsMap.get(sms.savings_or_cc_account__c);
+                    System.debug('sms=>' + sms);
+                    System.debug('sms.SA_available_balance__c=>' + sms.SA_available_balance__c);
                     String availableBalanceString = sms.SA_available_balance__c.replace(',', '');
+                    availableBalanceString = availableBalanceString.endsWith('.') ? availableBalanceString.substring(0, availableBalanceString.length() - 1) : availableBalanceString;
                     System.debug('Inside handleBankAccountBalanceUpdate=>' + availableBalanceString);
                     if(ba != null && sms.SA_available_balance__c != null && sms.SA_available_balance__c != ''){
                         if(ba.Account_Code__c.endsWith('-SA')){ // Savings Account
@@ -229,19 +243,28 @@ public with sharing class FinPlanSMSHandler {
         List<String> contentArray = new List<String>();
         contentArray = sms.content__c?.split(' ');
         sms.savings_or_cc_account__c = allBankAccountsMap.get('SBI-SA').Id;
-        // balance update
-        if(sms.content__c.contains('is debited for')){
-            sms.amount_value__c = contentArray[10];
-            sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0];
-            sms.type__c = 'balance_update';
-            lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
+        // credit
+        if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is credited by')){
+            sms.amount_value__c = contentArray[9].replace('Rs.', '');
+            String modifiedContent = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
+            sms.beneficiary__c = modifiedContent.split('by')[2].split('START_BRACKET')[0];
+            if(modifiedContent.contains('IMPS')){
+                sms.Payment_Via__c = 'IMPS';
+                sms.Payment_Reference__c = modifiedContent.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('IMPS Ref no', '').trim();
+            }
+            sms.type__c = 'credit';
+        }
+        // debit
+        if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is debited for')){
+            sms.amount_value__c = contentArray[9].replace('Rs.', '');
+            sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0].trim();
+            sms.type__c = 'debit';
         }
         // atm withdrawal
         if(sms.content__c.contains('withdrawn at SBI ATM')){
             sms.amount_value__c = contentArray[3].replace('Rs.', '');
             sms.beneficiary__c = 'self';
             sms.SA_available_balance__c = contentArray[18].replace('Rs.', '');
-            sms.Payment_Reference__c = contentArray[15];
             sms.Payment_Reference__c = contentArray[15];
             sms.Payment_Via__c = 'ATM';
             lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
@@ -271,6 +294,23 @@ public with sharing class FinPlanSMSHandler {
             sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
         }
         // Savings account block
+        else if(sms.content__c.startsWith('ICICI Bank Account XX360 credited')){
+            sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
+            sms.type__c = 'credit';
+            sms.amount_value__c = contentArray[5];
+            if(sms.content__c.contains('UPI')){
+                sms.Payment_Via__c = 'UPI';
+            }
+            else if(sms.content__c.contains('IMPS')){
+                sms.Payment_Via__c = 'IMPS';
+            }
+            else if(sms.content__c.contains('NEFT')){
+                sms.Payment_Via__c = 'NEFT';
+                String beneficiaryAndReferenceString = sms.content__c.split('Info')[1].split('Available')[0].replace('.', '');
+                sms.Payment_Reference__c = beneficiaryAndReferenceString.split('-')[1];
+                sms.beneficiary__c = beneficiaryAndReferenceString.split('-')[2];
+            }
+        }
         else if(sms.content__c.startsWith('ICICI Bank Acct XX360 debited with')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'debit';
