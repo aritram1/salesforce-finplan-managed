@@ -333,47 +333,57 @@ public with sharing class FinPlanSMSHandler {
 
     // This method deletes the SMS and clear the recycle bin
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String deleteSMSAndClearRecycleBin() {
+    public static Map<String, String> deleteSMSAndClearRecycleBin() {
+        Map<String, String> response = new Map<String, String>();
         try {
+            String responseSuccessMessage = '';
             List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c];
             if(messagesToDelete != null && messagesToDelete.size() > 0){
                 Database.DeleteResult[] deleteResults = Database.delete(messagesToDelete, false);
                 Database.emptyRecycleBin(messagesToDelete);
-                return 'SUCCESS : ' + messagesToDelete.size() + ' message records deleted successfully. ';
+                responseSuccessMessage = 'SUCCESS : ' + messagesToDelete.size() + ' message records deleted successfully. ';
             }
             else{
-                return 'SUCCESS : No messages available to delete. ';
+                responseSuccessMessage = 'SUCCESS : No messages available to delete. ';
             }
-        } catch (Exception e) {
-            return 'Failed : Error deleting messages: ' + e.getMessage();
+            response.put('data', responseSuccessMessage);
+        } 
+        catch (Exception e) {
+            String responseErrorMessage = 'Failed : Error deleting messages: ' + e.getMessage();
+            response.put('errors', responseErrorMessage);
         }
+        return response;
     }
 
     // This method deletes all transaction records - This is mostly when syncing / debugging
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static String deleteAllTransactionsAndClearRecycleBin() {
-        String response = '';
+    public static Map<String, String> deleteAllTransactionsAndClearRecycleBin() {
+        Map<String, String> response = new Map<String, String>();
+        String message = '';
         try {
             List<FinPlan__Bank_Transaction__c> bankTxntoDelete = [SELECT Id FROM FinPlan__Bank_Transaction__c];
             List<FinPlan__Investment_Transaction__c> invTxntoDelete = [SELECT Id FROM FinPlan__Investment_Transaction__c];
             if(bankTxntoDelete != null && bankTxntoDelete.size() > 0){
                 Database.DeleteResult[] deleteResults = Database.delete(bankTxntoDelete, false);
                 Database.emptyRecycleBin(bankTxntoDelete);
-                response = 'SUCCESS : ' + bankTxntoDelete.size() + ' bank transaction records deleted successfully. ';
+                message = 'SUCCESS : ' + bankTxntoDelete.size() + ' bank transaction records deleted successfully. ';
             }
             else{
-                response = 'SUCCESS : No bank transactions are available to delete. ';
+                message = 'SUCCESS : No bank transactions are available to delete. ';
             }
             if(invTxntoDelete != null && invTxntoDelete.size() > 0){
                 Database.DeleteResult[] deleteResults = Database.delete(invTxntoDelete, false);
                 Database.emptyRecycleBin(invTxntoDelete);
-                response = 'SUCCESS : ' + invTxntoDelete.size() + ' investment records deleted successfully. ';
+                message = 'SUCCESS : ' + invTxntoDelete.size() + ' investment records deleted successfully. ';
             }
             else{
-                response = 'SUCCESS : No investment transactions available to delete. ';
+                message = 'SUCCESS : No investment transactions available to delete. ';
             }
-        } catch (Exception e) {
-            response = 'Failed : Error deleting transactions : ' + e.getMessage();
+            response.put('data', message);
+        } 
+        catch (Exception e) {
+            message = 'Failed : Error deleting transactions : ' + e.getMessage();
+            response.put('errors', message);
         }
         return response;
     }

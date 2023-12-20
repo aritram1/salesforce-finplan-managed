@@ -2,13 +2,9 @@
 global with sharing class FinPlanDeleteTransactionAPIController {
     
     @HttpPost
-    global static String processPostRequest() {
-        String response = '';
-        try {
-            response = FinPlanSMSHandler.deleteAllTransactionsAndClearRecycleBin();
-        } catch (DmlException e) {
-            response = 'Error updating records: ' + e.getMessage();
-        }
+    global static Map<String, String> processPostRequest() {
+        Map<String, String> response = new Map<String, String>();
+        response = FinPlanSMSHandler.deleteAllTransactionsAndClearRecycleBin();
         return response;
     }
 }

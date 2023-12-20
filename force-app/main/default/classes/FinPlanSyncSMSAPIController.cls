@@ -50,7 +50,8 @@ global with sharing class FinPlanSyncSMSAPIController {
             apiResponse.put('data', apiResponse.get('data') + '|| balanceUpdateResponse=>' + balanceUpdateResponse);
 
             // Step 4 : Creates Bank/Investment Transaction records, as applicable, from messages
-            transactionCreateResponse = FinPlanTransactionHandler.createTransactions(processedMessages);
+
+            transactionCreateResponse = String.valueOf(FinPlanTransactionHandler.createTransactions(processedMessages));
             apiResponse.put('data', apiResponse.get('data') + '|| transactionCreateResponse=>' + transactionCreateResponse);
 
             // Step 5 : After transactions are created, delete messages [to save sf storage ;)]
@@ -102,7 +103,7 @@ global with sharing class FinPlanSyncSMSAPIController {
     }
 
     global static String deleteAllMessagesAndClearRecycleBin(){
-        String response = FinPlanSMSHandler.deleteSMSAndClearRecycleBin();
+        String response = String.valueOf(FinPlanSMSHandler.deleteSMSAndClearRecycleBin());
         return response;
     }
 
