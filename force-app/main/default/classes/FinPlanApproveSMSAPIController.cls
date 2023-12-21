@@ -10,17 +10,25 @@ global with sharing class FinPlanApproveSMSAPIController {
         List<String> recordIds = input.get('data');
         List<finplan__sms_message__c> recordsToUpdate = [SELECT id, Content__c, Approved__c, Amount_Value__c, Beneficiary__c ,CC_Available_Balance__c, Payment_Reference__c, Payment_Via__c ,SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, Type__c FROM SMS_Message__c WHERE id IN :recordIds];
         
-        // Set approved__c as false so they dont appear in approval list
-        for(finplan__sms_message__c rec : recordsToUpdate){
-            rec.Approved__c = true;
-        }
-        
         if(recordsToUpdate != null && recordsToUpdate.size() > 0) {
+            
+            // A. Either update the SMS Records ///////////////////////////////////////////////////
+            // Set approved__c as false so they dont appear in approval list
+            // for(finplan__sms_message__c rec : recordsToUpdate){
+            //     rec.Approved__c = true;
+            // }
             // update recordsToUpdate;
-            // For storage issue the message records could be deleted. Comment in these lines in that case.
+
+            // B. Or delete the SMS Records///////////////////////////////////////////////////
+            // additionally to save storage delete if any unapproved ones, 
+            // promotional ones etc. are left in system
+            for(finplan__sms_message__c sms : [SELECT id FROM SMS_Message__c WHERE Create_Transaction__c = false]){
+                recordsToUpdate.add(sms);
+            }   
             delete recordsToUpdate;
             Database.emptyRecycleBin(recordsToUpdate);
 
+            // And create corresponding transaction records from the messages
             apiResponse = FinPlanTransactionHandler.createTransactions(recordsToUpdate);
             
         }
