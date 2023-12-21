@@ -13,9 +13,10 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
         firstRecord.Savings_or_CC_Account__c = enrichedMessage.Savings_or_CC_Account__c;
         firstRecord.Transaction_Date__c = enrichedMessage.Transaction_Date__c;
         firstRecord.Type__c = enrichedMessage.Type__c;
+        firstRecord.Approved__c = enrichedMessage.Approved__c;
     }
     // if(Trigger.isAfter){
-        // String response = FinPlanTransactionHandler.createTransactions(Trigger.new);
-        // System.debug('Response is => ' + response);
+    //     Map<String, Map<String, List<String>>> response = FinPlanTransactionHandler.createTransactions(Trigger.new);
+    //     System.debug('Response is => ' + String.valueOf(response));
     // }
 }

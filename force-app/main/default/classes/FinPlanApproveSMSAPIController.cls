@@ -16,11 +16,13 @@ global with sharing class FinPlanApproveSMSAPIController {
         }
         
         if(recordsToUpdate != null && recordsToUpdate.size() > 0) {
-            update recordsToUpdate;
-            apiResponse = FinPlanTransactionHandler.createTransactions(recordsToUpdate);
+            // update recordsToUpdate;
             // For storage issue the message records could be deleted. Comment in these lines in that case.
-            // delete recordsToUpdate;
-            // Database.emptyRecycleBin(recordsToUpdate);
+            delete recordsToUpdate;
+            Database.emptyRecycleBin(recordsToUpdate);
+
+            apiResponse = FinPlanTransactionHandler.createTransactions(recordsToUpdate);
+            
         }
         return apiResponse;
     }
