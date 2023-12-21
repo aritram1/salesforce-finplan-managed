@@ -14,6 +14,20 @@ trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before up
         firstRecord.Transaction_Date__c = enrichedMessage.Transaction_Date__c;
         firstRecord.Type__c = enrichedMessage.Type__c;
         firstRecord.Approved__c = enrichedMessage.Approved__c;
+
+        System.debug('FinPlanSMSHandler.lastBalanceUpdateSMSList : ' + FinPlanSMSHandler.lastBalanceUpdateSMSList);
+        for(FinPlan__SMS_Message__c sms : FinPlanSMSHandler.lastBalanceUpdateSMSList){
+            System.debug('Last Balance SMS : ' + sms.Sender__c);
+            System.debug('Last Balance SMS : ' + sms.SA_Available_Balance__c);
+            System.debug('Last Balance SMS : ' + sms.Savings_or_CC_Account__c);
+        }
+
+        // Update Last Balances for Bank Accounts
+        String response = 'Default';
+        if(FinPlanSMSHandler.lastBalanceUpdateSMSList != null && FinPlanSMSHandler.lastBalanceUpdateSMSList.size() > 0){
+            response = FinPlanSMSHandler.handleBankAccountBalanceUpdate(FinPlanSMSHandler.lastBalanceUpdateSMSList);
+        }
+        System.debug('Response=> '+ response); 
     }
     // if(Trigger.isAfter){
     //     Map<String, Map<String, List<String>>> response = FinPlanTransactionHandler.createTransactions(Trigger.new);
