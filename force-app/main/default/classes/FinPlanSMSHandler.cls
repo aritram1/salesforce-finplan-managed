@@ -259,8 +259,15 @@ public with sharing class FinPlanSMSHandler {
             sms.amount_value__c = contentArray[3].replace('Rs.', '');
             sms.beneficiary__c = 'self';
             sms.SA_available_balance__c = contentArray[18].replace('Rs.', '');
+            if(sms.SA_available_balance__c.endsWith('.')){
+                sms.SA_available_balance__c = sms.SA_available_balance__c.substring(0, sms.SA_available_balance__c.length()-1);
+            }
             sms.Payment_Reference__c = contentArray[15];
+            if(sms.Payment_Reference__c.endsWith('.')){
+                sms.Payment_Reference__c = sms.Payment_Reference__c.substring(0, sms.Payment_Reference__c.length()-1);
+            }
             sms.Payment_Via__c = 'ATM';
+            sms.type__c = 'debit';
             lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         return sms;
