@@ -9,6 +9,9 @@
 		<members>FinPlanDeleteTransactionAPIController</members>
 		<members>Logger</members>
 		<members>FinPlanTransactionHandler</members>
+		<members>FinPlanDeleteSMSAPIController</members>
+		<members>FinPlanPermanentDeleteAPIController</members>
+		<members>FinPlanDeleteAPIController</members> <!-- may not be required later TBC -->
 		<name>ApexClass</name>
 	</types>
 	<types>

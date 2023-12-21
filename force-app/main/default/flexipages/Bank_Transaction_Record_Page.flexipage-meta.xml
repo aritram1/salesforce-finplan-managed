@@ -155,7 +155,7 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.SMS_Content__c</fieldItem>
+                <fieldItem>Record.Content__c</fieldItem>
                 <identifier>RecordFinPlan_SMS_Content_cField</identifier>
             </fieldInstance>
         </itemInstances>
