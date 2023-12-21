@@ -1,5 +1,5 @@
 trigger triggerOnSMSMessage on FinPlan__SMS_Message__c (before insert, before update, after insert, after update) {
-    if(Trigger.isBefore && Trigger.new[0].Created_From__c != 'Sync'){
+    if(Trigger.isBefore){ // && Trigger.new[0].Created_From__c != 'Sync'){
         List<FinPlan__SMS_Message__c> all = FinPlanSMSHandler.enrichData(Trigger.new);
         System.debug('all=>' + all);
         FinPlan__SMS_Message__c enrichedMessage = all[0];
