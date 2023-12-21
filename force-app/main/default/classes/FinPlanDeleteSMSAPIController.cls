@@ -4,13 +4,12 @@ global with sharing class FinPlanDeleteSMSAPIController {
     // This method processes post requests at this endpoint and deletes selected/all messages
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @HttpPost
-    global static Map<String, Object> processPostRequests() {
+    global static Map<String, List<String>> processPostRequests() {
         Map<String, List<String>> response = new Map<String, List<String>>();
         List<String> deletedIds = new List<String>();
         List<String> errors = new List<String>();
-        
         try {
-            List<SMS_Message__c> messagesToDelete = [SELECT Id FROM Account];
+            List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c];
             if(messagesToDelete != null && messagesToDelete.size() > 0){
                 Database.DeleteResult [] deleteResults = Database.delete(messagesToDelete, false);
                 for(Database.DeleteResult dr : deleteResults){
@@ -31,9 +30,5 @@ global with sharing class FinPlanDeleteSMSAPIController {
 }
 
 // Request body : Not required
-// Error Response structures :
+// Response structure for Error :
 // [{"errorCode":"APEX_ERROR","message":"System.MathException: Divide by 0\n\nClass.FinPlan.FinPlanDeleteSMSAPIController.processPostRequests: line 10, column 1"}]
-// [{"errorCode":"APEX_ERROR","message":"System.NullPointerException: Attempt to de-reference a null object\n\nClass.FinPlan.FinPlanDeleteSMSAPIController.processPostRequests: line 25, column 1"}]
-
-// Success Response Structure
-// { "deletedIds" : ['id1', 'id2' etc], "errors" : []}
