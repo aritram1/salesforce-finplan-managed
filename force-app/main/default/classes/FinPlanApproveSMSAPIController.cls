@@ -12,21 +12,19 @@ global with sharing class FinPlanApproveSMSAPIController {
         
         if(recordsToUpdate != null && recordsToUpdate.size() > 0) {
             
-            // A. Either update the SMS Records ///////////////////////////////////////////////////
-            // Set approved__c as false so they dont appear in approval list
-            // for(finplan__sms_message__c rec : recordsToUpdate){
-            //     rec.Approved__c = true;
-            // }
-            // update recordsToUpdate;
+            // A. Set approved__c as false so they dont appear in approval list //////////////////////////////////////////
+            for(finplan__sms_message__c rec : recordsToUpdate){
+                rec.Approved__c = true;
+            }
+            update recordsToUpdate;
 
-            // B. Or delete the SMS Records///////////////////////////////////////////////////
-            // additionally to save storage delete if any unapproved ones, 
-            // promotional ones etc. are left in system
-            for(finplan__sms_message__c sms : [SELECT id FROM SMS_Message__c WHERE Create_Transaction__c = false]){
-                recordsToUpdate.add(sms);
-            }   
-            delete recordsToUpdate;
-            Database.emptyRecycleBin(recordsToUpdate);
+            // B. To save storage delete if any unapproved ones, promotional ones etc. are left in system //////////////////
+            List<SMS_Message__c> toBeDeletedRecords = new List<SMS_Message__c>();
+            toBeDeletedRecords = [SELECT id FROM SMS_Message__c WHERE Create_Transaction__c = false];
+            if(toBeDeletedRecords != null && toBeDeletedRecords.size() > 0){
+                delete toBeDeletedRecords;
+                Database.emptyRecycleBin(toBeDeletedRecords);
+            }
 
             // And create corresponding transaction records from the messages
             apiResponse = FinPlanTransactionHandler.createTransactions(recordsToUpdate);
