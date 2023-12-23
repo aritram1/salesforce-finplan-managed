@@ -15,6 +15,10 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
+		<members>FinPlan_Delete_Non_Credit_Debit_Messages_After_1_Min</members>
+		<name>Flow</name>
+	</types>
+	<types>
 		<members>triggerOnSMSMessage</members>
 		<name>ApexTrigger</name>
 	</types>

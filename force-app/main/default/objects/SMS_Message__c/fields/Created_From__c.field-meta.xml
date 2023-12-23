@@ -15,6 +15,16 @@
                 <default>false</default>
                 <label>Sync</label>
             </value>
+            <value>
+                <fullName>Manual</fullName>
+                <default>false</default>
+                <label>Manual</label>
+            </value>
+            <value>
+                <fullName>SMS</fullName>
+                <default>false</default>
+                <label>SMS</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
