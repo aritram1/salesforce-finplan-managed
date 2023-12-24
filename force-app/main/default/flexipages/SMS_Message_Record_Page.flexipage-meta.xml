@@ -177,6 +177,16 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Balance_Update__c</fieldItem>
+                <identifier>RecordFinPlan_Balance_Update_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.CC_Available_Balance__c</fieldItem>
                 <identifier>RecordFinPlan_CC_Available_Balance_cField</identifier>
             </fieldInstance>
