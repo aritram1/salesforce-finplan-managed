@@ -170,10 +170,12 @@ public with sharing class FinPlanSMSHandler {
                     sms.Payment_Via__c = 'UPI';
                     String str = sms.content__c.split('for')[1].split('.Avl bal')[0];
                     sms.Beneficiary__c = str.split('-')[1] + '-' + str.split('-')[2] + '-' + str.split('-')[3];
+                    sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
                     sms.Payment_Reference__c = str.split('-')[4];
                 }
                 else{
                     sms.Beneficiary__c = sms.content__c.split('for')[1].split('.Avl bal')[0];
+                    sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
                 }
                 
             }
@@ -185,6 +187,7 @@ public with sharing class FinPlanSMSHandler {
                 String str = sms.content__c.split('Avl bal: INR')[0].split('by')[1].replace('(', '').replace(')', '');
                 
                 sms.Beneficiary__c = str.split('IMPS Ref No. ')[0];
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
                 
                 if(sms.content__c.contains('IMPS')){
                     sms.Payment_Via__c = 'IMPS';
@@ -201,6 +204,7 @@ public with sharing class FinPlanSMSHandler {
                 sms.Payment_Via__c = 'UPI';
                 String content = sms.content__c.replace('(', '').replace(')', '');
                 sms.Beneficiary__c = content.split('to ')[1].split('. Not you?')[0].split('UPI Ref No ')[0];
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
 
                 String paymentReferenceString = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
                 sms.Payment_Reference__c = paymentReferenceString.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('UPI Ref No.', '').trim();
@@ -212,6 +216,7 @@ public with sharing class FinPlanSMSHandler {
                 sms.Payment_Via__c = 'UPI';
                 sms.Payment_Reference__c = sms.content__c.split('UPI:')[1].split('Not you?')[0];
                 sms.Beneficiary__c = sms.content__c.split('UPI')[0].split(' to ')[1];
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             }
             // balance update
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
@@ -242,6 +247,7 @@ public with sharing class FinPlanSMSHandler {
             sms.amount_value__c = contentArray[9].replace('Rs.', '');
             String modifiedContent = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
             sms.beneficiary__c = modifiedContent.split('by')[2].split('START_BRACKET')[0];
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             if(modifiedContent.contains('IMPS')){
                 sms.Payment_Via__c = 'IMPS';
                 sms.Payment_Reference__c = modifiedContent.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('IMPS Ref no', '').trim();
@@ -252,12 +258,14 @@ public with sharing class FinPlanSMSHandler {
         if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is debited for')){
             sms.amount_value__c = contentArray[9].replace('Rs.', '');
             sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0].trim();
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.type__c = 'debit';
         }
         // atm withdrawal
         if(sms.content__c.contains('withdrawn at SBI ATM')){
             sms.amount_value__c = contentArray[3].replace('Rs.', '');
-            sms.beneficiary__c = 'self';
+            sms.beneficiary__c = 'Self';
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.SA_available_balance__c = contentArray[18].replace('Rs.', '');
             if(sms.SA_available_balance__c.endsWith('.')){
                 sms.SA_available_balance__c = sms.SA_available_balance__c.substring(0, sms.SA_available_balance__c.length()-1);
@@ -284,6 +292,7 @@ public with sharing class FinPlanSMSHandler {
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
             sms.type__c = 'debit';
             sms.beneficiary__c = sms.content__c.split('at')[1].split('Avl Lmt')[0];
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.amount_value__c = contentArray[1];
             sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('To dispute')[0];
             lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
@@ -293,6 +302,7 @@ public with sharing class FinPlanSMSHandler {
             sms.type__c = 'credit';
             sms.amount_value__c = contentArray[5];
             sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
         }
         // Savings account block
         else if(sms.content__c.startsWith('ICICI Bank Account XX360 credited')){
@@ -310,6 +320,7 @@ public with sharing class FinPlanSMSHandler {
                 String beneficiaryAndReferenceString = sms.content__c.split('Info')[1].split('Available')[0].replace('.', '');
                 sms.Payment_Reference__c = beneficiaryAndReferenceString.split('-')[1];
                 sms.beneficiary__c = beneficiaryAndReferenceString.split('-')[2];
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
 
                 if(sms.content__c.contains('Available Balance is Rs.')){
                     String availableBalanceString = sms.content__c.split('Available Balance is Rs.')[1];
@@ -329,6 +340,7 @@ public with sharing class FinPlanSMSHandler {
                 sms.Payment_Via__c = 'IMPS';
                 sms.Payment_Reference__c = sms.content__c.split('IMPS:')[1].split('. Call ')[0];
                 sms.beneficiary__c = sms.content__c.split('credited.')[0].split('&')[1];
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             }
             if(sms.content__c.contains('RTGS')){
                 sms.Payment_Via__c = 'RTGS';
@@ -337,4 +349,48 @@ public with sharing class FinPlanSMSHandler {
         return sms;
     }
     // End method
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Utility methods
+    public static String toCamelCase(String inputString) {
+        if(inputString == null){
+            return inputString;
+        }
+        else{
+            try{
+                List<String> modifiedWords = new List<String>();
+
+                inputString = inputString.trim();
+
+                // Split the string into words
+                List<String> words = inputString.trim().split(' ');
+                
+                for (String word : words) {
+                    word = word.trim();
+                    if(word.length() == 1){
+                        modifiedWords.add(word.toUpperCase());
+                    }
+                    else if(word.length() > 1){
+                        String firstAlphabet = word.substring(0, 1).toUpperCase();
+                        String rest = word.substring(1, word.length()).toLowerCase();
+                        modifiedWords.add(firstAlphabet + rest); 
+
+                        // Logic to apply to ignor eany transformation for specific business names likes HDFC, ICICI etc
+                        // if(word.substring(0, 1) == word.substring(0, 1).toUpperCase() && word.substring(1, 2) == word.substring(1, 2).toLowerCase()){
+                        //     // if first two alphabets are already capital, no transformation is required.
+                        //     // consider this as name of a Business, like HDFC, ICICI
+                        //     modifiedWords.add(word);
+                        // }
+                    }
+                }
+
+                // Join the words back together
+                return String.join(modifiedWords, ' '   );
+            }
+            catch(Exception e){
+                throw new FinPlanException(e.getMessage());
+            }
+        }
+    }
 }
