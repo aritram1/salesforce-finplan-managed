@@ -211,7 +211,7 @@ public with sharing class FinPlanSMSHandler {
                 sms.type__c = 'debit';
                 sms.Payment_Via__c = 'UPI';
                 sms.Payment_Reference__c = sms.content__c.split('UPI:')[1].split('Not you?')[0];
-                sms.Beneficiary__c = sms.content__c.split('UPI')[0].split('to')[1];
+                sms.Beneficiary__c = sms.content__c.split('UPI')[0].split('to ')[1];
             }
             // balance update
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
