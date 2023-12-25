@@ -8,19 +8,25 @@ global with sharing class FinPlanApproveSMSAPIController {
     global static Map<String, Map<string, List<String>>> updateApprovedField(Map<String, List<String>> input) {
         System.debug('input is => ' + input);
         List<String> recordIds = input.get('data');
-        List<finplan__sms_message__c> recordsToUpdate = [SELECT id, Content__c, Approved__c, Amount_Value__c, Beneficiary__c ,CC_Available_Balance__c, Payment_Reference__c, Payment_Via__c ,SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, Type__c FROM SMS_Message__c WHERE id IN :recordIds];
-        
-        // Set approved__c as false so they dont appear in approval list
-        for(finplan__sms_message__c rec : recordsToUpdate){
-            rec.Approved__c = true;
-        }
+        List<finplan__sms_message__c> recordsToUpdate = [SELECT id, Content__c, Approved__c, Amount_Value__c, Beneficiary__c ,CC_Available_Balance__c, Payment_Reference__c, Payment_Via__c ,SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, Type__c, Device__c FROM SMS_Message__c WHERE id IN :recordIds];
         
         if(recordsToUpdate != null && recordsToUpdate.size() > 0) {
-            // update recordsToUpdate;
-            // For storage issue the message records could be deleted. Comment in these lines in that case.
-            delete recordsToUpdate;
-            Database.emptyRecycleBin(recordsToUpdate);
+            
+            // A. Set approved__c as false so they dont appear in approval list //////////////////////////////////////////
+            for(finplan__sms_message__c rec : recordsToUpdate){
+                rec.Approved__c = true;
+            }
+            update recordsToUpdate;
 
+            // B. To save storage delete if any unapproved ones, promotional ones etc. are left in system //////////////////
+            List<SMS_Message__c> toBeDeletedRecords = new List<SMS_Message__c>();
+            toBeDeletedRecords = [SELECT id FROM SMS_Message__c WHERE Create_Transaction__c = false];
+            if(toBeDeletedRecords != null && toBeDeletedRecords.size() > 0){
+                delete toBeDeletedRecords;
+                Database.emptyRecycleBin(toBeDeletedRecords);
+            }
+
+            // And create corresponding transaction records from the messages
             apiResponse = FinPlanTransactionHandler.createTransactions(recordsToUpdate);
             
         }
