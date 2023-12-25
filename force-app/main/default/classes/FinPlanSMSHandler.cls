@@ -370,7 +370,7 @@ public with sharing class FinPlanSMSHandler {
                 }
 
                 // Join the words back together
-                return String.join(modifiedWords, ' '   );
+                return String.join(modifiedWords, ' ');
             }
             catch(Exception e){
                 throw new FinPlanException(e.getMessage());
