@@ -358,11 +358,11 @@ public with sharing class FinPlanSMSHandler {
                 List<String> words = inputString.trim().split(' ');
                 
                 for (String word : words) {
-                    word = word.trim();
+                    word = word.trim(); // trim the whitespaces
                     if(word.length() == 1){
-                        modifiedWords.add(word.toUpperCase());
+                        modifiedWords.add(word.toUpperCase());  // if there is only one character in the word
                     }
-                    else if(word.length() > 1){
+                    else if(word.length() > 1){ // if there are atleast 2 characters in a word
                         String firstAlphabet = word.substring(0, 1).toUpperCase();
                         String rest = word.substring(1, word.length()).toLowerCase();
                         modifiedWords.add(firstAlphabet + rest);
