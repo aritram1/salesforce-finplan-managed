@@ -23,13 +23,14 @@ public with sharing class FinPlanTransactionHandler {
                 else{
                     FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
                     tr.FinPlan__Created_From__c = 'SMS';
-                    tr.FinPlan__SMS_Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
+                    tr.Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
+                    tr.FinPlan__Device__c = sms.FinPlan__Device__c;
+                    tr.FinPlan__Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
                     tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;
                     tr.FinPlan__From_Account__c = sms.savings_or_cc_account__c;
                     tr.FinPlan__Transaction_Date__c = sms.FinPlan__Transaction_Date__c;
                     tr.FinPlan__Payment_Via__c = sms.Payment_Via__c;
                     tr.FinPlan__Payment_Reference__c = sms.Payment_Reference__c;
-                    tr.Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
                     tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
                     bankTransactionsList.add(tr);
                 }

@@ -17,7 +17,7 @@ The `sfdx-project.json` file contains useful configuration information for your 
 - [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
 - [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
 
-=============
+========================================================================================================
 
 ## Compatibility and Dependent Repositories
 
@@ -37,7 +37,7 @@ The `sfdx-project.json` file contains useful configuration information for your 
 
 - **Stable Version:** [1.0.0](https://github.com/aritram1/flutter-expense-manager/tree/release/stable/1.0.0)
 
-### [Salesforce Backend](https://github.com/aritram1/salesforce-finplan)
+### [Salesforce Backend](https://github.com/aritram1/salesforce-finplan-managed)
 
 - **Stable Version:** [1.0.0](https://github.com/aritram1/fin-plan-managed/tree/release/stable/1.0.0)
 

@@ -1,1 +1,3 @@
-public with sharing class FinPlanException extends Exception {}
+public with sharing class FinPlanException extends Exception {
+    
+}
