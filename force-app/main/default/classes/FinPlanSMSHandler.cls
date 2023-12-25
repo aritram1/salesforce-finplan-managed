@@ -220,14 +220,10 @@ public with sharing class FinPlanSMSHandler {
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
                 sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
-                // sms.type__c = 'balance_update';
-                // lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
             }
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 on')){
                 sms.SA_available_balance__c = contentArray[10].substring(0, contentArray[10].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
-                // sms.type__c = 'balance_update';
-                // lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
             }
         }
         return sms;
@@ -274,7 +270,6 @@ public with sharing class FinPlanSMSHandler {
             }
             sms.Payment_Via__c = 'ATM';
             sms.type__c = 'debit';
-            // lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         return sms;
     }
@@ -293,7 +288,6 @@ public with sharing class FinPlanSMSHandler {
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.amount_value__c = contentArray[1];
             sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('To dispute')[0];
-            // lastBalanceUpdateSMSList.add(sms); // Also add it to static list so it can be used to update balance update at the bank account later
         }
         else if(sms.content__c.contains('received on your ICICI Bank Credit Card Account 4xxx9006')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
@@ -323,7 +317,6 @@ public with sharing class FinPlanSMSHandler {
                 if(sms.content__c.contains('Available Balance is Rs.')){
                     String availableBalanceString = sms.content__c.split('Available Balance is Rs.')[1];
                     sms.SA_available_balance__c = availableBalanceString.substring(0, availableBalanceString.length()-1).replace(',', '').trim();
-                    // lastBalanceUpdateSMSList.add(sms);
                 }
             }
         }
@@ -372,14 +365,7 @@ public with sharing class FinPlanSMSHandler {
                     else if(word.length() > 1){
                         String firstAlphabet = word.substring(0, 1).toUpperCase();
                         String rest = word.substring(1, word.length()).toLowerCase();
-                        modifiedWords.add(firstAlphabet + rest); 
-
-                        // Logic to apply to ignor eany transformation for specific business names likes HDFC, ICICI etc
-                        // if(word.substring(0, 1) == word.substring(0, 1).toUpperCase() && word.substring(1, 2) == word.substring(1, 2).toLowerCase()){
-                        //     // if first two alphabets are already capital, no transformation is required.
-                        //     // consider this as name of a Business, like HDFC, ICICI
-                        //     modifiedWords.add(word);
-                        // }
+                        modifiedWords.add(firstAlphabet + rest);
                     }
                 }
 
