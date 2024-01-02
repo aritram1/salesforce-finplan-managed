@@ -92,6 +92,14 @@ public with sharing class FinPlanSMSHandler {
                 sms.type__c = 'promotional';
             }
 
+            // Fix some specific beneficiary names to correct sms typos or abbreviations
+            if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
+                sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
+            }
+            if(sms.beneficiary__c == 'Amazon Pay Indi'){
+                sms.beneficiary__c = 'Amazon Pay India';
+            }
+
             processedMessages.add(sms);
         
         }
@@ -281,13 +289,13 @@ public with sharing class FinPlanSMSHandler {
         List<String> contentArray = new List<String>();
         contentArray = sms.content__c?.split(' ');
         // Credit card blocks
-        if(sms.content__c.contains('spent on ICICI Credit Card XX9006')){
+        if(sms.content__c.contains('spent on ICICI Bank Card XX9006')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
             sms.type__c = 'debit';
-            sms.beneficiary__c = sms.content__c.split('at')[1].split('Avl Lmt')[0];
+            sms.beneficiary__c = sms.content__c.split(' at ')[1].split('. Avl Lmt')[0];
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.amount_value__c = contentArray[1];
-            sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('To dispute')[0];
+            sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('. To dispute')[0];
         }
         else if(sms.content__c.contains('received on your ICICI Bank Credit Card Account 4xxx9006')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
