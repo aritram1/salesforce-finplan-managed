@@ -130,16 +130,19 @@ public with sharing class FinPlanSMSHandler {
                 if(sms.savings_or_cc_account__c != null){
                     Bank_Account__c ba = lastBalanceBankAccountsMap.get(sms.savings_or_cc_account__c);
                     System.debug('sms=>' + sms);
-                    System.debug('sms.SA_available_balance__c=>' + sms.SA_available_balance__c);
-                    String availableBalanceString = sms.SA_available_balance__c.replace(',', '');
-                    availableBalanceString = availableBalanceString.endsWith('.') ? availableBalanceString.substring(0, availableBalanceString.length() - 1) : availableBalanceString;
-                    System.debug('Inside handleBankAccountBalanceUpdate=>' + availableBalanceString);
-                    if(ba != null && sms.SA_available_balance__c != null && sms.SA_available_balance__c != ''){
+                    
+                    if(ba != null && ba.Account_Code__c != null && ba.Account_Code__c != ''){
                         if(ba.Account_Code__c.endsWith('-SA')){ // Savings Account
-                            ba.FinPlan__Last_Balance__c = Double.valueOf(availableBalanceString);
+                            System.debug('sms.SA_available_balance__c=>' + sms.SA_available_balance__c);
+                            String availableSABalanceString = sms.SA_available_balance__c.replace(',', '');
+                            availableSABalanceString = availableSABalanceString.endsWith('.') ? availableSABalanceString.substring(0, availableSABalanceString.length() - 1) : availableSABalanceString;
+                            System.debug('Inside handleBankAccountBalanceUpdate for SA =>' + availableSABalanceString);                      
+                            ba.FinPlan__Last_Balance__c = Double.valueOf(availableSABalanceString);
                         }
                         else if(ba.Account_Code__c.endsWith('-CC')){   // Current Account
-                            ba.FinPlan__CC_Available_Limit__c = Double.valueOf(availableBalanceString);
+                            String availableCCBalanceString = sms.FinPlan__CC_Available_Balance__c.replace(',', '');
+                            System.debug('Inside handleBankAccountBalanceUpdate for CC =>' + availableCCBalanceString);                      
+                            ba.FinPlan__CC_Available_Limit__c = Double.valueOf(availableCCBalanceString);
                         }
                         toBeUpdatedBankAccounts.add(ba);
                         
@@ -150,7 +153,7 @@ public with sharing class FinPlanSMSHandler {
                 }
             }
             if(toBeUpdatedBankAccounts.size() > 0){
-                System.debug('toBeUpdatedBankAccounts inside handleBankAccountBalanceUpdate =>' + toBeUpdatedBankAccounts);
+                System.debug('toBeUpdatedBankAccounts inside FinPlanSMSHandler.handleBankAccountBalanceUpdate =>' + toBeUpdatedBankAccounts);
                 update toBeUpdatedBankAccounts;
             }
         }
