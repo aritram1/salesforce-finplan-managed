@@ -1,6 +1,8 @@
 @RestResource(urlMapping='/api/sms/delete/*')
 global with sharing class FinPlanDeleteSMSAPIController {
 
+    static final String TAG = 'FinPlanDeleteSMSAPIController';
+
     // This method processes post requests at this endpoint and deletes selected/all messages
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @HttpPost
@@ -23,6 +25,8 @@ global with sharing class FinPlanDeleteSMSAPIController {
         catch (Exception e) {
             errors.add(e.getMessage());
             response.put('errors', errors);
+
+            FinPlanLogger.logError(e, TAG);
         }
         return response;
     }

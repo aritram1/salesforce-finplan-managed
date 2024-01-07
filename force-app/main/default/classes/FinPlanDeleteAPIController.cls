@@ -1,4 +1,8 @@
 public with sharing class FinPlanDeleteAPIController {
+
+    
+    static final String TAG = 'FinPlanDeleteAPIController';
+
     // This method deletes all transaction records - This is mostly when syncing / debugging
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static Map<String, String> deleteAllTransactionsAndClearRecycleBin() {

@@ -6,8 +6,8 @@
 		<members>FinPlanSyncSMSAPIController</members>
 		<members>FinPlanSMSHandler</members>
 		<members>FinPlanException</members>
+		<members>FinPlanLogger</members>
 		<members>FinPlanDeleteTransactionAPIController</members>
-		<members>Logger</members>
 		<members>FinPlanTransactionHandler</members>
 		<members>FinPlanDeleteSMSAPIController</members>
 		<members>FinPlanPermanentDeleteAPIController</members>

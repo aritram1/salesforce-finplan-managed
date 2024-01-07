@@ -1,6 +1,8 @@
 @RestResource(urlMapping='/api/sms/approve/*')
 global with sharing class FinPlanApproveSMSAPIController {
 
+    static final String TAG = 'FinPlanApproveSMSAPIController';
+
     public static Map<String, Map<string, List<String>>> apiResponse = new Map<String, Map<string, List<String>>>();
     // This method approves the messages which means transaction records are created from these messages and
     // to save storage these sms records are deleted from the system. 

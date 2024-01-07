@@ -1,5 +1,7 @@
 public with sharing class FinPlanSMSHandler {
 
+    static final String TAG = 'FinPlanSMSHandler';
+
     public static List<FinPlan__SMS_Message__c> processedMessages;
     public static List<FinPlan__SMS_Message__c> lastBalanceUpdateSMSList;
     public static Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
@@ -21,89 +23,96 @@ public with sharing class FinPlanSMSHandler {
 
     // Method to enrich message data
     public static List<FinPlan__SMS_Message__c> enrichData(List<FinPlan__SMS_Message__c> allMessages){
+        try{
+            // initiate variables
+            processedMessages = new List<FinPlan__SMS_Message__c>();
+            lastBalanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
+            getAllBankAccounts();
+
+            // The main loop starts
+            for(FinPlan__SMS_Message__c sms : allMessages){
+                
+                // set the date;
+                String rawDateString = sms.FinPlan__Received_At__c?.split(' ')[0];
+                if(rawDateString?.contains('-')){
+                    Integer yyyy = Integer.valueOf(rawDateString.split('-')[0]);
+                    Integer mm = Integer.valueOf(rawDateString.split('-')[1]);
+                    Integer dd = Integer.valueOf(rawDateString.split('-')[2]);
+                    sms.FinPlan__Transaction_Date__c = Date.newInstance(yyyy, mm, dd);
+                }
+                else{ 
+                    // Convert String -> Long -> DateTime -> Date
+                    sms.FinPlan__Transaction_Date__c = Date.valueOf(DateTime.newInstance(Long.valueOf(rawDateString))); 
+                }
+
+                // set personal type
+                ////////////////////////////////////////////////////////////////////////////////////////
+                if(sms.sender__c.startsWith('+')){
+                    sms.type__c = 'personal';
+                }
+                
+                // set OTP type
+                ////////////////////////////////////////////////////////////////////////////////////////
+                else if (sms.content__c?.contains('OTP') || sms.sender__c?.contains('OTP') || sms.content__c?.contains('Verification') || sms.content__c?.contains('verification')){
+                    sms.Type__c = 'otp';
+                }
         
-        // initiate variables
-        processedMessages = new List<FinPlan__SMS_Message__c>();
-        lastBalanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
-        getAllBankAccounts();
-
-        // The main loop starts
-        for(FinPlan__SMS_Message__c sms : allMessages){
-            
-            // set the date;
-            String rawDateString = sms.FinPlan__Received_At__c?.split(' ')[0];
-            if(rawDateString?.contains('-')){
-                Integer yyyy = Integer.valueOf(rawDateString.split('-')[0]);
-                Integer mm = Integer.valueOf(rawDateString.split('-')[1]);
-                Integer dd = Integer.valueOf(rawDateString.split('-')[2]);
-                sms.FinPlan__Transaction_Date__c = Date.newInstance(yyyy, mm, dd);
-            }
-            else{ 
-                // Convert String -> Long -> DateTime -> Date
-                sms.FinPlan__Transaction_Date__c = Date.valueOf(DateTime.newInstance(Long.valueOf(rawDateString))); 
-            }
-
-            // set personal type
-            ////////////////////////////////////////////////////////////////////////////////////////
-            if(sms.sender__c.startsWith('+')){
-                sms.type__c = 'personal';
-            }
-            
-            // set OTP type
-            ////////////////////////////////////////////////////////////////////////////////////////
-            else if (sms.content__c?.contains('OTP') || sms.sender__c?.contains('OTP') || sms.content__c?.contains('Verification') || sms.content__c?.contains('verification')){
-                sms.Type__c = 'otp';
-            }
-    
-            // set credit and debit types
-            ////////////////////////////////////////////////////////////////////////////////////////
-            else{ 
-                // HDFC
-                if(sms.Sender__c.contains('HDFC')){
-                    processForHDFCBank(sms);
+                // set credit and debit types
+                ////////////////////////////////////////////////////////////////////////////////////////
+                else{ 
+                    // HDFC
+                    if(sms.Sender__c.contains('HDFC')){
+                        processForHDFCBank(sms);
+                    }
+                    // SBI
+                    else if(sms.Sender__c.contains('SBI')){
+                        processForSBIBank(sms);
+                    }
+                    // ICICI
+                    else if(sms.Sender__c.contains('ICICI')){
+                        processForICICIBank(sms);
+                    }
                 }
-                // SBI
-                else if(sms.Sender__c.contains('SBI')){
-                    processForSBIBank(sms);
+                
+                ////////////////////////////////////////////////////////////////////////////////////////
+                // Few final checks to classify messages further
+                ////////////////////////////////////////////////////////////////////////////////////////
+                
+                // Check if this sms is related to a financial transaction
+                if(sms.amount_value__c != null){
+                    sms.Create_Transaction__c = true;
                 }
-                // ICICI
-                else if(sms.Sender__c.contains('ICICI')){
-                    processForICICIBank(sms);
+
+                // Check if this is useful for balance updating, then add it to static list `lastBalanceUpdateSMSList`
+                if(String.isNotBlank(sms.CC_Available_Balance__c) || String.isNotBlank(sms.SA_available_balance__c)){
+                    sms.Balance_Update__c = true;
+                    lastBalanceUpdateSMSList.add(sms);
                 }
-            }
+
+                // the type is still not assigned set type as promotional
+                if(sms.type__c == null || sms.type__c == ''){
+                    sms.type__c = 'promotional';
+                }
+
+                // Fix some specific beneficiary names to correct sms typos or abbreviations
+                if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
+                    sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
+                }
+                if(sms.beneficiary__c == 'Amazon Pay Indi'){
+                    sms.beneficiary__c = 'Amazon Pay India';
+                }
+                if(sms.beneficiary__c.contains('a/c linked to VPA')){
+                    sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
+                }
+
+                processedMessages.add(sms);
             
-            ////////////////////////////////////////////////////////////////////////////////////////
-            // Few final checks to classify messages further
-            ////////////////////////////////////////////////////////////////////////////////////////
-            
-            // Check if this sms is related to a financial transaction
-            if(sms.amount_value__c != null){
-                sms.Create_Transaction__c = true;
             }
-
-            // Check if this is useful for balance updating, then add it to static list `lastBalanceUpdateSMSList`
-            if(String.isNotBlank(sms.CC_Available_Balance__c) || String.isNotBlank(sms.SA_available_balance__c)){
-                sms.Balance_Update__c = true;
-                lastBalanceUpdateSMSList.add(sms);
-            }
-
-            // the type is still not assigned set type as promotional
-            if(sms.type__c == null || sms.type__c == ''){
-                sms.type__c = 'promotional';
-            }
-
-            // Fix some specific beneficiary names to correct sms typos or abbreviations
-            if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
-                sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
-            }
-            if(sms.beneficiary__c == 'Amazon Pay Indi'){
-                sms.beneficiary__c = 'Amazon Pay India';
-            }
-
-            processedMessages.add(sms);
-        
+            System.debug('Processed messages=>' + processedMessages);
         }
-        System.debug('Processed messages=>' + processedMessages);
+        catch(Exception e){
+            FinPlanLogger.logError(e, TAG);
+        }
         return processedMessages;
     }
 
@@ -158,6 +167,7 @@ public with sharing class FinPlanSMSHandler {
             }
         }
         catch(Exception ex){
+            FinPlanLogger.logError(ex, TAG);
             balanceUpdateResponse = 'Error occurred inside handleBankAccountBalanceUpdate : ' + ex.getMessage();
         }
         return balanceUpdateResponse;
@@ -203,8 +213,15 @@ public with sharing class FinPlanSMSHandler {
                     sms.Payment_Via__c = 'IMPS';
                     sms.Payment_Reference__c = str.split('IMPS Ref No. ')[1];
                 }
-                
-                
+            }
+            else if(sms.content__c.startsWith('HDFC Bank: Rs.') && sms.content__c.contains('credited to a/c XXXXXX9560') && sms.content__c.contains('UPI Ref No')){
+                sms.amount_value__c = contentArray[3];
+                String upiRef = sms.content__c.split('UPI Ref No')[1];
+                sms.Payment_Reference__c = upiRef.substring(0, upiRef.length()-2);
+                sms.Payment_Via__c = 'UPI';
+                String beneficiary = sms.content__c.split(' by ')[1].split('UPI Ref No')[0];
+                sms.beneficiary__c = beneficiary.substring(0, beneficiary.length()-2);
+                sms.type__c = 'credit';
             }
             // debit bank transfer
             else if(sms.content__c.contains('debited from a/c **9560') && sms.content__c.contains('UPI')){
@@ -231,10 +248,12 @@ public with sharing class FinPlanSMSHandler {
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
                 sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
+                sms.Type__c = 'balance_update';
             }
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 on')){
                 sms.SA_available_balance__c = contentArray[10].substring(0, contentArray[10].length()-1);
                 sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
+                sms.Type__c = 'balance_update';
             }
         }
         return sms;
@@ -360,32 +379,27 @@ public with sharing class FinPlanSMSHandler {
             return inputString;
         }
         else{
-            try{
-                List<String> modifiedWords = new List<String>();
+            List<String> modifiedWords = new List<String>();
+            inputString = inputString.trim();
 
-                inputString = inputString.trim();
-
-                // Split the string into words
-                List<String> words = inputString.trim().split(' ');
-                
-                for (String word : words) {
-                    word = word.trim(); // trim the whitespaces
-                    if(word.length() == 1){
-                        modifiedWords.add(word.toUpperCase());  // if there is only one character in the word
-                    }
-                    else if(word.length() > 1){ // if there are atleast 2 characters in a word
-                        String firstAlphabet = word.substring(0, 1).toUpperCase();
-                        String rest = word.substring(1, word.length()).toLowerCase();
-                        modifiedWords.add(firstAlphabet + rest);
-                    }
+            // Split the string into words
+            List<String> words = inputString.trim().split(' ');
+            
+            for (String word : words) {
+                word = word.trim(); // trim the whitespaces
+                if(word.length() == 1){
+                    modifiedWords.add(word.toUpperCase());  // if there is only one character in the word
                 }
+                else if(word.length() > 1){ // if there are atleast 2 characters in a word
+                    String firstAlphabet = word.substring(0, 1).toUpperCase();
+                    String rest = word.substring(1, word.length()).toLowerCase();
+                    modifiedWords.add(firstAlphabet + rest);
+                }
+            }
 
-                // Join the words back together
-                return String.join(modifiedWords, ' ');
-            }
-            catch(Exception e){
-                throw new FinPlanException(e.getMessage());
-            }
+            // Join the words back together
+            return String.join(modifiedWords, ' ');
+            
         }
     }
 }

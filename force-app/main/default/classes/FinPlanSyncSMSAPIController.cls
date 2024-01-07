@@ -1,12 +1,13 @@
 @RestResource(urlMapping='/api/sms/sync/*')
 global with sharing class FinPlanSyncSMSAPIController {
-    
+    static final String TAG = 'FinPlanSyncSMSAPIController';
+
     global static List<FinPlan__SMS_Message__c> receivedMessages;
     global static List<FinPlan__SMS_Message__c> processedMessages;
     global static List<FinPlan__SMS_Message__c> balanceUpdateSMSList;
     global static Map<String, String> apiResponse;
     global static String balanceUpdateResponse;
-    global static String messageDeleteResponse;
+    global static String deleteResponse;
     global static String afterTransactionsCreatedMessageDeleteResponse;
     
     global static String transactionCreateResponse;
@@ -24,7 +25,7 @@ global with sharing class FinPlanSyncSMSAPIController {
     }
 
     // This method does more than one actions
-    // 1 - Deletes existing messages
+    // 1 - Deletes existing messages and transactions
     // 2 - Inserts the New Messages
     // 3 - Updates Balances
     // 4 - Creates Bank/Investment Transaction records, as applicable, from messages
@@ -36,9 +37,9 @@ global with sharing class FinPlanSyncSMSAPIController {
             
             apiResponse.put('data', ''); // Create success response - can be optimized to return better json. TBD
             
-            // Step 1 : Deletes existing messages
-            messageDeleteResponse = deleteAllMessagesAndClearRecycleBin();
-            apiResponse.put('data', apiResponse.get('data') + '|| messageDeleteResponse=>' + messageDeleteResponse);
+            // Step 1 : Deletes existing messages/transactions
+            deleteResponse = deleteAllExistingAndClearRecycleBin();
+            apiResponse.put('data', apiResponse.get('data') + '|| deleteResponse=>' + deleteResponse);
 
             // Step 2 : Inserts the New Messages
             processedMessages = insertMessages(records);
@@ -56,8 +57,8 @@ global with sharing class FinPlanSyncSMSAPIController {
 
             // Step 5 : After transactions are created, delete messages [to save sf storage ;)]
             // (this can be conditionally commented pout for debugging/testing)
-            afterTransactionsCreatedMessageDeleteResponse = deleteAllMessagesAndClearRecycleBin(); 
-            apiResponse.put('data', apiResponse.get('data') + '|| afterTransactionsCreatedMessageDeleteResponse=>' + afterTransactionsCreatedMessageDeleteResponse);
+            // afterTransactionsCreatedMessageDeleteResponse = deleteAllExistingAndClearRecycleBin(); 
+            // apiResponse.put('data', apiResponse.get('data') + '|| afterTransactionsCreatedMessageDeleteResponse=>' + afterTransactionsCreatedMessageDeleteResponse);
 
             // Set the status code
             apiResponse.put('statusCode', '200');
@@ -67,6 +68,9 @@ global with sharing class FinPlanSyncSMSAPIController {
             // Set status code and error
             apiResponse.put('statusCode', '400');
             apiResponse.put('error', 'Error : ' + ex.getMessage());
+
+            // Also log the error to the System Logs
+            FinPlanLogger.logError(ex, TAG);
         }
         return apiResponse;
     }
@@ -87,23 +91,14 @@ global with sharing class FinPlanSyncSMSAPIController {
         return processedMessages;
     }
 
-    // global static void createInvestmentTransactions(List<FinPlan__SMS_Message__c> messageList){
-    //     bankTransactions = new List<FinPlan__Transaction__c>();
-    //     investmentTransactions = new List<FinPlan__Investment_Transaction__c>();
-        
-    //     for(FinPlan__SMS_Message__c sms : messageList){
-
-    //     }
-    // }
-
     public static String handleUpdateAccountBalance(List<FinPlan__SMS_Message__c> msgList){
         String response = '';
         response = FinPlanSMSHandler.handleBankAccountBalanceUpdate(msgList);
         return response;
     }
 
-    global static String deleteAllMessagesAndClearRecycleBin(){
-        String response = String.valueOf(FinPlanSMSHandler.deleteSMSAndClearRecycleBin());
+    global static String deleteAllExistingAndClearRecycleBin(){
+        String response = String.valueOf(FinPlanPermanentDeleteAPIController.permanentlyDeleteMessagesAndTransactions());
         return response;
     }
 
