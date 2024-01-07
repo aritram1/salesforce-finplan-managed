@@ -101,7 +101,7 @@ public with sharing class FinPlanSMSHandler {
                 if(sms.beneficiary__c == 'Amazon Pay Indi'){
                     sms.beneficiary__c = 'Amazon Pay India';
                 }
-                if(sms.beneficiary__c.contains('a/c linked to VPA')){
+                if(sms.beneficiary__c != null && sms.beneficiary__c != '' && sms.beneficiary__c.contains('a/c linked to VPA')){
                     sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
                 }
 
@@ -288,7 +288,7 @@ public with sharing class FinPlanSMSHandler {
         // atm withdrawal
         if(sms.content__c.contains('withdrawn at SBI ATM')){
             sms.amount_value__c = contentArray[3].replace('Rs.', '');
-            sms.beneficiary__c = 'Self - ATM';
+            sms.beneficiary__c = 'SBI ATM withdrawal';
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.SA_available_balance__c = contentArray[18].replace('Rs.', '');
             if(sms.SA_available_balance__c.endsWith('.')){
