@@ -4,6 +4,8 @@
 		<members>FinPlanApproveSMSAPIController</members>
 		<members>FinPlanSyncSMSAPIController</members>
 		<members>FinPlanSMSHandler</members>
+		<members>FinPlanSMSHandlerBank</members>
+		<members>FinPlanSMSHandlerInvestment</members>
 		<members>FinPlanException</members>
 		<members>FinPlanLogger</members>
 		<members>FinPlanTransactionHandler</members>
