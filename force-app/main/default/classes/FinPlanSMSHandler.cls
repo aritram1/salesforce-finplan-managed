@@ -124,6 +124,7 @@ public with sharing class FinPlanSMSHandler {
                     }
                     when else {
                         // Do nothing
+                        System.debug('I should not be in this enrichData() method ! :(');
                     }
                 }
                 
