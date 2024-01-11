@@ -191,6 +191,16 @@
                 <identifier>RecordFinPlan_CC_Available_Balance_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.INV_Available_Balance__c</fieldItem>
+                <identifier>RecordFinPlan_INV_Available_Balance_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-d76fcfe4-5a1b-425e-a364-59b27c38db03</name>
         <type>Facet</type>
     </flexiPageRegions>

@@ -30,6 +30,11 @@
                 <default>false</default>
                 <label>ATM</label>
             </value>
+            <value>
+                <fullName>DEBITCARD</fullName>
+                <default>false</default>
+                <label>DEBITCARD</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>

@@ -2,6 +2,9 @@ public with sharing class FinPlanSMSHandler {
 
     static final String TAG = 'FinPlanSMSHandler';
 
+    static final Set<String> BANK_SMS_SENDERS = new Set<String>{'HDFC', 'ICICI', 'SBI'};
+    static final Set<String> INVESTMENT_SMS_SENDERS = new Set<String>{'NPS', 'PPF', 'EPF'};
+
     public static List<FinPlan__SMS_Message__c> processedMessages;
     public static List<FinPlan__SMS_Message__c> lastBalanceUpdateSMSList;
     public static Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
@@ -44,35 +47,22 @@ public with sharing class FinPlanSMSHandler {
                     sms.FinPlan__Transaction_Date__c = Date.valueOf(DateTime.newInstance(Long.valueOf(rawDateString))); 
                 }
 
-                // set personal type
-                ////////////////////////////////////////////////////////////////////////////////////////
-                if(sms.sender__c.startsWith('+')){
-                    sms.type__c = 'personal';
-                }
-                
-                // set OTP type
-                ////////////////////////////////////////////////////////////////////////////////////////
-                else if (sms.content__c?.contains('OTP') || sms.sender__c?.contains('OTP') || sms.content__c?.contains('Verification') || sms.content__c?.contains('verification')){
+                // Personal
+                if(sms.sender__c.startsWith('+')){  // set personal type
+                    sms.type__c = 'personal';   
+                }                
+                // OTP
+                else if (sms.content__c?.toUpperCase().contains('OTP') || sms.content__c?.toUpperCase().contains('VERIFICATION CODE')){
                     sms.Type__c = 'otp';
                 }
-        
-                // set credit and debit types
-                ////////////////////////////////////////////////////////////////////////////////////////
+                // Credit / Debit / Balance Update
                 else{ 
-                    // HDFC
-                    if(sms.Sender__c.contains('HDFC')){
-                        FinPlanSMSHandlerBank.processForHDFCBank(sms, allBankAccountsMap);
+                    // Bank Types
+                    if(BANK_SMS_SENDERS.contains(sms.Sender__c)){
+                        FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap);
                     }
-                    // SBI
-                    else if(sms.Sender__c.contains('SBI')){
-                        FinPlanSMSHandlerBank.processForSBIBank(sms, allBankAccountsMap);
-                    }
-                    // ICICI
-                    else if(sms.Sender__c.contains('ICICI')){
-                        FinPlanSMSHandlerBank.processForICICIBank(sms, allBankAccountsMap);
-                    }
-                    // Related to Investments
-                    else if(sms.Sender__c.contains('NSE')){
+                    // Investment Types
+                    else if(INVESTMENT_SMS_SENDERS.contains(sms.Sender__c)){
                         FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
                     }
                 }
@@ -86,21 +76,18 @@ public with sharing class FinPlanSMSHandler {
                     sms.Create_Transaction__c = true;
                 }
 
-                // Check if this is useful for balance updating, then add it to static 
-                // list `lastBalanceUpdateSMSList` for further use
+                // Identify if this helps to update balance, set flags accordingly
                 if(String.isNotBlank(sms.CC_Available_Balance__c) || String.isNotBlank(sms.SA_available_balance__c)){
                     sms.Balance_Update__c = true;
                     lastBalanceUpdateSMSList.add(sms);
                 }
 
-                // the type is still not assigned set type as promotional
-                if(sms.type__c == null || sms.type__c == ''){
+                // If the type is still not assigned set type as promotional
+                if(String.isBlank(sms.type__c)){
                     sms.type__c = 'promotional';
                 }
 
-                // Fix some specific beneficiary names to 
-                // - correct sms typos / better abbreviations or
-                // - set the investment type if the beneficiary name represents Tax, Investments etc
+                // Fix some specific beneficiary names to correct sms typos / provide better abbreviations
                 if(sms.beneficiary__c != null && sms.beneficiary__c != ''){
                     if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
                         sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
@@ -115,13 +102,13 @@ public with sharing class FinPlanSMSHandler {
                         sms.beneficiary__c = 'HDFC ATM withdrawal';
                     }
                     else if(sms.beneficiary__c == 'Cbdttax'){
-                        sms.beneficiary__c = 'CBDTTAX';
                         sms.Related_To_Investment__c = true;
+                        sms.beneficiary__c = 'CBDTTAX';
                         sms.Investment_Type__c = 'Advance Tax';
                     }
                     else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARINGCORP')){
                         sms.Related_To_Investment__c = true;
-                        sms.Investment_Type__c = 'Indian Clearing Corporation';
+                        sms.beneficiary__c = 'NPS - Indian Clearing Corporation';
                         sms.Investment_Type__c = 'NPS';
                     }
                     else if(sms.beneficiary__c.contains('a/c linked to VPA')){

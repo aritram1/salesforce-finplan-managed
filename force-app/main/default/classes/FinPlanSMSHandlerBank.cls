@@ -1,117 +1,143 @@
 public with sharing class FinPlanSMSHandlerBank {
 
+    public static FinPlan__SMS_Message__c processForBanks(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+        if(sms.Sender__c.contains('HDFC')){
+            sms = processForHDFCBank(sms, allBankAccountsMap);
+        }
+        else if(sms.Sender__c.contains('ICICI')){
+            sms = processForICICIBank(sms, allBankAccountsMap);
+        }
+        else if(sms.Sender__c.contains('SBI')){
+            sms = processForSBIBank(sms, allBankAccountsMap);
+        }
+        return sms;
+    }
+
+
     // This method enriches the sms record if it's from HDFC
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static FinPlan__SMS_Message__c processForHDFCBank(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+        
         List<String> contentArray = new List<String>();
         contentArray = sms.content__c?.split(' ');
-        if(sms.Sender__c.contains('HDFC')){
-            sms.savings_or_cc_account__c = allBankAccountsMap.get('HDFC-SA').Id;
-            // credit
-            if(sms.content__c.contains('deposited')){
-                sms.amount_value__c = contentArray[2].replace(',' , '');
-                sms.type__c = 'credit';
-                sms.SA_available_balance__c = sms.content__c.split('.Avl bal INR ')[1].split('. Cheque deposits')[0];
-                if(sms.content__c.contains('UPI')){
-                    sms.Payment_Via__c = 'UPI';
-                    String str = sms.content__c.split('for')[1].split('.Avl bal')[0];
-                    sms.Beneficiary__c = str.split('-')[1] + '-' + str.split('-')[2] + '-' + str.split('-')[3];
-                    sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
-                    sms.Payment_Reference__c = str.split('-')[4];
-                }
-                else{
-                    sms.Beneficiary__c = sms.content__c.split('for')[1].split('.Avl bal')[0];
-                    sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
-                }
-                
-            }
-            // credit
-            else if(sms.content__c.startsWith('Money Received')){
-                sms.amount_value__c = contentArray[4].replace(',' , '');
-                sms.SA_available_balance__c = sms.content__c.split('Avl bal: INR')[1];
-                sms.type__c = 'credit';
-                String str = sms.content__c.split('Avl bal: INR')[0].split('by')[1].replace('(', '').replace(')', '');
-                
-                sms.Beneficiary__c = str.split('IMPS Ref No. ')[0];
-                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
-                
-                if(sms.content__c.contains('IMPS')){
-                    sms.Payment_Via__c = 'IMPS';
-                    sms.Payment_Reference__c = str.split('IMPS Ref No. ')[1];
-                }
-            }
-            else if(sms.content__c.startsWith('HDFC Bank: Rs.') && sms.content__c.contains('credited to a/c XXXXXX9560') && sms.content__c.contains('UPI Ref No')){
-                sms.amount_value__c = contentArray[3].replace(',' , '');
-                String upiRef = sms.content__c.split('UPI Ref No')[1];
-                sms.Payment_Reference__c = upiRef.substring(0, upiRef.length()-2);
-                sms.Payment_Via__c = 'UPI';
-                String beneficiary = sms.content__c.split(' by ')[1].split('UPI Ref No')[0];
-                sms.beneficiary__c = beneficiary.substring(0, beneficiary.length()-2);
-                sms.type__c = 'credit';
-            }
-            // debit bank transfer
-            else if(sms.content__c.contains('debited from a/c **9560') && sms.content__c.contains('UPI')){
-                sms.amount_value__c = contentArray[3].replace(',' , '');
-                sms.type__c = 'debit';
-                sms.Payment_Via__c = 'UPI';
-                String content = sms.content__c.replace('(', '').replace(')', '');
-                sms.Beneficiary__c = content.split('to ')[1].split('. Not you?')[0].split('UPI Ref No ')[0];
-                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+        
+        sms.savings_or_cc_account__c = allBankAccountsMap.get('HDFC-SA').Id;
 
-                String paymentReferenceString = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
-                sms.Payment_Reference__c = paymentReferenceString.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('UPI Ref No.', '').trim();
-            }
-            // debit UPI
-            else if(sms.content__c.startswith('Money Transfer:Rs') && sms.content__c.contains('UPI')){
-                sms.amount_value__c = contentArray[2].replace(',' , '');
-                sms.type__c = 'debit';
+        // credit 1
+        if(sms.content__c.contains('deposited')){
+            sms.amount_value__c = contentArray[2].replace(',' , '');
+            sms.type__c = 'credit';
+            sms.SA_available_balance__c = sms.content__c.split('.Avl bal INR ')[1].split('. Cheque deposits')[0];
+            if(sms.content__c.contains('UPI')){
                 sms.Payment_Via__c = 'UPI';
-                sms.Payment_Reference__c = sms.content__c.split(' UPI:')[1].split('Not you?')[0];
-                sms.Beneficiary__c = sms.content__c.split(' UPI')[0].split(' to ')[1];
+                String str = sms.content__c.split('for')[1].split('.Avl bal')[0];
+                sms.Beneficiary__c = str.split('-')[1] + '-' + str.split('-')[2] + '-' + str.split('-')[3];
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+                sms.Payment_Reference__c = str.split('-')[4];
+            }
+            else{
+                sms.Beneficiary__c = sms.content__c.split('for')[1].split('.Avl bal')[0];
                 sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             }
-            // debit UPI where sms starts like 
-            // UPDATE: ....
-            else if(sms.content__c.contains('debited from HDFC Bank XX9560')){
-                sms.amount_value__c = contentArray[2].replace(',', '');
-                sms.type__c = 'debit';
-                sms.Payment_Via__c = 'UPI';
-                sms.SA_available_balance__c = sms.content__c.split('Avl bal:INR ')[1].replace(',', '');
-                sms.beneficiary__c = sms.content__c.split('Info: UPI-')[1].split('Avl bal:INR')[0];
-                if(sms.beneficiary__c.length() > 255){
-                    sms.beneficiary__c = sms.beneficiary__c.substring(0,255);
-                }
-                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
-            }
-            // debit via NEFT/IMPS where sms starts like
-            // Thanks for paying ...
-            else if(sms.content__c.startswith('Thanks for paying Rs.')){
-                sms.amount_value__c = contentArray[3].replace(',', '').replace('Rs.', '');
-                sms.type__c = 'debit';
+            
+        }
+        // credit 2
+        else if(sms.content__c.startsWith('Money Received')){
+            sms.amount_value__c = contentArray[4].replace(',' , '');
+            sms.SA_available_balance__c = sms.content__c.split('Avl bal: INR')[1];
+            sms.type__c = 'credit';
+            String str = sms.content__c.split('Avl bal: INR')[0].split('by')[1].replace('(', '').replace(')', '');
+            
+            sms.Beneficiary__c = str.split('IMPS Ref No. ')[0];
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+            
+            if(sms.content__c.contains('IMPS')){
                 sms.Payment_Via__c = 'IMPS';
-                sms.Beneficiary__c = sms.content__c.split('from A/c XXXX9560 to')[1].split('via HDFC Bank NetBanking')[0];
-                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
-            }
-            // atm withdrawal
-            else if(sms.content__c.contains('ve withdrawn Rs.')){
-                sms.amount_value__c = contentArray[2].replace(',' , '').replace('Rs.', '');
-                sms.type__c = 'debit';
-                sms.Payment_Via__c = 'ATM';
-                sms.Beneficiary__c = 'HDFC ATM withdrawal';
-                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c);
-            }
-            // balance update
-            else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
-                sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);
-                sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
-                sms.Type__c = 'balance_update';
-            }
-            else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 on')){
-                sms.SA_available_balance__c = contentArray[10].substring(0, contentArray[10].length()-1);
-                sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
-                sms.Type__c = 'balance_update';
+                sms.Payment_Reference__c = str.split('IMPS Ref No. ')[1];
             }
         }
+        // credit 3
+        else if(sms.content__c.startsWith('HDFC Bank: Rs.') && sms.content__c.contains('credited to a/c XXXXXX9560') && sms.content__c.contains('UPI Ref No')){
+            sms.amount_value__c = contentArray[3].replace(',' , '');
+            String upiRef = sms.content__c.split('UPI Ref No')[1];
+            sms.Payment_Reference__c = upiRef.substring(0, upiRef.length()-2);
+            sms.Payment_Via__c = 'UPI';
+            String beneficiary = sms.content__c.split(' by ')[1].split('UPI Ref No')[0];
+            sms.beneficiary__c = beneficiary.substring(0, beneficiary.length()-2);
+            sms.type__c = 'credit';
+        }
+        // debit1 bank transfer
+        else if(sms.content__c.contains('debited from a/c **9560') && sms.content__c.contains('UPI')){
+            sms.amount_value__c = contentArray[3].replace(',' , '');
+            sms.type__c = 'debit';
+            sms.Payment_Via__c = 'UPI';
+            String content = sms.content__c.replace('(', '').replace(')', '');
+            sms.Beneficiary__c = content.split(' to ')[1].split('. Not you?')[0].split('UPI Ref')[0];
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+
+            String paymentReferenceString = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
+            sms.Payment_Reference__c = paymentReferenceString.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('UPI Ref No.', '').trim();
+        }
+        // debit2 UPI
+        else if(sms.content__c.startswith('Money Transfer:Rs') && sms.content__c.contains('UPI')){
+            sms.amount_value__c = contentArray[2].replace(',' , '');
+            sms.type__c = 'debit';
+            sms.Payment_Via__c = 'UPI';
+            sms.Payment_Reference__c = sms.content__c.split(' UPI:')[1].split('Not you?')[0];
+            sms.Beneficiary__c = sms.content__c.split(' UPI')[0].split(' to ')[1];
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+        }
+        // debit3 UPI where sms starts like 
+        // UPDATE: ....
+        else if(sms.content__c.contains('debited from HDFC Bank XX9560')){
+            sms.amount_value__c = contentArray[2].replace(',', '');
+            sms.type__c = 'debit';
+            sms.Payment_Via__c = 'UPI';
+            sms.SA_available_balance__c = sms.content__c.split('Avl bal:INR ')[1].replace(',', '');
+            sms.beneficiary__c = sms.content__c.split('Info: UPI-')[1].split('Avl bal:INR')[0];
+            if(sms.beneficiary__c.length() > 255){
+                sms.beneficiary__c = sms.beneficiary__c.substring(0,255);
+            }
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+        }
+        // debit4 via NEFT/IMPS where sms starts like
+        // Thanks for paying ...
+        else if(sms.content__c.startswith('Thanks for paying Rs.')){
+            sms.amount_value__c = contentArray[3].replace(',', '').replace('Rs.', '');
+            sms.type__c = 'debit';
+            sms.Payment_Via__c = 'IMPS';
+            sms.Beneficiary__c = sms.content__c.split('from A/c XXXX9560 to')[1].split('via HDFC Bank NetBanking')[0];
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+        }
+        // debit 5
+        else if(sms.content__c.startswith('Alert!') && sms.content__c.contains('spent Rs')){
+            sms.amount_value__c = contentArray[2].replace(',', '').replace('Rs.', '');
+            sms.type__c = 'debit';
+            sms.Payment_Via__c = 'DEBITCARD';
+            sms.SA_Available_Balance__c = sms.content__c.split('Avl bal: ')[1].split('Not you?')[0].replace(',', '');
+            sms.Beneficiary__c = sms.content__c.split('At ')[1].split('On ')[0].replace('.', ' ').replace('_', '').trim();
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+        }
+        // atm withdrawal
+        else if(sms.content__c.contains('ve withdrawn Rs.')){
+            sms.amount_value__c = contentArray[2].replace(',' , '').replace('Rs.', '');
+            sms.type__c = 'debit';
+            sms.Payment_Via__c = 'ATM';
+            sms.Beneficiary__c = 'HDFC ATM withdrawal';
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c);
+        }
+        // balance update
+        else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
+            sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);
+            sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
+            sms.Type__c = 'balance_update';
+        }
+        else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 on')){
+            sms.SA_available_balance__c = contentArray[10].substring(0, contentArray[10].length()-1);
+            sms.SA_available_balance__c =  sms.SA_available_balance__c.replace('.Cheque', ''); // further check added
+            sms.Type__c = 'balance_update';
+        }
+        
         return sms;
     }
     // End method
@@ -246,7 +272,7 @@ public with sharing class FinPlanSMSHandlerBank {
             if(sms.SA_Available_Balance__c.endsWith('.')){
                 sms.SA_Available_Balance__c = sms.SA_Available_Balance__c.substring(0, sms.SA_Available_Balance__c.length()-1);
             } 
-            if(sms.content__c.contains('InfoBIL*000781090')){
+            if(sms.content__c.contains('InfoBIL*')){
                 sms.beneficiary__c = 'ICICI CC Account';
             }
             else{
