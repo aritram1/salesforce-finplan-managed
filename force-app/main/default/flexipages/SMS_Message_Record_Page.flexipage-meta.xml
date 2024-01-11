@@ -259,6 +259,16 @@
                 <identifier>RecordFinPlan_Payment_Reference_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Investment_Type__c</fieldItem>
+                <identifier>RecordFinPlan_Investment_Type_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-caff8009-f416-495a-9d06-4c52867abbeb</name>
         <type>Facet</type>
     </flexiPageRegions>

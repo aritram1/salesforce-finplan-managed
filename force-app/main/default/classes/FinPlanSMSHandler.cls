@@ -117,6 +117,7 @@ public with sharing class FinPlanSMSHandler {
                     when 'Cbdttax' {
                         sms.beneficiary__c = 'CBDTTAX';
                         sms.Related_To_Investment__c = true;
+                        sms.Investment_Type__c = 'Advance Tax';
                     }
                     when else {
                         // Do nothing
