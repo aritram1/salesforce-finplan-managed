@@ -70,12 +70,21 @@ public with sharing class FinPlanSMSHandlerBank {
                 sms.Beneficiary__c = sms.content__c.split(' UPI')[0].split(' to ')[1];
                 sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             }
+            // debit via NEFT/IMPS
+            else if(sms.content__c.startswith('Thanks for paying Rs.')){
+                sms.amount_value__c = contentArray[3].replace(',', '').replace('Rs.', '');
+                sms.type__c = 'debit';
+                sms.Payment_Via__c = 'IMPS';
+                sms.Beneficiary__c = sms.content__c.split('from A/c XXXX9560 to')[1].split('via HDFC Bank NetBanking')[0];
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+            }
             // atm withdrawal
             else if(sms.content__c.contains('ve withdrawn Rs.')){
                 sms.amount_value__c = contentArray[2]?.replace('Rs.', '');
                 sms.type__c = 'debit';
                 sms.Payment_Via__c = 'ATM';
                 sms.Beneficiary__c = 'HDFC ATM withdrawal';
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c);
             }
             // balance update
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
@@ -133,8 +142,12 @@ public with sharing class FinPlanSMSHandlerBank {
         // atm withdrawal
         else if(sms.content__c.contains('withdrawn at SBI ATM')){
             sms.amount_value__c = contentArray[3].replace('Rs.', '');
+            sms.Payment_Via__c = 'ATM';
+            sms.type__c = 'debit';
+            
             sms.beneficiary__c = 'SBI ATM withdrawal';
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+            
             sms.SA_available_balance__c = contentArray[18].replace('Rs.', '');
             if(sms.SA_available_balance__c.endsWith('.')){
                 sms.SA_available_balance__c = sms.SA_available_balance__c.substring(0, sms.SA_available_balance__c.length()-1);
@@ -143,8 +156,6 @@ public with sharing class FinPlanSMSHandlerBank {
             if(sms.Payment_Reference__c.endsWith('.')){
                 sms.Payment_Reference__c = sms.Payment_Reference__c.substring(0, sms.Payment_Reference__c.length()-1);
             }
-            sms.Payment_Via__c = 'ATM';
-            sms.type__c = 'debit';
         }
         return sms;
     }

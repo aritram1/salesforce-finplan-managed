@@ -111,6 +111,13 @@ public with sharing class FinPlanSMSHandler {
                     when 'Sbi Atm Withdrawal' {
                         sms.beneficiary__c = 'SBI ATM withdrawal';
                     }
+                    when 'Hdfc Atm Withdrawal' {
+                        sms.beneficiary__c = 'HDFC ATM withdrawal';
+                    }
+                    when 'Cbdttax' {
+                        sms.beneficiary__c = 'CBDTTAX';
+                        sms.Related_To_Investment__c = true;
+                    }
                     when else {
                         // Do nothing
                     }

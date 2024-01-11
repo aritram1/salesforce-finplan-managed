@@ -31,6 +31,7 @@ public with sharing class FinPlanSMSMessageTriggerHandler {
                     currentMessage.Transaction_Date__c = enrichedMessage.Transaction_Date__c;
                     currentMessage.Type__c = enrichedMessage.Type__c;
                     currentMessage.Approved__c = enrichedMessage.Approved__c;
+                    currentMessage.Related_To_Investment__c = enrichedMessage.Related_To_Investment__c;
                 }
             }   
                 
