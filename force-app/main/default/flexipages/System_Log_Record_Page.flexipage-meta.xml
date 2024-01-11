@@ -125,8 +125,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Stack_Trace__c</fieldItem>
-                <identifier>RecordFinPlan_Stack_Trace_cField2</identifier>
+                <fieldItem>Record.Related_To__c</fieldItem>
+                <identifier>RecordFinPlan_Related_To_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Content__c</fieldItem>
+                <identifier>RecordFinPlan_Content_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-cbd22caa-f64d-4b10-bb6b-9d982a186b23</name>
