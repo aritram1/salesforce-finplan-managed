@@ -212,6 +212,23 @@ public with sharing class FinPlanSMSHandlerBank {
                 sms.Payment_Via__c = 'RTGS';
             }
         }
+        // debit
+        else if(sms.content__c.startsWith('ICICI Bank Acc XX360 debited Rs.')){
+            sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
+            sms.type__c = 'debit';
+            sms.amount_value__c = contentArray[6].replace(',', '');
+            sms.SA_Available_Balance__c = sms.content__c.split('.Avl Bal Rs. ')[1].split('To dispute call')[0].replace(',', '');
+            if(sms.SA_Available_Balance__c.endsWith('.')){
+                sms.SA_Available_Balance__c = sms.SA_Available_Balance__c.substring(0, sms.SA_Available_Balance__c.length()-1);
+            } 
+            if(sms.content__c.contains('InfoBIL*000781090')){
+                sms.beneficiary__c = 'ICICI CC Account';
+            }
+            else{
+                sms.beneficiary__c = 'XXXXXXXXXXX';
+            }
+            sms.Payment_Via__c = 'IMPS';
+        }
         return sms;
     }
     // End method
