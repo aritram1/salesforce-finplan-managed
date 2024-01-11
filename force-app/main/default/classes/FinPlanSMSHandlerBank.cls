@@ -70,6 +70,13 @@ public with sharing class FinPlanSMSHandlerBank {
                 sms.Beneficiary__c = sms.content__c.split(' UPI')[0].split(' to ')[1];
                 sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             }
+            // atm withdrawal
+            else if(sms.content__c.contains('ve withdrawn Rs.')){
+                sms.amount_value__c = contentArray[2]?.replace('Rs.', '');
+                sms.type__c = 'debit';
+                sms.Payment_Via__c = 'ATM';
+                sms.Beneficiary__c = 'HDFC ATM withdrawal';
+            }
             // balance update
             else if(sms.content__c.startsWith('Available Bal in HDFC Bank A/c XX9560 as on')){
                 sms.SA_available_balance__c = contentArray[12].substring(0, contentArray[12].length()-1);

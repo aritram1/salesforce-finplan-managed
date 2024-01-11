@@ -89,7 +89,7 @@ public with sharing class FinPlanSMSHandler {
                 }
 
                 // Check if this is useful for balance updating, then add it to static 
-                // list `lastBalanceUpdateSMSList`
+                // list `lastBalanceUpdateSMSList` for further use
                 if(String.isNotBlank(sms.CC_Available_Balance__c) || String.isNotBlank(sms.SA_available_balance__c)){
                     sms.Balance_Update__c = true;
                     lastBalanceUpdateSMSList.add(sms);
