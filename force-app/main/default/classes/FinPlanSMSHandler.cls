@@ -100,7 +100,10 @@ public with sharing class FinPlanSMSHandler {
                     sms.type__c = 'promotional';
                 }
 
-                // Fix some specific beneficiary names to correct sms typos or better abbreviations
+                // Fix some specific beneficiary names to 
+                // - correct sms typos or 
+                // - better abbreviations or
+                // - set the investment type if the beneficiary name represents Tax, Investments etc
                 switch on sms.beneficiary__c {
                     when 'Icici Bank Credit Card Account 4xxx9006' {
                         sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
