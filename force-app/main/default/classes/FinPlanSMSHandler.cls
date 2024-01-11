@@ -72,10 +72,14 @@ public with sharing class FinPlanSMSHandler {
                     else if(sms.Sender__c.contains('ICICI')){
                         FinPlanSMSHandlerBank.processForICICIBank(sms, allBankAccountsMap);
                     }
-                    // Investments
-                    // To be completed 
-                    // Urgent
-                    // else if(){
+                    // Related to Investments
+                    else if(sms.Sender__c.contains('NSE')){
+                        FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
+                    }
+                    // more to implement here
+                    // Related to Investments
+                    // else if(sms.Sender__c.contains('NSE')){
+                    //     // some logic
                     // }
                 }
                 
