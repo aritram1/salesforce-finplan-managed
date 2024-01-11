@@ -105,42 +105,36 @@ public with sharing class FinPlanSMSHandler {
                 }
 
                 // Fix some specific beneficiary names to 
-                // - correct sms typos or 
-                // - better abbreviations or
+                // - correct sms typos / better abbreviations or
                 // - set the investment type if the beneficiary name represents Tax, Investments etc
-                switch on sms.beneficiary__c {
-                    when 'Icici Bank Credit Card Account 4xxx9006' {
+                if(sms.beneficiary__c != null && sms.beneficiary__c != ''){
+                    if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
                         sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
                     }
-                    when 'Amazon Pay Indi' {
+                    else if(sms.beneficiary__c == 'Amazon Pay Indi'){
                         sms.beneficiary__c = 'Amazon Pay India';
                     }
-                    when 'Sbi Atm Withdrawal' {
+                    else if(sms.beneficiary__c == 'Sbi Atm Withdrawal'){
                         sms.beneficiary__c = 'SBI ATM withdrawal';
                     }
-                    when 'Hdfc Atm Withdrawal' {
+                    else if(sms.beneficiary__c == 'Hdfc Atm Withdrawal'){
                         sms.beneficiary__c = 'HDFC ATM withdrawal';
                     }
-                    when 'Cbdttax' {
+                    else if(sms.beneficiary__c == 'Cbdttax'){
                         sms.beneficiary__c = 'CBDTTAX';
                         sms.Related_To_Investment__c = true;
                         sms.Investment_Type__c = 'Advance Tax';
                     }
-                    when else {
-                        // Do nothing
-                        System.debug('I should not be in this enrichData() method ! :(');
+                    else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARING')){
+                        sms.Related_To_Investment__c = true;
+                        sms.Investment_Type__c = 'Indian Clearing Corporation';
+                        sms.Investment_Type__c = 'NPS';
                     }
-                }
-                
-                if(sms.beneficiary__c != null && sms.beneficiary__c != ''){
-                    if(sms.beneficiary__c.contains('a/c linked to VPA')){
+                    else if(sms.beneficiary__c.contains('a/c linked to VPA')){
                         sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
                     }
-                    else if(sms.beneficiary__c.startsWith('Vpa ')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '');
-                    }
-                    else if(sms.beneficiary__c.startsWith('VPA ')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('VPA ', '');
+                    else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
                     }
                 }
 

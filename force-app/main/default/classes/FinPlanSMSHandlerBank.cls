@@ -70,7 +70,21 @@ public with sharing class FinPlanSMSHandlerBank {
                 sms.Beneficiary__c = sms.content__c.split(' UPI')[0].split(' to ')[1];
                 sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             }
-            // debit via NEFT/IMPS
+            // debit UPI where sms starts like 
+            // UPDATE: ....
+            else if(sms.content__c.contains('debited from HDFC Bank XX9560')){
+                sms.amount_value__c = contentArray[2].replace(',', '');
+                sms.type__c = 'debit';
+                sms.Payment_Via__c = 'UPI';
+                sms.SA_available_balance__c = sms.content__c.split('Avl bal:INR ')[1].replace(',', '');
+                sms.beneficiary__c = sms.content__c.split('Info: UPI-')[1].split('Avl bal:INR')[0];
+                if(sms.beneficiary__c.length() > 255){
+                    sms.beneficiary__c = sms.beneficiary__c.substring(0,255);
+                }
+                sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+            }
+            // debit via NEFT/IMPS where sms starts like
+            // Thanks for paying ...
             else if(sms.content__c.startswith('Thanks for paying Rs.')){
                 sms.amount_value__c = contentArray[3].replace(',', '').replace('Rs.', '');
                 sms.type__c = 'debit';
