@@ -10,6 +10,9 @@ public with sharing class FinPlanSMSHandlerInvestment {
         else if(sms.Sender__c.contains('EPF')){
             sms = processForEPF(sms, allBankAccountsMap);
         }
+        else if(sms.Sender__c.contains('NPS')){
+            sms = processForNPS(sms, allBankAccountsMap);
+        }
         // else if(sms.Sender__c.contains('PPF')){
 
         // }
@@ -32,4 +35,17 @@ public with sharing class FinPlanSMSHandlerInvestment {
         return sms;
     }
 
+    public static FinPlan__SMS_Message__c processForNPS(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+        List<String> contentArray = sms.content__c?.split(' ');
+        if(sms.content__c.startsWith('Investment value in Tier I (PRANXX8815)')){
+            sms.Investment_Type__c = 'NPS';
+            sms.type__c = 'balance_update';
+            sms.INV_Available_Balance__c = contentArray[11].replace(',', '');
+            if(sms.INV_Available_Balance__c.endsWith('.')){ // if there is a dot in the end, remove it
+                sms.INV_Available_Balance__c = sms.INV_Available_Balance__c.substring(0, sms.INV_Available_Balance__c.length() - 1);
+            }
+            sms.Related_To_Investment__c = true;
+        }
+        return sms;
+    }
 }

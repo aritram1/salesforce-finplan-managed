@@ -23,16 +23,17 @@ public with sharing class FinPlanSMSMessageTriggerHandler {
                 if(enrichedMessage != null){
                     currentMessage.Amount_Value__c = enrichedMessage.Amount_Value__c;
                     currentMessage.Beneficiary__c = enrichedMessage.Beneficiary__c;
-                    currentMessage.CC_Available_Balance__c = enrichedMessage.CC_Available_Balance__c;
                     currentMessage.Payment_Reference__c = enrichedMessage.Payment_Reference__c;
                     currentMessage.Payment_Via__c = enrichedMessage.Payment_Via__c;
                     currentMessage.SA_Available_Balance__c = enrichedMessage.SA_Available_Balance__c;
+                    currentMessage.CC_Available_Balance__c = enrichedMessage.CC_Available_Balance__c;
                     currentMessage.Savings_or_CC_Account__c = enrichedMessage.Savings_or_CC_Account__c;
                     currentMessage.Transaction_Date__c = enrichedMessage.Transaction_Date__c;
                     currentMessage.Type__c = enrichedMessage.Type__c;
                     currentMessage.Approved__c = enrichedMessage.Approved__c;
                     currentMessage.Related_To_Investment__c = enrichedMessage.Related_To_Investment__c;
                     currentMessage.Investment_Type__c = enrichedMessage.Investment_Type__c;
+                    currentMessage.INV_Available_Balance__c = enrichedMessage.INV_Available_Balance__c;
                 }
             }   
                 

@@ -118,6 +118,17 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.Beneficiary__c = sms.content__c.split('At ')[1].split('On ')[0].replace('.', ' ').replace('_', '').trim();
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
         }
+        // debit 6
+        else if(sms.content__c.startsWith('Money Transferred - ')){
+            sms.amount_value__c = contentArray[4].replace(',', '');
+            sms.SA_available_balance__c = sms.content__c.split('Avl bal:INR ')[1].split(' Not you')[0].replace(',', '');
+            sms.type__c = 'debit';
+            String content = sms.content__c.replace('(', 'STARTBRACKET').replace(')', 'ENDBRACKET').replace('.', '');
+            sms.beneficiary__c = content.split(' to ')[1].split('STARTBRACKET')[0].trim();
+            if(sms.content__c.contains('IMPS')){
+                sms.Payment_Via__c = 'IMPS';
+            }
+        }
         // atm withdrawal
         else if(sms.content__c.contains('ve withdrawn Rs.')){
             sms.amount_value__c = contentArray[2].replace(',' , '').replace('Rs.', '');
@@ -148,7 +159,8 @@ public with sharing class FinPlanSMSHandlerBank {
         List<String> contentArray = new List<String>();
         contentArray = sms.content__c?.split(' ');
         sms.savings_or_cc_account__c = allBankAccountsMap.get('SBI-SA').Id;
-        // credit
+        
+        // credit 1
         if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is credited by')){
             sms.amount_value__c = contentArray[9].replace(',' , '').replace('Rs.', '');
             String modifiedContent = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
@@ -160,12 +172,36 @@ public with sharing class FinPlanSMSHandlerBank {
             }
             sms.type__c = 'credit';
         }
-        // debit
+        // credit 2
+        else if(sms.content__c.startsWith('Your A/C XXXXX816414 has credit')){
+            sms.amount_value__c = sms.content__c.split('of Rs ')[1].split(' on ')[0].replace(',', '');
+            sms.SA_Available_Balance__c = sms.content__c.split('Avl Bal Rs ')[1].split('.-')[0].replace(',' ,'');
+            if(sms.content__c.contains('IMPS')) { 
+                sms.Payment_Via__c = 'IMPS'; 
+            }
+            sms.Beneficiary__c = sms.content__c.split(' of Rs ')[0].split('has credit for')[1];
+            sms.type__c = 'credit';
+        }
+        // credit 3
+        else if(sms.content__c.startsWith('Your A/C XXXXX816414 has credit for')){
+            sms.type__c = 'credit';
+            sms.beneficiary__c = sms.content__c.split(' of Rs ')[0].split('has credit for ')[1].trim();
+            sms.beneficiary__c = sms.content__c.split(' of Rs ')[1].split(' on ')[0].replace(',', '').trim();
+
+        }
+        // debit 1
         else if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is debited for')){
             sms.amount_value__c = contentArray[9].replace(',' , '').replace('Rs.', '');
             sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0].trim();
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.type__c = 'debit';
+        }
+        // debit 2
+        else if(sms.content__c.startsWith('Dear Customer, Your A/C XXXXX816414 has a debit')){
+            sms.type__c = 'debit';
+            sms.amount_value__c = contentArray[12].replace(',', '');
+            sms.SA_Available_Balance__c = sms.content__c.split('Avl Bal Rs ')[1].split('.-')[0].replace(',', '');
+            sms.beneficiary__c = 'Not Available';
         }
         // debit via yono app
         else if(sms.content__c.contains('Your A/C XXXXX816414 Debited INR')){
@@ -223,6 +259,7 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
         }
         // Savings account block
+        // Credit
         else if(sms.content__c.startsWith('ICICI Bank Account XX360 credited')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'credit';
@@ -246,6 +283,7 @@ public with sharing class FinPlanSMSHandlerBank {
                 }
             }
         }
+        // debit 1
         else if(sms.content__c.startsWith('ICICI Bank Acct XX360 debited with')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'debit';
@@ -263,7 +301,7 @@ public with sharing class FinPlanSMSHandlerBank {
                 sms.Payment_Via__c = 'RTGS';
             }
         }
-        // debit
+        // debit 2
         else if(sms.content__c.startsWith('ICICI Bank Acc XX360 debited Rs.')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'debit';
@@ -279,6 +317,15 @@ public with sharing class FinPlanSMSHandlerBank {
                 sms.beneficiary__c = 'XXXXXXXXXXX';
             }
             sms.Payment_Via__c = 'IMPS';
+        }
+        // debit 3
+        else if(sms.content__c.startsWith('ICICI Bank Acc XX360 is debited with')){
+            sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
+            sms.amount_value__c = contentArray[8].replace(',' , '');
+            sms.SA_Available_Balance__c = sms.content__c.split('. Available bal: Rs. ')[1].split('. For dispute call')[0].replace(',','');
+            sms.type__c = 'debit';
+            sms.beneficiary__c = sms.content__c.split('. Available bal:')[0].split(' on ')[1].trim();
+            sms.beneficiary__c = sms.beneficiary__c.substring(9, sms.beneficiary__c.length());
         }
         return sms;
     }

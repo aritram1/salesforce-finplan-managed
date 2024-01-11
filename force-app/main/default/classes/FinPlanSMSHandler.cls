@@ -58,11 +58,11 @@ public with sharing class FinPlanSMSHandler {
                 // Credit / Debit / Balance Update
                 else{ 
                     // Bank Types
-                    if(BANK_SMS_SENDERS.contains(sms.Sender__c)){
+                    if(sms.Sender__c.contains('HDFC') || sms.Sender__c.contains('ICICI') || sms.Sender__c.contains('SBI')){ // TBC Urgent Implementation  BANK_SMS_SENDERS.contains(sms.Sender__c)){
                         FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap);
                     }
                     // Investment Types
-                    else if(INVESTMENT_SMS_SENDERS.contains(sms.Sender__c)){
+                    else if(sms.Sender__c.contains('EPF') || sms.Sender__c.contains('NPS')) { // TBC Urgent Implementation INVESTMENT_SMS_SENDERS.contains(sms.Sender__c)){
                         FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
                     }
                 }
