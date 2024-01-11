@@ -132,8 +132,16 @@ public with sharing class FinPlanSMSHandler {
                     }
                 }
                 
-                if(sms.beneficiary__c != null && sms.beneficiary__c != '' && sms.beneficiary__c.contains('a/c linked to VPA')){
-                    sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
+                if(sms.beneficiary__c != null && sms.beneficiary__c != ''){
+                    if(sms.beneficiary__c.contains('a/c linked to VPA')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
+                    }
+                    else if(sms.beneficiary__c.startsWith('Vpa ')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '');
+                    }
+                    else if(sms.beneficiary__c.startsWith('VPA ')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('VPA ', '');
+                    }
                 }
 
                 processedMessages.add(sms);
