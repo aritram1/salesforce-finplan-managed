@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Investment_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Investment Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Advance Tax</fullName>
+                <default>false</default>
+                <label>Advance Tax</label>
+            </value>
+            <value>
+                <fullName>MF</fullName>
+                <default>false</default>
+                <label>MF</label>
+            </value>
+            <value>
+                <fullName>SmallCase</fullName>
+                <default>false</default>
+                <label>SmallCase</label>
+            </value>
+            <value>
+                <fullName>Bond</fullName>
+                <default>false</default>
+                <label>Bond</label>
+            </value>
+            <value>
+                <fullName>FD</fullName>
+                <default>false</default>
+                <label>FD</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>
