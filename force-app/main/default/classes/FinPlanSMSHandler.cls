@@ -23,15 +23,14 @@ public with sharing class FinPlanSMSHandler {
 
     // Method to enrich message data
     public static List<FinPlan__SMS_Message__c> enrichData(List<FinPlan__SMS_Message__c> allMessages){
-        try{
-            // initiate variables
-            processedMessages = new List<FinPlan__SMS_Message__c>();
-            lastBalanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
-            getAllBankAccounts();
+        // initiate variables
+        processedMessages = new List<FinPlan__SMS_Message__c>();
+        lastBalanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
+        getAllBankAccounts();
 
-            // The main loop starts
-            for(FinPlan__SMS_Message__c sms : allMessages){
-                
+        // The main loop starts
+        for(FinPlan__SMS_Message__c sms : allMessages){
+            try{
                 // set the date;
                 String rawDateString = sms.FinPlan__Received_At__c?.split(' ')[0];
                 if(rawDateString?.contains('-')){
@@ -76,11 +75,6 @@ public with sharing class FinPlanSMSHandler {
                     else if(sms.Sender__c.contains('NSE')){
                         FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
                     }
-                    // more to implement here
-                    // Related to Investments
-                    // else if(sms.Sender__c.contains('NSE')){
-                    //     // some logic
-                    // }
                 }
                 
                 ////////////////////////////////////////////////////////////////////////////////////////
@@ -125,7 +119,7 @@ public with sharing class FinPlanSMSHandler {
                         sms.Related_To_Investment__c = true;
                         sms.Investment_Type__c = 'Advance Tax';
                     }
-                    else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARING')){
+                    else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARINGCORP')){
                         sms.Related_To_Investment__c = true;
                         sms.Investment_Type__c = 'Indian Clearing Corporation';
                         sms.Investment_Type__c = 'NPS';
@@ -137,15 +131,16 @@ public with sharing class FinPlanSMSHandler {
                         sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
                     }
                 }
-
-                processedMessages.add(sms);
-            
             }
-            System.debug('Processed messages=>' + processedMessages);
+            catch(Exception e){
+                FinPlanLogger.logError(e, TAG, sms.content__c);
+            }
+
+            processedMessages.add(sms);
+        
         }
-        catch(Exception e){
-            FinPlanLogger.logError(e, TAG);
-        }
+        System.debug('Processed messages=>' + processedMessages);
+        
         return processedMessages;
     }
 

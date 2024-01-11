@@ -9,7 +9,7 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.savings_or_cc_account__c = allBankAccountsMap.get('HDFC-SA').Id;
             // credit
             if(sms.content__c.contains('deposited')){
-                sms.amount_value__c = contentArray[2];
+                sms.amount_value__c = contentArray[2].replace(',' , '');
                 sms.type__c = 'credit';
                 sms.SA_available_balance__c = sms.content__c.split('.Avl bal INR ')[1].split('. Cheque deposits')[0];
                 if(sms.content__c.contains('UPI')){
@@ -27,7 +27,7 @@ public with sharing class FinPlanSMSHandlerBank {
             }
             // credit
             else if(sms.content__c.startsWith('Money Received')){
-                sms.amount_value__c = contentArray[4];
+                sms.amount_value__c = contentArray[4].replace(',' , '');
                 sms.SA_available_balance__c = sms.content__c.split('Avl bal: INR')[1];
                 sms.type__c = 'credit';
                 String str = sms.content__c.split('Avl bal: INR')[0].split('by')[1].replace('(', '').replace(')', '');
@@ -41,7 +41,7 @@ public with sharing class FinPlanSMSHandlerBank {
                 }
             }
             else if(sms.content__c.startsWith('HDFC Bank: Rs.') && sms.content__c.contains('credited to a/c XXXXXX9560') && sms.content__c.contains('UPI Ref No')){
-                sms.amount_value__c = contentArray[3];
+                sms.amount_value__c = contentArray[3].replace(',' , '');
                 String upiRef = sms.content__c.split('UPI Ref No')[1];
                 sms.Payment_Reference__c = upiRef.substring(0, upiRef.length()-2);
                 sms.Payment_Via__c = 'UPI';
@@ -51,7 +51,7 @@ public with sharing class FinPlanSMSHandlerBank {
             }
             // debit bank transfer
             else if(sms.content__c.contains('debited from a/c **9560') && sms.content__c.contains('UPI')){
-                sms.amount_value__c = contentArray[3];
+                sms.amount_value__c = contentArray[3].replace(',' , '');
                 sms.type__c = 'debit';
                 sms.Payment_Via__c = 'UPI';
                 String content = sms.content__c.replace('(', '').replace(')', '');
@@ -63,7 +63,7 @@ public with sharing class FinPlanSMSHandlerBank {
             }
             // debit UPI
             else if(sms.content__c.startswith('Money Transfer:Rs') && sms.content__c.contains('UPI')){
-                sms.amount_value__c = contentArray[2];
+                sms.amount_value__c = contentArray[2].replace(',' , '');
                 sms.type__c = 'debit';
                 sms.Payment_Via__c = 'UPI';
                 sms.Payment_Reference__c = sms.content__c.split(' UPI:')[1].split('Not you?')[0];
@@ -94,7 +94,7 @@ public with sharing class FinPlanSMSHandlerBank {
             }
             // atm withdrawal
             else if(sms.content__c.contains('ve withdrawn Rs.')){
-                sms.amount_value__c = contentArray[2]?.replace('Rs.', '');
+                sms.amount_value__c = contentArray[2].replace(',' , '').replace('Rs.', '');
                 sms.type__c = 'debit';
                 sms.Payment_Via__c = 'ATM';
                 sms.Beneficiary__c = 'HDFC ATM withdrawal';
@@ -124,7 +124,7 @@ public with sharing class FinPlanSMSHandlerBank {
         sms.savings_or_cc_account__c = allBankAccountsMap.get('SBI-SA').Id;
         // credit
         if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is credited by')){
-            sms.amount_value__c = contentArray[9].replace('Rs.', '');
+            sms.amount_value__c = contentArray[9].replace(',' , '').replace('Rs.', '');
             String modifiedContent = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
             sms.beneficiary__c = modifiedContent.split('by')[2].split('START_BRACKET')[0];
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
@@ -136,7 +136,7 @@ public with sharing class FinPlanSMSHandlerBank {
         }
         // debit
         else if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is debited for')){
-            sms.amount_value__c = contentArray[9].replace('Rs.', '');
+            sms.amount_value__c = contentArray[9].replace(',' , '').replace('Rs.', '');
             sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0].trim();
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.type__c = 'debit';
@@ -155,7 +155,7 @@ public with sharing class FinPlanSMSHandlerBank {
         }
         // atm withdrawal
         else if(sms.content__c.contains('withdrawn at SBI ATM')){
-            sms.amount_value__c = contentArray[3].replace('Rs.', '');
+            sms.amount_value__c = contentArray[3].replace(',' , '').replace('Rs.', '');
             sms.Payment_Via__c = 'ATM';
             sms.type__c = 'debit';
             
@@ -186,13 +186,13 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.type__c = 'debit';
             sms.beneficiary__c = sms.content__c.split(' at ')[1].split('. Avl Lmt')[0];
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
-            sms.amount_value__c = contentArray[1];
+            sms.amount_value__c = contentArray[1].replace(',' , '');
             sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('. To dispute')[0];
         }
         else if(sms.content__c.contains('received on your ICICI Bank Credit Card Account 4xxx9006')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
             sms.type__c = 'credit';
-            sms.amount_value__c = contentArray[5];
+            sms.amount_value__c = contentArray[5].replace(',' , '');
             sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
         }
@@ -200,7 +200,7 @@ public with sharing class FinPlanSMSHandlerBank {
         else if(sms.content__c.startsWith('ICICI Bank Account XX360 credited')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'credit';
-            sms.amount_value__c = contentArray[5];
+            sms.amount_value__c = contentArray[5].replace(',' , '');
             if(sms.content__c.contains('UPI')){
                 sms.Payment_Via__c = 'UPI';
             }
@@ -223,7 +223,7 @@ public with sharing class FinPlanSMSHandlerBank {
         else if(sms.content__c.startsWith('ICICI Bank Acct XX360 debited with')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'debit';
-            sms.amount_value__c = contentArray[7];
+            sms.amount_value__c = contentArray[7].replace(',' , '');
             if(sms.content__c.contains('UPI')){
                 sms.Payment_Via__c = 'UPI';
             }
