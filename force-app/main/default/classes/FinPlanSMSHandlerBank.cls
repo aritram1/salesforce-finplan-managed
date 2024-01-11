@@ -112,14 +112,26 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.type__c = 'credit';
         }
         // debit
-        if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is debited for')){
+        else if(sms.content__c.contains('Your a/c no. XXXXXXXX6414 is debited for')){
             sms.amount_value__c = contentArray[9].replace('Rs.', '');
             sms.beneficiary__c = sms.content__c.split('and')[1].split('credited')[0].trim();
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
             sms.type__c = 'debit';
         }
+        // debit via yono app
+        else if(sms.content__c.contains('Your A/C XXXXX816414 Debited INR')){
+            sms.amount_value__c = contentArray[5].replace(',', '');
+            sms.SA_available_balance__c = sms.content__c.split('Avl Balance INR')[1].split('-')[0].replace(',', '');
+            sms.beneficiary__c = sms.content__c.split('Avl Balance INR')[0].split('Transferred to')[1].trim();
+            if(sms.beneficiary__c.endsWith('.')){
+                sms.beneficiary__c = sms.beneficiary__c.substring(0, sms.beneficiary__c.length()-1);
+            }
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+            sms.Payment_Via__c = 'IMPS';
+            sms.type__c = 'debit';
+        }
         // atm withdrawal
-        if(sms.content__c.contains('withdrawn at SBI ATM')){
+        else if(sms.content__c.contains('withdrawn at SBI ATM')){
             sms.amount_value__c = contentArray[3].replace('Rs.', '');
             sms.beneficiary__c = 'SBI ATM withdrawal';
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
