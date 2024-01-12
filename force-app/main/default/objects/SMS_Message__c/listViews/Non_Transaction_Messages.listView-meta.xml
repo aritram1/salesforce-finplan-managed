@@ -15,7 +15,7 @@
     <filters>
         <field>Type__c</field>
         <operation>notEqual</operation>
-        <value>debit,credit</value>
+        <value>debit,credit,balance_update</value>
     </filters>
     <label>Non_Transaction Messages</label>
 </ListView>

@@ -2,16 +2,15 @@
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
 	<types>
 		<members>FinPlanApproveSMSAPIController</members>
-		<members>FinPlanDeleteSMSAPIController</members>
 		<members>FinPlanSyncSMSAPIController</members>
 		<members>FinPlanSMSHandler</members>
+		<members>FinPlanSMSHandlerBank</members>
+		<members>FinPlanSMSHandlerInvestment</members>
 		<members>FinPlanException</members>
-		<members>FinPlanDeleteTransactionAPIController</members>
-		<members>Logger</members>
+		<members>FinPlanLogger</members>
 		<members>FinPlanTransactionHandler</members>
-		<members>FinPlanDeleteSMSAPIController</members>
 		<members>FinPlanPermanentDeleteAPIController</members>
-		<members>FinPlanDeleteAPIController</members> <!-- may not be required later TBC -->
+		<members>FinPlanSMSMessageTriggerHandler</members>
 		<name>ApexClass</name>
 	</types>
 	<types>

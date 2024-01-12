@@ -1,5 +1,7 @@
 public with sharing class FinPlanTransactionHandler {
     
+    static final String TAG = 'FinPlanTransactionHandler';
+
     public static List<FinPlan__Bank_Transaction__c> bankTransactionsList;
     public static List<FinPlan__Investment_Transaction__c> investmentTransactionsList;
     public static List<String> btRecordsIds = new List<String>();
@@ -48,6 +50,10 @@ public with sharing class FinPlanTransactionHandler {
             result.put('data', dataMap);
         }
         catch(Exception e){
+            
+            // Log the error
+            FinPlanLogger.logError(e, TAG);
+
             Map<String,List<String>> errorMap = new Map<String,List<String>>();
             List<String> errorList = new List<String>();
             String errorMessage = 'Error occurred : ' + e.getMessage();

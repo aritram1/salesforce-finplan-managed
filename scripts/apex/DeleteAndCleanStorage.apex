@@ -7,6 +7,18 @@
 
 // Script to delete existing records and clean up storage
 
+List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c];
+Database.DeleteResult[] deleteResults1 = Database.delete(messagesToDelete, false);
+if(messagesToDelete.size() > 0) Database.emptyRecycleBin(messagesToDelete);
+
+List<FinPlan__Bank_Transaction__c> bankTxntoDelete = [SELECT Id FROM FinPlan__Bank_Transaction__c];
+Database.DeleteResult[] deleteResults2 = Database.delete(bankTxntoDelete, false);
+if(bankTxntoDelete.size() > 0) Database.emptyRecycleBin(bankTxntoDelete); 
+
+List<FinPlan__Investment_Transaction__c> invTxntoDelete = [SELECT Id FROM FinPlan__Investment_Transaction__c];
+Database.DeleteResult[] deleteResults3 = Database.delete(invTxntoDelete, false);
+if(invTxntoDelete.size() > 0) Database.emptyRecycleBin(invTxntoDelete);
+
 List<Campaign> campaigns = [SELECT id from Campaign];
 delete campaigns;
 if(campaigns.size() > 0) Database.emptyRecycleBin(campaigns);

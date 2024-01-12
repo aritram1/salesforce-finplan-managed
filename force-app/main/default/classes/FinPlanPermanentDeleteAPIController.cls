@@ -1,8 +1,10 @@
 @RestResource(urlMapping='/api/delete/*')
 global with sharing class FinPlanPermanentDeleteAPIController {
+
+    static final String TAG = 'FinPlanPermanentDeleteAPIController';
     
     @HttpPost
-    global static Map<String, String> deleteRecordsFromObjects() {
+    global static Map<String, String> permanentlyDeleteMessagesAndTransactions() {
         Map<String, String> response = new  Map<String, String>();
         try{
             String message = '';
@@ -36,6 +38,7 @@ global with sharing class FinPlanPermanentDeleteAPIController {
         }
         catch(Exception e){
             // In case of errors, add to errors property
+            FinPlanLogger.logError(e, TAG);
             response.put('errors', e.getMessage());
         }
         return response;
