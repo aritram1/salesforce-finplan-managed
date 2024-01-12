@@ -28,8 +28,13 @@ public with sharing class FinPlanSMSHandlerInvestment {
         List<String> contentArray = sms.content__c?.split(' ');
         if(sms.content__c.contains('your passbook balance against')){
             sms.Investment_Type__c = 'EPF';
-            sms.amount_value__c = contentArray[8].replace(',', '').replace('/', '').replace('-', '');
-            sms.INV_Available_Balance__c = contentArray[12].replace(',', '').replace('/', '').replace('-', '');
+            sms.amount_value__c = contentArray[12].replace(',', '').replace('/', '').replace('-', '');
+            
+            sms.INV_Available_Balance__c = contentArray[8].replace(',', '').replace('/', '').replace('-', '');
+            if(sms.INV_Available_Balance__c.endsWith('.')){
+                sms.INV_Available_Balance__c = sms.INV_Available_Balance__c.substring(0, sms.INV_Available_Balance__c.length() - 1);
+            }
+            
             sms.Beneficiary__c = 'EPF For ' + contentArray[16].substring(2,6) + '/' + contentArray[16].substring(0,2);
         }
         return sms;
