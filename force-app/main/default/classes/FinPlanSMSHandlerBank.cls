@@ -251,13 +251,16 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.amount_value__c = contentArray[1].replace(',' , '');
             sms.CC_Available_Balance__c = sms.content__c.split('Avl Lmt: INR')[1].split('. To dispute')[0];
         }
-        else if(sms.content__c.contains('received on your ICICI Bank Credit Card Account 4xxx9006')){
-            sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
-            sms.type__c = 'credit';
-            sms.amount_value__c = contentArray[5].replace(',' , '');
-            sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
-            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
-        }
+        // -- This part is not required since the bill paid sms is already tracked -- //
+        // else if(sms.content__c.contains('received on your ICICI Bank Credit Card Account 4xxx9006')){
+        //     sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-CC').Id;
+        //     sms.Balance_Update__c = true;
+        //     sms.type__c = 'balance_update';
+        //     sms.amount_value__c = contentArray[5].replace(',' , '');
+        //     sms.beneficiary__c = 'Payment Received ICICI CC';
+        //     sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+        // }
+        
         // Savings account block
         // Credit
         else if(sms.content__c.startsWith('ICICI Bank Account XX360 credited')){
@@ -311,7 +314,7 @@ public with sharing class FinPlanSMSHandlerBank {
                 sms.SA_Available_Balance__c = sms.SA_Available_Balance__c.substring(0, sms.SA_Available_Balance__c.length()-1);
             } 
             if(sms.content__c.contains('InfoBIL*')){
-                sms.beneficiary__c = 'ICICI CC Account';
+                sms.beneficiary__c = 'Bill Paid ICICI CC';
             }
             else{
                 sms.beneficiary__c = 'XXXXXXXXXXX';

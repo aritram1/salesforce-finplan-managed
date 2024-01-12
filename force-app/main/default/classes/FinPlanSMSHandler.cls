@@ -117,6 +117,9 @@ public with sharing class FinPlanSMSHandler {
                     else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
                         sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
                     }
+                    else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
+                    }
                 }
             }
             catch(Exception e){
