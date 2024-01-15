@@ -101,7 +101,7 @@ public with sharing class FinPlanSMSHandler {
                     else if(sms.beneficiary__c == 'Hdfc Atm Withdrawal'){
                         sms.beneficiary__c = 'HDFC ATM withdrawal';
                     }
-                    else if(sms.beneficiary__c == 'Cbdttax'){
+                    else if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
                         sms.Related_To_Investment__c = true;
                         sms.beneficiary__c = 'CBDTTAX';
                         sms.Investment_Type__c = 'Advance Tax';

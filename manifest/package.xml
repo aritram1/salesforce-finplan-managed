@@ -80,6 +80,7 @@
 		<members>SMS_Message_Record_Page</members>
 		<members>System_Log_Record_Page</members>
 		<members>Beneficiary_Record_Page</members>
+		<members>Investment_Transaction_Record_Page</members>
 		<name>FlexiPage</name>
 	</types>
 	<types>

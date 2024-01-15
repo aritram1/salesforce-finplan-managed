@@ -17,13 +17,25 @@ public with sharing class FinPlanTransactionHandler {
             investmentTransactionsList = new List<FinPlan__Investment_Transaction2__c>();
             // List<FinPlan__Beneficiary__c> beneficiaries = new List<FinPlan__Beneficiary__c>();
             for(FinPlan__SMS_Message__c sms : messageList){
-                if(sms.FinPlan__Beneficiary__c?.contains('Fund')){
+                if(sms.Related_To_Investment__c == true){
                     FinPlan__Investment_Transaction2__c ivt = new FinPlan__Investment_Transaction2__c();
+                    ivt.FinPlan__Created_From__c = 'SMS';
+                    ivt.approved__c = sms.approved__c;
+                    ivt.Type__c = sms.Investment_Type__c;
+                    ivt.FinPlan__Device__c = sms.FinPlan__Device__c;
+                    ivt.FinPlan__Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
+                    ivt.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;
+                    // To be implemented after Investment object is finalized
+                    // ivt.FinPlan__From_Account__c = sms.savings_or_cc_account__c;
+                    ivt.FinPlan__Transaction_Date__c = sms.FinPlan__Transaction_Date__c;
+                    ivt.FinPlan__Payment_Via__c = sms.Payment_Via__c;
+                    ivt.FinPlan__Payment_Reference__c = sms.Payment_Reference__c;
                     ivt.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
-                    // To be implemented
+                    investmentTransactionsList.add(ivt);
                 }
                 else{
                     FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
+                    tr.approved__c = sms.approved__c;
                     tr.FinPlan__Created_From__c = 'SMS';
                     tr.Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
                     tr.FinPlan__Device__c = sms.FinPlan__Device__c;
