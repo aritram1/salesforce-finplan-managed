@@ -11,6 +11,13 @@
 		<members>FinPlanTransactionHandler</members>
 		<members>FinPlanPermanentDeleteAPIController</members>
 		<members>FinPlanSMSMessageTriggerHandler</members>
+		
+		<!-- old code-->
+		<members>InvestmentTransactionTriggerHandler</members>
+		<members>RefreshInvestmentDataController</members>
+		<members>Scheduler</members>
+		<members>FutureController</members>
+
 		<name>ApexClass</name>
 	</types>
 	<types>
@@ -19,6 +26,8 @@
 	</types>
 	<types>
 		<members>triggerOnSMSMessage</members>
+		<!-- old code-->
+		<members>triggerOnInvestmentTransaction</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -38,6 +47,7 @@
 		<members>Investment_Instituition__c</members>
 		<members>Investment_Portfolio__c</members>
 		<members>Investment_Transaction__c</members>
+		<members>Investment_Transaction2__c</members>
 		<members>Investment__c</members>
 		<members>SMS_Message__c</members>
 		<members>System_Log__c</members>

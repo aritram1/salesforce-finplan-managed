@@ -4,7 +4,6 @@
     <externalId>false</externalId>
     <label>Investment Portfolio</label>
     <referenceTo>Investment_Portfolio__c</referenceTo>
-    <relationshipLabel>Investment Transactions</relationshipLabel>
     <relationshipName>Investment_Transactions</relationshipName>
     <relationshipOrder>0</relationshipOrder>
     <reparentableMasterDetail>false</reparentableMasterDetail>

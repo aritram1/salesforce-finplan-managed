@@ -26,7 +26,7 @@ global with sharing class FinPlanPermanentDeleteAPIController {
             message = message + bankTxntoDelete.size() + ' bank transactions found and deleted | ';
             
             // Delete investment transactions
-            List<FinPlan__Investment_Transaction__c> invTxntoDelete = [SELECT Id FROM FinPlan__Investment_Transaction__c];
+            List<FinPlan__Investment_Transaction2__c> invTxntoDelete = [SELECT Id FROM FinPlan__Investment_Transaction2__c];
             if(invTxntoDelete != null && invTxntoDelete.size() > 0){
                 Database.delete(invTxntoDelete, false);
                 Database.emptyRecycleBin(invTxntoDelete);

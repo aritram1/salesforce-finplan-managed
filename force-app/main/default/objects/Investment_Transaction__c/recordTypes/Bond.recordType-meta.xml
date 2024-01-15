@@ -3,4 +3,19 @@
     <fullName>Bond</fullName>
     <active>true</active>
     <label>Bond</label>
+    <picklistValues>
+        <picklist>Created_From__c</picklist>
+        <values>
+            <fullName>Manual</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>SMS</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sync</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
 </RecordType>

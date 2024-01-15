@@ -5,7 +5,6 @@
     <externalId>false</externalId>
     <label>EPF Details</label>
     <referenceTo>EPF__c</referenceTo>
-    <relationshipLabel>Investment Transactions</relationshipLabel>
     <relationshipName>Investment_Transactions</relationshipName>
     <required>false</required>
     <trackHistory>false</trackHistory>

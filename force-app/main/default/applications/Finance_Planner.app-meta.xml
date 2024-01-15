@@ -25,6 +25,7 @@
     <tabs>Investment__c</tabs>
     <tabs>standard-report</tabs>
     <tabs>standard-Dashboard</tabs>
+    <tabs>Investment_Transaction2__c</tabs>
     <uiType>Lightning</uiType>
     <utilityBar>Finance_Planner_UtilityBar</utilityBar>
 </CustomApplication>

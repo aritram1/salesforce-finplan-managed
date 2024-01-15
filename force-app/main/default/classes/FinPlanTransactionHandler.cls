@@ -3,7 +3,7 @@ public with sharing class FinPlanTransactionHandler {
     static final String TAG = 'FinPlanTransactionHandler';
 
     public static List<FinPlan__Bank_Transaction__c> bankTransactionsList;
-    public static List<FinPlan__Investment_Transaction__c> investmentTransactionsList;
+    public static List<FinPlan__Investment_Transaction2__c> investmentTransactionsList;
     public static List<String> btRecordsIds = new List<String>();
     public static List<String> ivRecordsIds = new List<String>();
     public static Map<String, List<String>> dataMap = new Map<String, List<String>>();
@@ -14,11 +14,11 @@ public with sharing class FinPlanTransactionHandler {
         
         try{
             bankTransactionsList = new List<FinPlan__Bank_Transaction__c>();
-            investmentTransactionsList = new List<FinPlan__Investment_Transaction__c>();
+            investmentTransactionsList = new List<FinPlan__Investment_Transaction2__c>();
             // List<FinPlan__Beneficiary__c> beneficiaries = new List<FinPlan__Beneficiary__c>();
             for(FinPlan__SMS_Message__c sms : messageList){
                 if(sms.FinPlan__Beneficiary__c?.contains('Fund')){
-                    FinPlan__Investment_Transaction__c ivt = new FinPlan__Investment_Transaction__c();
+                    FinPlan__Investment_Transaction2__c ivt = new FinPlan__Investment_Transaction2__c();
                     ivt.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
                     // To be implemented
                 }
@@ -71,9 +71,9 @@ public with sharing class FinPlanTransactionHandler {
         }
         return processedResponse;
     }
-    static List<String> processInvestmentTransactions(List<FinPlan__Investment_Transaction__c> ivList){
+    static List<String> processInvestmentTransactions(List<FinPlan__Investment_Transaction2__c> ivList){
         List<String> processedResponse = new List<String>();
-        for(FinPlan__Investment_Transaction__c iv : ivList){
+        for(FinPlan__Investment_Transaction2__c iv : ivList){
             processedResponse.add(iv.id);
         }
         return processedResponse;
