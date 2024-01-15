@@ -41,6 +41,7 @@
 		<members>Investment__c</members>
 		<members>SMS_Message__c</members>
 		<members>System_Log__c</members>
+		<members>Beneficiary__c</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
@@ -68,7 +69,14 @@
 		<members>Home_Page_Default1</members>
 		<members>SMS_Message_Record_Page</members>
 		<members>System_Log_Record_Page</members>
+		<members>Beneficiary_Record_Page</members>
 		<name>FlexiPage</name>
+	</types>
+	<types>
+		<members>Bank_Transaction__c-Bank Transaction Layout</members>
+		<members>Beneficiary__c-Beneficiary Layout</members>
+		<members>SMS_Message__c-SMS Message Layout</members>
+		<name>Layout</name>
 	</types>
 	<types>
 		<members>FinPlanReports/New_SMS_Messages_Report</members>
