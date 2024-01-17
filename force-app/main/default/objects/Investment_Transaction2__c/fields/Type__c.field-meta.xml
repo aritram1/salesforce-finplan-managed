@@ -12,24 +12,49 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>Credit</fullName>
-                <default>false</default>
-                <label>Credit</label>
-            </value>
-            <value>
-                <fullName>Debit</fullName>
-                <default>false</default>
-                <label>Debit</label>
-            </value>
-            <value>
-                <fullName>OTP</fullName>
-                <default>false</default>
-                <label>OTP</label>
-            </value>
-            <value>
                 <fullName>Other</fullName>
                 <default>false</default>
                 <label>Other</label>
+            </value>
+            <value>
+                <fullName>Advance Tax</fullName>
+                <default>false</default>
+                <label>Advance Tax</label>
+            </value>
+            <value>
+                <fullName>MF</fullName>
+                <default>false</default>
+                <label>MF</label>
+            </value>
+            <value>
+                <fullName>SmallCase</fullName>
+                <default>false</default>
+                <label>SmallCase</label>
+            </value>
+            <value>
+                <fullName>Bond</fullName>
+                <default>false</default>
+                <label>Bond</label>
+            </value>
+            <value>
+                <fullName>FD</fullName>
+                <default>false</default>
+                <label>FD</label>
+            </value>
+            <value>
+                <fullName>NPS</fullName>
+                <default>false</default>
+                <label>NPS</label>
+            </value>
+            <value>
+                <fullName>EPF</fullName>
+                <default>false</default>
+                <label>EPF</label>
+            </value>
+            <value>
+                <fullName>PPF</fullName>
+                <default>false</default>
+                <label>PPF</label>
             </value>
         </valueSetDefinition>
     </valueSet>
