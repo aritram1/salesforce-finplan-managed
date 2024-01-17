@@ -92,15 +92,29 @@ public with sharing class FinPlanSMSHandler {
                     if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
                         sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
                     }
-                    else if(sms.beneficiary__c == 'Amazon Pay Indi'){
+                    else if(sms.beneficiary__c.toUpperCase() == 'AMAZON PAY INDI'){
                         sms.beneficiary__c = 'Amazon Pay India';
                     }
-                    else if(sms.beneficiary__c == 'Sbi Atm Withdrawal'){
+                    else if(sms.beneficiary__c.toUpperCase() == 'SBI ATM WITHDRAWAL'){
                         sms.beneficiary__c = 'SBI ATM withdrawal';
                     }
-                    else if(sms.beneficiary__c == 'Hdfc Atm Withdrawal'){
+                    else if(sms.beneficiary__c.toUpperCase() == 'HDFC ATM WITHDRAWAL'){
                         sms.beneficiary__c = 'HDFC ATM withdrawal';
                     }
+                    else if(sms.beneficiary__c.toUpperCase() == 'SBIMOPS'){
+                        sms.beneficiary__c = 'Kolkata Metro Recharge';
+                    }
+                    // Clean up VPA and A/c related beneficiaries
+                    else if(sms.beneficiary__c.contains('a/c linked to VPA')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
+                    }
+                    else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
+                    }
+                    else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
+                        sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
+                    }
+                    // Investment related things
                     else if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
                         sms.Related_To_Investment__c = true;
                         sms.beneficiary__c = 'CBDTTAX';
@@ -110,15 +124,6 @@ public with sharing class FinPlanSMSHandler {
                         sms.Related_To_Investment__c = true;
                         sms.beneficiary__c = 'NPS - Indian Clearing Corporation';
                         sms.Investment_Type__c = 'NPS';
-                    }
-                    else if(sms.beneficiary__c.contains('a/c linked to VPA')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
-                    }
-                    else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
-                    }
-                    else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
                     }
                 }
             }
