@@ -71,16 +71,6 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Approved__c</fieldItem>
-                <identifier>RecordFinPlan_Approved_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
                 <fieldItem>Record.Beneficiary_Name__c</fieldItem>
                 <identifier>RecordFinPlan_Beneficiary_Name_cField</identifier>
             </fieldInstance>
