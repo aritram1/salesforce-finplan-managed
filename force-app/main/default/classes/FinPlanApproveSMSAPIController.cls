@@ -17,7 +17,8 @@ global with sharing class FinPlanApproveSMSAPIController {
                                     id, Content__c, Approved__c, Amount_Value__c, Beneficiary__c ,
                                     CC_Available_Balance__c, Payment_Reference__c, Payment_Via__c ,
                                     SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, 
-                                    Type__c, Device__c, Related_To_Investment__c, Investment_Type__c
+                                    Type__c, Device__c, Related_To_Investment__c, Investment_Type__c,
+                                    INV_Available_Balance__c
                                     FROM SMS_Message__c WHERE id IN :recordIds];
             
             // A. Set approved__c as false so they dont appear in approval list //////////////////////////////////////////

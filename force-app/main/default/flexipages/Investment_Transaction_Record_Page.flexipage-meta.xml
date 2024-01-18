@@ -71,8 +71,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Beneficiary_Name__c</fieldItem>
-                <identifier>RecordFinPlan_Beneficiary_Name_cField</identifier>
+                <fieldItem>Record.Investment__c</fieldItem>
+                <identifier>RecordFinPlan_Investment_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-4f009f74-cbb2-452d-9b87-a5984150ab3c</name>
@@ -225,8 +225,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.OwnerId</fieldItem>
-                <identifier>RecordOwnerIdField</identifier>
+                <fieldItem>Record.Beneficiary_Name__c</fieldItem>
+                <identifier>RecordFinPlan_Beneficiary_Name_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -243,6 +243,16 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Beneficiary__c</fieldItem>
+                <identifier>RecordFinPlan_Beneficiary_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <itemInstances>
             <fieldInstance>
                 <fieldInstanceProperties>

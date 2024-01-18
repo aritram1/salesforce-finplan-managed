@@ -22,6 +22,7 @@ public with sharing class FinPlanTransactionHandler {
         {
             existingInvestments.put(inv.Investment_Code__c, inv);
         }
+        System.debug('existingInvestments=>' + existingInvestments);
         Map<String, Map<String, List<String>>> data = processTransactions(messageList, existingInvestments);
         return data;
     }
@@ -47,31 +48,29 @@ public with sharing class FinPlanTransactionHandler {
                     ivt.FinPlan__Payment_Reference__c = sms.Payment_Reference__c;
                     ivt.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
 
-                    // Set the investment based on investment type
-                    if(sms.Investment_Type__c == 'EPF'){
-                        FinPlan__Investment__c investment = existingInvestments.get('EPF');
-                        ivt.Investment__c = investment.Id;
+                    // Set the following two things at the transaction and investment level for different type of investments
+                    if(sms.Investment_Type__c == 'EPF' || sms.Investment_Type__c == 'PPF' || sms.Investment_Type__c == 'NPS'){
+                        
+                        // 1 - Update the Current Value at the Investment Level
+                        FinPlan__Investment__c investment = existingInvestments.get(sms.Investment_Type__c);
+                        ivt.FinPlan__Investment__c = investment.Id;
 
-                        // Also update the related investment if applicable
-                        investment.FinPlan__Current_Value_of_Investment__c = Double.valueOf(sms.INV_Available_Balance__c);
-                        toBeUpdatedInvestmentsMap.put(investment.FinPlan__Investment_Code__c, investment);
+                        // 2 - Update the Parent Investment Information
+                        if(String.isNotBlank(sms.INV_Available_Balance__c)){ // && sms.INV_Available_Balance__c > 0){
+                            investment.FinPlan__Current_Value_of_Investment__c = Double.valueOf(sms.INV_Available_Balance__c);
+                            toBeUpdatedInvestmentsMap.put(investment.FinPlan__Investment_Code__c, investment);
+                        }
                     }
-                    else if(sms.Investment_Type__c == 'PPF'){
-                        FinPlan__Investment__c investment = existingInvestments.get('PPF');
-                        ivt.Investment__c = investment.Id;
-
-                        // Also update the related investment if applicable
-                        investment.FinPlan__Current_Value_of_Investment__c = Double.valueOf(sms.INV_Available_Balance__c);
-                        toBeUpdatedInvestmentsMap.put(investment.FinPlan__Investment_Code__c, investment);
-                    }
-                    // More to be added here  
+                    // Other Type Investments like FD, MF, Stocks, ULIP to be added here later
+                    // else if{
+                    // }
 
                     investmentTransactionsList.add(ivt);
                 }
                 else{
                     FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
                     tr.FinPlan__Created_From__c = 'SMS';
-                    tr.Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
+                    tr.FinPlan__Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
                     tr.FinPlan__Device__c = sms.FinPlan__Device__c;
                     tr.FinPlan__Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
                     tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;

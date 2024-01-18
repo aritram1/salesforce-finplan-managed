@@ -18,7 +18,7 @@ global with sharing class FinPlanPermanentDeleteAPIController {
             message = message + messagesToDelete.size() + ' messages are found and deleted | ';
 
             // Delete bank transactions
-            List<FinPlan__Bank_Transaction__c> bankTxntoDelete = [SELECT Id FROM FinPlan__Bank_Transaction__c];
+            List<FinPlan__Bank_Transaction__c> bankTxntoDelete = [SELECT Id FROM FinPlan__Bank_Transaction__c where FinPlan__Created_From__c != 'Manual'];
             if(bankTxntoDelete != null && bankTxntoDelete.size() > 0){
                 Database.delete(bankTxntoDelete, false);
                 Database.emptyRecycleBin(bankTxntoDelete); 
@@ -26,7 +26,7 @@ global with sharing class FinPlanPermanentDeleteAPIController {
             message = message + bankTxntoDelete.size() + ' bank transactions found and deleted | ';
             
             // Delete investment transactions
-            List<FinPlan__Investment_Transaction2__c> invTxntoDelete = [SELECT Id FROM FinPlan__Investment_Transaction2__c];
+            List<FinPlan__Investment_Transaction2__c> invTxntoDelete = [SELECT Id FROM FinPlan__Investment_Transaction2__c where FinPlan__Created_From__c != 'Manual'];
             if(invTxntoDelete != null && invTxntoDelete.size() > 0){
                 Database.delete(invTxntoDelete, false);
                 Database.emptyRecycleBin(invTxntoDelete);

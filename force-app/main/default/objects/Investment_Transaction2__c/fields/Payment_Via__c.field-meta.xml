@@ -36,6 +36,11 @@
                 <default>false</default>
                 <label>CASH</label>
             </value>
+            <value>
+                <fullName>DEBITCARD</fullName>
+                <default>false</default>
+                <label>DEBITCARD</label>
+            </value>
         </valueSetDefinition>
     </valueSet>
 </CustomField>
