@@ -13,9 +13,28 @@ public with sharing class FinPlanSMSHandlerInvestment {
         else if(sms.Sender__c.contains('NPS')){
             sms = processForNPS(sms, allBankAccountsMap);
         }
+        else if(sms.sender__c.contains('ITDCPC')){
+            sms = processForTax(sms, allBankAccountsMap);
+        }
+        else if(sms.Investment_Type__c == 'PPF'){
+            sms = processForPPF(sms, allBankAccountsMap);
+        }
         // else if(sms.Sender__c.contains('PPF')){
 
         // }
+        return sms;
+    }
+
+    public static FinPlan__SMS_Message__c processForTax(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+        sms.type__c = 'income_tax';
+        return sms;
+    }
+
+    public static FinPlan__SMS_Message__c processForPPF(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+        sms.type__c = 'PPF';
+        sms.amount_value__c = sms.content__c.split(' ')[5];
+        sms.INV_Available_Balance__c = sms.content__c.split('Avl Bal INR')[1].split('-')[0].replace(',', '').trim();
+        sms.beneficiary__c = 'PPF';
         return sms;
     }
 

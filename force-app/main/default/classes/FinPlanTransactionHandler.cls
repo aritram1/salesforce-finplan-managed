@@ -20,7 +20,6 @@ public with sharing class FinPlanTransactionHandler {
                 if(sms.Related_To_Investment__c == true){
                     FinPlan__Investment_Transaction2__c ivt = new FinPlan__Investment_Transaction2__c();
                     ivt.FinPlan__Created_From__c = 'SMS';
-                    ivt.approved__c = sms.approved__c;
                     ivt.Type__c = sms.Investment_Type__c;
                     ivt.FinPlan__Device__c = sms.FinPlan__Device__c;
                     ivt.FinPlan__Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
@@ -35,7 +34,6 @@ public with sharing class FinPlanTransactionHandler {
                 }
                 else{
                     FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
-                    tr.approved__c = sms.approved__c;
                     tr.FinPlan__Created_From__c = 'SMS';
                     tr.Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
                     tr.FinPlan__Device__c = sms.FinPlan__Device__c;

@@ -81,8 +81,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Created_From__c</fieldItem>
-                <identifier>RecordFinPlan_Created_From_cField</identifier>
+                <fieldItem>Record.Type__c</fieldItem>
+                <identifier>RecordFinPlan_Type_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-40b1ebe6-dfd9-4be8-9c81-0984941be2d0</name>
@@ -105,8 +105,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Received_At__c</fieldItem>
-                <identifier>RecordFinPlan_Received_At_cField</identifier>
+                <fieldItem>Record.Beneficiary__c</fieldItem>
+                <identifier>RecordFinPlan_Beneficiary_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -115,8 +115,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Device__c</fieldItem>
-                <identifier>RecordFinPlan_Device_cField</identifier>
+                <fieldItem>Record.Transaction_Date__c</fieldItem>
+                <identifier>RecordFinPlan_Transaction_Date_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-99b4626e-c8f4-43b7-ba56-7547bb4a892a</name>
@@ -147,60 +147,10 @@
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Savings_or_CC_Account__c</fieldItem>
-                <identifier>RecordFinPlan_Savings_or_CC_Account_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.SA_Available_Balance__c</fieldItem>
-                <identifier>RecordFinPlan_SA_Available_Balance_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
         <name>Facet-ff687c9e-05f2-4bf2-88cc-02e70d3c8694</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Balance_Update__c</fieldItem>
-                <identifier>RecordFinPlan_Balance_Update_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.CC_Available_Balance__c</fieldItem>
-                <identifier>RecordFinPlan_CC_Available_Balance_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.INV_Available_Balance__c</fieldItem>
-                <identifier>RecordFinPlan_INV_Available_Balance_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
         <name>Facet-d76fcfe4-5a1b-425e-a364-59b27c38db03</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -235,8 +185,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Type__c</fieldItem>
-                <identifier>RecordFinPlan_Type_cField</identifier>
+                <fieldItem>Record.Savings_or_CC_Account__c</fieldItem>
+                <identifier>RecordFinPlan_Savings_or_CC_Account_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -245,8 +195,18 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Beneficiary__c</fieldItem>
-                <identifier>RecordFinPlan_Beneficiary_cField</identifier>
+                <fieldItem>Record.SA_Available_Balance__c</fieldItem>
+                <identifier>RecordFinPlan_SA_Available_Balance_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CC_Available_Balance__c</fieldItem>
+                <identifier>RecordFinPlan_CC_Available_Balance_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -275,8 +235,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Investment_Type__c</fieldItem>
-                <identifier>RecordFinPlan_Investment_Type_cField</identifier>
+                <fieldItem>Record.Device__c</fieldItem>
+                <identifier>RecordFinPlan_Device_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Received_At__c</fieldItem>
+                <identifier>RecordFinPlan_Received_At_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Created_From__c</fieldItem>
+                <identifier>RecordFinPlan_Created_From_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-caff8009-f416-495a-9d06-4c52867abbeb</name>
@@ -289,8 +269,48 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Related_To_Investment__c</fieldItem>
+                <identifier>RecordFinPlan_Related_To_Investment_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Investment_Type__c</fieldItem>
+                <identifier>RecordFinPlan_Investment_Type_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.INV_Available_Balance__c</fieldItem>
+                <identifier>RecordFinPlan_INV_Available_Balance_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Amount_Value__c</fieldItem>
                 <identifier>RecordFinPlan_Amount_Value_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Balance_Update__c</fieldItem>
+                <identifier>RecordFinPlan_Balance_Update_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -309,28 +329,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Related_To_Investment__c</fieldItem>
-                <identifier>RecordFinPlan_Related_To_Investment_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
                 <fieldItem>Record.Approved__c</fieldItem>
                 <identifier>RecordFinPlan_Approved_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Transaction_Date__c</fieldItem>
-                <identifier>RecordFinPlan_Transaction_Date_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-0497437a-3bd2-4170-b4e6-fcf6d2814a62</name>

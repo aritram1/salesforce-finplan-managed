@@ -306,20 +306,24 @@ public with sharing class FinPlanSMSHandlerBank {
         }
         // debit 2
         else if(sms.content__c.startsWith('ICICI Bank Acc XX360 debited Rs.')){
+            
+            // Fix some typo in SMS
+            sms.content__c = sms.content__c.replace('Avb Bal Rs.', 'Avl Bal Rs.');
+            sms.content__c = sms.content__c.replace('To dispute Call', 'To dispute call');
+            
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.type__c = 'debit';
             sms.amount_value__c = contentArray[6].replace(',', '');
-            sms.SA_Available_Balance__c = sms.content__c.split('.Avl Bal Rs. ')[1].split('To dispute call')[0].replace(',', '');
+            sms.SA_Available_Balance__c = sms.content__c.split('Avl Bal Rs. ')[1].split('To dispute call')[0].replace(',', '').trim();
+
             if(sms.SA_Available_Balance__c.endsWith('.')){
                 sms.SA_Available_Balance__c = sms.SA_Available_Balance__c.substring(0, sms.SA_Available_Balance__c.length()-1);
             } 
-            if(sms.content__c.contains('InfoBIL*')){
-                sms.beneficiary__c = 'Bill Paid ICICI CC';
+            String dateValue = contentArray[8];
+            sms.beneficiary__c = sms.content__c.split(dateValue)[1].split('Avl Bal')[0].trim();
+            if(sms.beneficiary__c.endsWith('.')){
+                sms.beneficiary__c = sms.beneficiary__c.substring(0, sms.beneficiary__c.length()-1);
             }
-            else{
-                sms.beneficiary__c = 'XXXXXXXXXXX';
-            }
-            sms.Payment_Via__c = 'IMPS';
         }
         // debit 3
         else if(sms.content__c.startsWith('ICICI Bank Acc XX360 is debited with')){

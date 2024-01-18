@@ -4,6 +4,7 @@ public with sharing class FinPlanSMSHandler {
 
     static final Set<String> BANK_SMS_SENDERS = new Set<String>{'HDFC', 'ICICI', 'SBI'};
     static final Set<String> INVESTMENT_SMS_SENDERS = new Set<String>{'NPS', 'PPF', 'EPF'};
+    static final String PPF_4DIGITS = '3962';
 
     public static List<FinPlan__SMS_Message__c> processedMessages;
     public static List<FinPlan__SMS_Message__c> lastBalanceUpdateSMSList;
@@ -59,7 +60,14 @@ public with sharing class FinPlanSMSHandler {
                 else{ 
                     // Bank Types
                     if(sms.Sender__c.contains('HDFC') || sms.Sender__c.contains('ICICI') || sms.Sender__c.contains('SBI')){ // TBC Urgent Implementation  BANK_SMS_SENDERS.contains(sms.Sender__c)){
-                        FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap);
+                        if(sms.Sender__c.contains('SBI') && sms.content__c.contains(PPF_4DIGITS)){ // PPF
+                            sms.Investment_Type__c = 'PPF';
+                            sms.Related_To_Investment__c = true;
+                            FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
+                        }
+                        else{
+                            FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap);
+                        }
                     }
                     // Investment Types
                     else if(sms.Sender__c.contains('EPF') || sms.Sender__c.contains('NPS')) { // TBC Urgent Implementation INVESTMENT_SMS_SENDERS.contains(sms.Sender__c)){
@@ -88,44 +96,7 @@ public with sharing class FinPlanSMSHandler {
                 }
 
                 // Fix some specific beneficiary names to correct sms typos / provide better abbreviations
-                if(sms.beneficiary__c != null && sms.beneficiary__c != ''){
-                    if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
-                        sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
-                    }
-                    else if(sms.beneficiary__c.toUpperCase() == 'AMAZON PAY INDI'){
-                        sms.beneficiary__c = 'Amazon Pay India';
-                    }
-                    else if(sms.beneficiary__c.toUpperCase() == 'SBI ATM WITHDRAWAL'){
-                        sms.beneficiary__c = 'SBI ATM withdrawal';
-                    }
-                    else if(sms.beneficiary__c.toUpperCase() == 'HDFC ATM WITHDRAWAL'){
-                        sms.beneficiary__c = 'HDFC ATM withdrawal';
-                    }
-                    else if(sms.beneficiary__c.toUpperCase() == 'SBIMOPS'){
-                        sms.beneficiary__c = 'Kolkata Metro Recharge';
-                    }
-                    // Clean up VPA and A/c related beneficiaries
-                    else if(sms.beneficiary__c.contains('a/c linked to VPA')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
-                    }
-                    else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
-                    }
-                    else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
-                        sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
-                    }
-                    // Investment related things
-                    else if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
-                        sms.Related_To_Investment__c = true;
-                        sms.beneficiary__c = 'CBDTTAX';
-                        sms.Investment_Type__c = 'Advance Tax';
-                    }
-                    else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARINGCORP')){
-                        sms.Related_To_Investment__c = true;
-                        sms.beneficiary__c = 'NPS - Indian Clearing Corporation';
-                        sms.Investment_Type__c = 'NPS';
-                    }
-                }
+                sms = fixBeneficiaryName(sms);
             }
             catch(Exception e){
                 FinPlanLogger.logError(e, TAG, sms.content__c);
@@ -196,5 +167,63 @@ public with sharing class FinPlanSMSHandler {
         return balanceUpdateResponse;
     }
     // End method
+
+    // This method fixes if there is any typo in beneficiary name or some abbreviations are missed
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public static FinPlan__SMS_Message__c fixBeneficiaryName(FinPlan__SMS_Message__c sms){
+
+        if(sms.beneficiary__c != null && sms.beneficiary__c != ''){
+
+            // some abbreviations are corrected in case present in beneficiary names
+            if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
+                sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
+            }
+            else if(sms.beneficiary__c.toUpperCase() == 'AMAZON PAY INDI'){
+                sms.beneficiary__c = 'Amazon Pay India';
+            }
+            else if(sms.beneficiary__c.toUpperCase() == 'SBI ATM WITHDRAWAL'){
+                sms.beneficiary__c = 'SBI ATM withdrawal';
+            }
+            else if(sms.beneficiary__c.toUpperCase() == 'HDFC ATM WITHDRAWAL'){
+                sms.beneficiary__c = 'HDFC ATM withdrawal';
+            }
+            else if(sms.beneficiary__c.toUpperCase().contains('NFS*')){ // NFS means National Financial Switch (NFS), A Leading ATM Network
+                sms.beneficiary__c = 'ICICI ATM Withdrawal';
+            }
+            else if(sms.beneficiary__c.toUpperCase().contains('INFOBIL')){ // NFS means National Financial Switch (NFS), A Leading ATM Network
+                sms.beneficiary__c = 'ICICI CC Bill';
+            }
+            else if(sms.beneficiary__c.toUpperCase() == 'SBIMOPS'){
+                sms.beneficiary__c = 'Kolkata Metro Recharge';
+            }
+
+            // Clean up VPA and A/c related beneficiary names
+            else if(sms.beneficiary__c.contains('a/c linked to VPA')){
+                sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
+            }
+            else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
+                sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
+            }
+            else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
+                sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
+            }
+
+            // Investment related beneficiary names
+            else if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
+                sms.Related_To_Investment__c = true;
+                sms.beneficiary__c = 'CBDTTAX';
+                sms.Investment_Type__c = 'Advance Tax';
+            }
+            else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARINGCORP')){
+                sms.Related_To_Investment__c = true;
+                sms.beneficiary__c = 'NPS - Indian Clearing Corporation';
+                sms.Investment_Type__c = 'NPS';
+            }
+        }
+
+        return sms;
+
+    }
+
 
 }
