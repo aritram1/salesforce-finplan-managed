@@ -54,8 +54,20 @@ public with sharing class FinPlanSMSHandlerInvestment {
             if(sms.INV_Available_Balance__c.endsWith('.')){
                 sms.INV_Available_Balance__c = sms.INV_Available_Balance__c.substring(0, sms.INV_Available_Balance__c.length() - 1);
             }
-            
-            sms.Beneficiary__c = 'EPF For ' + contentArray[16].substring(2,6) + '/' + contentArray[16].substring(0,2);
+            // The beneficiary can come in sms in two formats
+            // 1 : 092023 (i.e. in MMYYYY format)
+            // OR
+            // 2 : Sep-23 (i.e. in MMM-YY format)
+            String datePeriod = contentArray[16];
+            if(datePeriod.isNumeric() && datePeriod.length() == 6){
+                datePeriod = datePeriod.substring(0, 2) + '/' + datePeriod.substring(2, 6);
+            }
+            else{
+                String m = datePeriod.split('-')[0];
+                String y = '20' + datePeriod.split('-')[1];
+                datePeriod = m + '/' + y;
+            }
+            sms.Beneficiary__c = 'EPF For ' + datePeriod;
         }
         return sms;
     }
