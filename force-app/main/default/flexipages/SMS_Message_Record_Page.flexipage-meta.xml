@@ -85,6 +85,16 @@
                 <identifier>RecordFinPlan_Type_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Amount_Value__c</fieldItem>
+                <identifier>RecordFinPlan_Amount_Value_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-40b1ebe6-dfd9-4be8-9c81-0984941be2d0</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -107,6 +117,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.Beneficiary__c</fieldItem>
                 <identifier>RecordFinPlan_Beneficiary_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Received_At__c</fieldItem>
+                <identifier>RecordFinPlan_Received_At_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -144,38 +164,6 @@
             </componentInstance>
         </itemInstances>
         <name>Facet-ea5824d4-0f7b-43c8-a275-6fb69db30f8b</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Facet-ff687c9e-05f2-4bf2-88cc-02e70d3c8694</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <name>Facet-d76fcfe4-5a1b-425e-a364-59b27c38db03</name>
-        <type>Facet</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>Facet-ff687c9e-05f2-4bf2-88cc-02e70d3c8694</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:column</componentName>
-                <identifier>flexipage_column7</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>body</name>
-                    <value>Facet-d76fcfe4-5a1b-425e-a364-59b27c38db03</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:column</componentName>
-                <identifier>flexipage_column8</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>Facet-dfba07e9-7383-4418-b739-7eb626b732b5</name>
         <type>Facet</type>
     </flexiPageRegions>
     <flexiPageRegions>
@@ -239,26 +227,6 @@
                 <identifier>RecordFinPlan_Device_cField</identifier>
             </fieldInstance>
         </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Received_At__c</fieldItem>
-                <identifier>RecordFinPlan_Received_At_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Created_From__c</fieldItem>
-                <identifier>RecordFinPlan_Created_From_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
         <name>Facet-caff8009-f416-495a-9d06-4c52867abbeb</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -291,16 +259,6 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.INV_Available_Balance__c</fieldItem>
                 <identifier>RecordFinPlan_INV_Available_Balance_cField</identifier>
-            </fieldInstance>
-        </itemInstances>
-        <itemInstances>
-            <fieldInstance>
-                <fieldInstanceProperties>
-                    <name>uiBehavior</name>
-                    <value>none</value>
-                </fieldInstanceProperties>
-                <fieldItem>Record.Amount_Value__c</fieldItem>
-                <identifier>RecordFinPlan_Amount_Value_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -391,8 +349,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Received_At_formula__c</fieldItem>
-                <identifier>RecordFinPlan_Received_At_formula_cField2</identifier>
+                <fieldItem>Record.Created_From__c</fieldItem>
+                <identifier>RecordFinPlan_Created_From_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -449,24 +407,6 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>flexipage_fieldSection3</identifier>
-            </componentInstance>
-        </itemInstances>
-        <itemInstances>
-            <componentInstance>
-                <componentInstanceProperties>
-                    <name>columns</name>
-                    <value>Facet-dfba07e9-7383-4418-b739-7eb626b732b5</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>horizontalAlignment</name>
-                    <value>false</value>
-                </componentInstanceProperties>
-                <componentInstanceProperties>
-                    <name>label</name>
-                    <value>Savings Account/ CC Account Info</value>
-                </componentInstanceProperties>
-                <componentName>flexipage:fieldSection</componentName>
-                <identifier>flexipage_fieldSection4</identifier>
             </componentInstance>
         </itemInstances>
         <itemInstances>

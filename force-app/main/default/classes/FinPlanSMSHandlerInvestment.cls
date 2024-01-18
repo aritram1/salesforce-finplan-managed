@@ -31,7 +31,7 @@ public with sharing class FinPlanSMSHandlerInvestment {
     }
 
     public static FinPlan__SMS_Message__c processForPPF(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
-        sms.type__c = 'PPF';
+        sms.type__c = 'ppf';
         sms.amount_value__c = sms.content__c.split(' ')[5];
         sms.INV_Available_Balance__c = sms.content__c.split('Avl Bal INR')[1].split('-')[0].replace(',', '').trim();
         sms.beneficiary__c = 'PPF';
@@ -47,6 +47,7 @@ public with sharing class FinPlanSMSHandlerInvestment {
         List<String> contentArray = sms.content__c?.split(' ');
         if(sms.content__c.contains('your passbook balance against')){
             sms.Investment_Type__c = 'EPF';
+            sms.type__c = 'epf';
             sms.amount_value__c = contentArray[12].replace(',', '').replace('/', '').replace('-', '');
             
             sms.INV_Available_Balance__c = contentArray[8].replace(',', '').replace('/', '').replace('-', '');
