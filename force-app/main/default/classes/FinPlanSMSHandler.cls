@@ -216,7 +216,7 @@ public with sharing class FinPlanSMSHandler {
             }
             else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARINGCORP')){
                 sms.Related_To_Investment__c = true;
-                sms.beneficiary__c = 'NPS - Indian Clearing Corporation';
+                sms.beneficiary__c = 'NPS';
                 sms.Investment_Type__c = 'NPS';
             }
         }
