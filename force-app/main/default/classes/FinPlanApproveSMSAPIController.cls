@@ -21,13 +21,7 @@ global with sharing class FinPlanApproveSMSAPIController {
                                     INV_Available_Balance__c
                                     FROM SMS_Message__c WHERE id IN :recordIds];
             
-            // A. Set approved__c as false so they dont appear in approval list //////////////////////////////////////////
-            for(finplan__sms_message__c rec : recordsToUpdate){
-                rec.Approved__c = true;
-            }
-            update recordsToUpdate;
-
-            // B. To save storage delete if any unapproved ones, promotional ones etc. are left in system //////////////////
+            // A. To save storage delete if any unapproved ones, promotional ones etc. are left in system //////////////////
             List<SMS_Message__c> toBeDeletedRecords = new List<SMS_Message__c>();
             toBeDeletedRecords = [SELECT id FROM SMS_Message__c WHERE Create_Transaction__c = false];
             if(toBeDeletedRecords != null && toBeDeletedRecords.size() > 0){
@@ -35,8 +29,14 @@ global with sharing class FinPlanApproveSMSAPIController {
                 Database.emptyRecycleBin(toBeDeletedRecords);
             }
 
-            // And create corresponding transaction records from the messages
+            // B - And create corresponding transaction records from the messages
             apiResponse = FinPlanTransactionHandler.createTransactions(recordsToUpdate);
+
+            // C. And Approve the messages (aproved messages don't appear in expenses)
+            for(finplan__sms_message__c rec : recordsToUpdate){
+                rec.Approved__c = true;
+            }
+            update recordsToUpdate;
             
         }
         return apiResponse;

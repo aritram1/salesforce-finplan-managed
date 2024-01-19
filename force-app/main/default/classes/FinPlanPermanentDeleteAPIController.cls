@@ -35,11 +35,14 @@ global with sharing class FinPlanPermanentDeleteAPIController {
             
             // Add to data property
             response.put('data', message);
+            response.put('statusCode', '200');
         }
         catch(Exception e){
-            // In case of errors, add to errors property
-            FinPlanLogger.logError(e, TAG);
-            response.put('errors', e.getMessage());
+            // Get the detail error Info and Log the error, also add to errors property
+            String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
+            FinPlanLogger.logError(new FinPlanException(errorMessage), TAG);
+            response.put('errors', errorMessage);
+            response.put('statusCode', '400');
         }
         return response;
     }

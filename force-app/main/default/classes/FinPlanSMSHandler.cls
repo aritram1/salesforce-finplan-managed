@@ -99,7 +99,9 @@ public with sharing class FinPlanSMSHandler {
                 sms = fixBeneficiaryName(sms);
             }
             catch(Exception e){
-                FinPlanLogger.logError(e, TAG, sms.content__c);
+                // Get the detail error Info and Log the error
+                String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
+                FinPlanLogger.logError(new FinPlanException(errorMessage), TAG, sms.content__c);
             }
 
             processedMessages.add(sms);
@@ -160,9 +162,11 @@ public with sharing class FinPlanSMSHandler {
                 update toBeUpdatedBankAccounts;
             }
         }
-        catch(Exception ex){
-            FinPlanLogger.logError(ex, TAG);
-            balanceUpdateResponse = 'Error occurred inside handleBankAccountBalanceUpdate : ' + ex.getMessage();
+        catch(Exception e){
+            // Get the detail error Info and Log the error
+            String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
+            FinPlanLogger.logError(new FinPlanException(errorMessage), TAG);
+            balanceUpdateResponse = 'Error occurred inside handleBankAccountBalanceUpdate : ' + errorMessage;
         }
         return balanceUpdateResponse;
     }

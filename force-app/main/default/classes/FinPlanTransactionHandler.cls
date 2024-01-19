@@ -101,8 +101,6 @@ public with sharing class FinPlanTransactionHandler {
         }
         catch(Exception e){
 
-            FinPlanLogger.logError(e);
-            
             // Get the detail error Info and Log the error
             String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
             FinPlanLogger.logError(new FinPlanException(errorMessage), TAG);

@@ -60,7 +60,9 @@ public with sharing class FinPlanSMSMessageTriggerHandler {
             System.debug('bankBalanceUpdateResponse (Sync method) => '+ bankBalanceUpdateResponse); 
         }
         catch(Exception e){
-            FinPlanLogger.logError(e, TAG);
+            // Get the detail error Info and Log the error
+            String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
+            FinPlanLogger.logError(new FinPlanException(errorMessage), TAG);
         }
     
     }
