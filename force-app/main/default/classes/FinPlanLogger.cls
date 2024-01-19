@@ -33,7 +33,7 @@ public with sharing class FinPlanLogger {
             }
         }
         else{
-            errorMessage = 'Error occurred : ' + e.getMessage();
+            errorMessage = e.getMessage();
         }
         return errorMessage;
     }
