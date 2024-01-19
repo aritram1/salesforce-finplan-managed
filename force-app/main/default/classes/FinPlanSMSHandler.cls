@@ -178,8 +178,14 @@ public with sharing class FinPlanSMSHandler {
             if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
                 sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
             }
+            if(sms.beneficiary__c.toUpperCase() == 'CONCEN'){
+                sms.beneficiary__c = 'Concentrix Catalyst';
+            }
             else if(sms.beneficiary__c.toUpperCase() == 'AMAZON PAY INDI'){
                 sms.beneficiary__c = 'Amazon Pay India';
+            }
+            else if(sms.beneficiary__c.toUpperCase() == 'FLIPKART INTERN'){
+                sms.beneficiary__c = 'Flipkart';
             }
             else if(sms.beneficiary__c.toUpperCase() == 'SBI ATM WITHDRAWAL'){
                 sms.beneficiary__c = 'SBI ATM withdrawal';
@@ -190,22 +196,14 @@ public with sharing class FinPlanSMSHandler {
             else if(sms.beneficiary__c.toUpperCase().contains('NFS*')){ // NFS means National Financial Switch (NFS), A Leading ATM Network
                 sms.beneficiary__c = 'ICICI ATM Withdrawal';
             }
-            else if(sms.beneficiary__c.toUpperCase().contains('INFOBIL')){ // NFS means National Financial Switch (NFS), A Leading ATM Network
+            else if(sms.beneficiary__c.toUpperCase().contains('INFOBIL')){
                 sms.beneficiary__c = 'ICICI CC Bill';
             }
             else if(sms.beneficiary__c.toUpperCase() == 'SBIMOPS'){
                 sms.beneficiary__c = 'Kolkata Metro Recharge';
             }
-
-            // Clean up VPA and A/c related beneficiary names
-            else if(sms.beneficiary__c.contains('a/c linked to VPA')){
-                sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
-            }
-            else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
-                sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
-            }
-            else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
-                sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
+            else if(sms.beneficiary__c.toUpperCase() == 'A/C xxxxxxx6414'){
+                sms.beneficiary__c = 'Dr. Sanyal';
             }
 
             // Investment related beneficiary names
@@ -218,6 +216,17 @@ public with sharing class FinPlanSMSHandler {
                 sms.Related_To_Investment__c = true;
                 sms.beneficiary__c = 'NPS';
                 sms.Investment_Type__c = 'NPS';
+            }
+
+            // Clean up VPA and A/c related beneficiary names
+            else if(sms.beneficiary__c.contains('a/c linked to VPA')){
+                sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
+            }
+            else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
+                sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
+            }
+            else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
+                sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
             }
         }
 

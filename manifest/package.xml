@@ -8,6 +8,7 @@
 		<members>FinPlanSMSHandlerInvestment</members>
 		<members>FinPlanException</members>
 		<members>FinPlanLogger</members>
+		<members>FinPlanUtil</members>
 		<members>FinPlanTransactionHandler</members>
 		<members>FinPlanPermanentDeleteAPIController</members>
 		<members>FinPlanSMSMessageTriggerHandler</members>

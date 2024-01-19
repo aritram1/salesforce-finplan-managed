@@ -38,6 +38,17 @@ public with sharing class FinPlanSMSHandlerBank {
             else{
                 sms.Beneficiary__c = sms.content__c.split('for')[1].split('.Avl bal')[0];
                 sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+                if(sms.beneficiary__c.toUpperCase().contains('IMPS') && sms.beneficiary__c.contains('-')){
+                    sms.Payment_Via__c = 'IMPS';
+                    sms.Payment_Reference__c = sms.beneficiary__c.split('-')[1];
+                    // sms.beneficiary__c = sms.beneficiary__c.split('-')[2];
+                }
+                if(sms.beneficiary__c.toUpperCase().contains('NEFT') && sms.beneficiary__c.contains('-')){
+                    sms.Payment_Via__c = 'NEFT';
+                    integer lastIndexOfDash = sms.beneficiary__c.split('-').size() - 1;
+                    sms.Payment_Reference__c = sms.beneficiary__c.split('-')[lastIndexOfDash];
+                    // sms.beneficiary__c = sms.beneficiary__c.split('-')[2];
+                }
             }
             
         }
@@ -76,7 +87,7 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
 
             String paymentReferenceString = sms.content__c.replace('(', 'START_BRACKET').replace(')', 'END_BRACKET');
-            sms.Payment_Reference__c = paymentReferenceString.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('UPI Ref No.', '').trim();
+            sms.Payment_Reference__c = paymentReferenceString.split('START_BRACKET')[1].split('END_BRACKET')[0].replace('UPI Ref No ', '').replace('UPI Ref No. ', '').trim();
         }
         // debit2 UPI
         else if(sms.content__c.startswith('Money Transfer:Rs') && sms.content__c.contains('UPI')){
@@ -98,10 +109,16 @@ public with sharing class FinPlanSMSHandlerBank {
             if(sms.beneficiary__c.length() > 255){
                 sms.beneficiary__c = sms.beneficiary__c.substring(0,255);
             }
+            integer countOfDash = sms.beneficiary__c.split('-').size();
+            if(countOfDash > 2){ // meaning the it contains reference number etc along with beneficiary name
+                integer indexOfPaymentReference = countOfDash - 2;
+                sms.Payment_Reference__c = sms.beneficiary__c.split('-')[indexOfPaymentReference];
+            }
             sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c); // convert to camel case for better readability
+            
         }
-        // debit4 via NEFT/IMPS where sms starts like
-        // Thanks for paying ...
+        // debit4 via NEFT/IMPS 
+        // where sms starts like "Thanks for paying ..."
         else if(sms.content__c.startswith('Thanks for paying Rs.')){
             sms.amount_value__c = contentArray[3].replace(',', '').replace('Rs.', '');
             sms.type__c = 'debit';
@@ -127,7 +144,11 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.beneficiary__c = content.split(' to ')[1].split('STARTBRACKET')[0].trim();
             if(sms.content__c.contains('IMPS')){
                 sms.Payment_Via__c = 'IMPS';
+                if(content.contains('IMPS Ref No')){
+                    sms.Payment_Reference__c = content.split('STARTBRACKETIMPS Ref No')[1].split('ENDBRACKET Avl bal:')[0];
+                }
             }
+            
         }
         // atm withdrawal
         else if(sms.content__c.contains('ve withdrawn Rs.')){

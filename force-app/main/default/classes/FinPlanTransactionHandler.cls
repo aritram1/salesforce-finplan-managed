@@ -100,13 +100,16 @@ public with sharing class FinPlanTransactionHandler {
             result.put('data', dataMap);
         }
         catch(Exception e){
-            
-            // Log the error
-            FinPlanLogger.logError(e, TAG);
 
+            FinPlanLogger.logError(e);
+            
+            // Get the detail error Info and Log the error
+            String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
+            FinPlanLogger.logError(new FinPlanException(errorMessage), TAG);
+
+            // Also send the response back from this `api` accordingly
             Map<String,List<String>> errorMap = new Map<String,List<String>>();
             List<String> errorList = new List<String>();
-            String errorMessage = 'Error occurred : ' + e.getMessage();
             errorList.add(errorMessage);
             errorMap.put('message', errorList);
             result.put('errors', errorMap);
