@@ -26,7 +26,7 @@ public with sharing class FinPlanLogger {
     // creates Error Message in case of error
     public static String getDetailedErrorMessage(Exception e){
         String errorMessage = '';
-        if(e.getTypeName() == 'DMLException'){
+        if(e.getTypeName().contains('DMLException')){
             for (Integer i = 0; i < e.getNumDml(); i++) {
                 // Process exception here
                 errorMessage += e.getDMLType(i) + ' : ' + e.getDmlMessage(i) + ' : ' + e.getDmlFields(i) + '|'; 

@@ -30,12 +30,18 @@ public with sharing class FinPlanTransactionHandler {
     public static Map<String, Map<String, List<String>>> processTransactions(List<FinPlan__SMS_Message__c> messageList, Map<String, FinPlan__Investment__c> existingInvestments){
         
         Map<String, Map<string, List<String>>> result = new Map<String, Map<string, List<String>>>();
+        Map<String, Integer> txnToMessageMap = new Map<String, Integer>();
         
         try{
             bankTransactionsList = new List<FinPlan__Bank_Transaction__c>();
             investmentTransactionsList = new List<FinPlan__Investment_Transaction2__c>();
             // List<FinPlan__Beneficiary__c> beneficiaries = new List<FinPlan__Beneficiary__c>();
-            for(FinPlan__SMS_Message__c sms : messageList){
+            
+            // TBC later
+            // Integer btIndex = 0;
+            // Integer invIndex = 0;
+            for(Integer index = 0; index < messageList.size(); index++){
+                FinPlan__SMS_Message__c sms = messageList.get(index);
                 if(sms.Related_To_Investment__c == true){
                     FinPlan__Investment_Transaction2__c ivt = new FinPlan__Investment_Transaction2__c();
                     ivt.FinPlan__Created_From__c = 'SMS';
@@ -64,8 +70,12 @@ public with sharing class FinPlanTransactionHandler {
                     // Other Type Investments like FD, MF, Stocks, ULIP to be added here later
                     // else if{
                     // }
-
+                    
                     investmentTransactionsList.add(ivt);
+                    
+                    // TBC later
+                    // orderMap.put('bt-'+btIndex, index);
+                    // btIndex = btIndex + 1;
                 }
                 else{
                     FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
@@ -79,7 +89,12 @@ public with sharing class FinPlanTransactionHandler {
                     tr.FinPlan__Payment_Via__c = sms.Payment_Via__c;
                     tr.FinPlan__Payment_Reference__c = sms.Payment_Reference__c;
                     tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
+
                     bankTransactionsList.add(tr);
+
+                    // TBC later
+                    // orderMap.put('inv-'+btIndex, index);
+                    // invIndex = invIndex + 1;
                 }
             }
             if(bankTransactionsList != null && bankTransactionsList.size() > 0){
@@ -104,6 +119,20 @@ public with sharing class FinPlanTransactionHandler {
             // Get the detail error Info and Log the error
             String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
             FinPlanLogger.logError(new FinPlanException(errorMessage), TAG);
+
+            // TBC Later
+            // String errorMessage = '';
+            // if(e.getTypeName().contains('DMLException')){
+            //     for (Integer i = 0; i < e.getNumDml(); i++) {
+            //         // Process exception here
+            //         errorMessage += e.getDMLType(i) + ' || ' + e.getDmlMessage(i) + ' || ' + e.getDmlFields(i) + '|'; 
+            //         errorMessage += (messageList.get('inv-'+i)!=null) ? messageList.get('inv-'+i) : 'inv_not_found';
+            //         errorMessage += (messageList.get('bt-'+i)!=null) ? messageList.get('bt-'+i) : 'bt_not_found'; 
+            //     }
+            // }
+            // else{
+            //     errorMessage = e.getMessage();
+            // }
 
             // Also send the response back from this `api` accordingly
             Map<String,List<String>> errorMap = new Map<String,List<String>>();
