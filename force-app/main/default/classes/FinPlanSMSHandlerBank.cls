@@ -201,7 +201,7 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.type__c = 'debit';
             sms.amount_value__c = contentArray[12].replace(',', '');
             sms.SA_Available_Balance__c = sms.content__c.split('Avl Bal Rs ')[1].split('.-')[0].replace(',', '');
-            sms.beneficiary__c = 'Not Available';
+            sms.beneficiary__c = 'SBI Internal Transfer';
         }
         // debit via yono app
         else if(sms.content__c.contains('Your A/C XXXXX816414 Debited INR')){
