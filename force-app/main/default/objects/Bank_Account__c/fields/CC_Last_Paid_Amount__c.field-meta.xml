@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
-    <fullName>Investable_Fund__c</fullName>
+    <fullName>CC_Last_Paid_Amount__c</fullName>
     <externalId>false</externalId>
-    <formula>IF( 
-  Last_Balance__c -  Emergency_Fund__c &gt; 0, Last_Balance__c -  Emergency_Fund__c, 0
-)</formula>
-    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
-    <label>Investable Fund</label>
+    <label>CC Last Paid Amount</label>
     <precision>18</precision>
     <required>false</required>
     <scale>2</scale>

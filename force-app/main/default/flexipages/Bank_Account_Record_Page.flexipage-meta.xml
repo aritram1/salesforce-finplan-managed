@@ -176,6 +176,16 @@
                 <identifier>RecordFinPlan_CC_Max_Limit_cField</identifier>
             </fieldInstance>
         </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CC_Billing_Cycle_Date__c</fieldItem>
+                <identifier>RecordFinPlan_CC_Billing_Cycle_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
         <name>Facet-d563575c-0f4c-4305-b188-d5cd5605f80c</name>
         <type>Facet</type>
     </flexiPageRegions>
@@ -188,6 +198,26 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.CC_Available_Limit__c</fieldItem>
                 <identifier>RecordFinPlan_CC_Available_Limit_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CC_Last_Bill_Paid_Date__c</fieldItem>
+                <identifier>RecordFinPlan_CC_Last_Bill_Paid_Date_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.CC_Last_Paid_Amount__c</fieldItem>
+                <identifier>RecordFinPlan_CC_Last_Paid_Amount_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-2fcef111-ce9e-45bc-ba0b-5eb93ac30510</name>
@@ -248,15 +278,21 @@
                 </componentInstanceProperties>
                 <componentInstanceProperties>
                     <name>label</name>
-                    <value>Savings Account Details</value>
+                    <value>Savings Account / Wallet Details</value>
                 </componentInstanceProperties>
                 <componentName>flexipage:fieldSection</componentName>
                 <identifier>flexipage_fieldSection4</identifier>
                 <visibilityRule>
+                    <booleanFilter>1 OR 2</booleanFilter>
                     <criteria>
-                        <leftValue>{!Record.Name}</leftValue>
+                        <leftValue>{!Record.Account_Code__c}</leftValue>
                         <operator>CONTAINS</operator>
-                        <rightValue>Savings Account</rightValue>
+                        <rightValue>-SA</rightValue>
+                    </criteria>
+                    <criteria>
+                        <leftValue>{!Record.Account_Code__c}</leftValue>
+                        <operator>CONTAINS</operator>
+                        <rightValue>-WA</rightValue>
                     </criteria>
                 </visibilityRule>
             </componentInstance>

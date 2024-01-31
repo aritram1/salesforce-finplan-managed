@@ -65,15 +65,12 @@ global with sharing class FinPlanSyncSMSAPIController {
             
         }
         catch(Exception ex){
-            
-            // Get the detail error Info and Log the error
-            String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
-            FinPlanLogger.logError(new FinPlanException(errorMessage), TAG);
-
-            // And also set status code and error
+            // Set status code and error
             apiResponse.put('statusCode', '400');
-            apiResponse.put('error', 'Error : ' + errorMessage);
+            apiResponse.put('error', 'Error : ' + ex.getMessage());
 
+            // Also log the error to the System Logs
+            FinPlanLogger.logError(ex, TAG);
         }
         return apiResponse;
     }
