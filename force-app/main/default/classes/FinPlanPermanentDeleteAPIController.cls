@@ -4,13 +4,13 @@ global with sharing class FinPlanPermanentDeleteAPIController {
     static final String TAG = 'FinPlanPermanentDeleteAPIController';
     
     @HttpPost
-    global static Map<String, String> permanentlyDeleteMessagesAndTransactions() {
+    global static Map<String, String> permanentlyDeleteMessagesAndTransactions(String deviceId) {
         Map<String, String> response = new  Map<String, String>();
         try{
             String message = '';
 
             // Delete messages
-            List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c];
+            List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c where FinPlan__Device__c = :deviceId];
             if(messagesToDelete != null && messagesToDelete.size() > 0){
                 Database.delete(messagesToDelete, false);
                 Database.emptyRecycleBin(messagesToDelete);

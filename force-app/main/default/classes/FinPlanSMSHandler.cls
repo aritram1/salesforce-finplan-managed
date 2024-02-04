@@ -19,7 +19,9 @@ public with sharing class FinPlanSMSHandler {
     
     // Get all Bank accounts, make a map of code vs Id to set Bank account info later
     public static void getAllBankAccounts(){
-        for(Bank_Account__c ba : [SELECT Id, Finplan__Account_Code__c, FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, FinPlan__CC_Max_Limit__c, Name from Bank_Account__c]){
+        for(Bank_Account__c ba : [SELECT Id, Finplan__Active__c, FinPlan__Account_Code__c, 
+                                         FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, 
+                                         FinPlan__CC_Max_Limit__c, Name from Bank_Account__c]){
             allBankAccountsMap.put(ba.Finplan__Account_Code__c, ba);
             lastBalanceBankAccountsMap.put(ba.id, ba);
         }
@@ -63,15 +65,19 @@ public with sharing class FinPlanSMSHandler {
                         if(sms.Sender__c.contains('SBI') && sms.content__c.contains(PPF_4DIGITS)){ // PPF
                             sms.Investment_Type__c = 'PPF';
                             sms.Related_To_Investment__c = true;
-                            FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
+                            sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
                         }
                         else{
-                            FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap);
+                            sms = FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap);
                         }
                     }
                     // Investment Types
                     else if(sms.Sender__c.contains('EPF') || sms.Sender__c.contains('NPS')) { // TBC Urgent Implementation INVESTMENT_SMS_SENDERS.contains(sms.Sender__c)){
-                        FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
+                        sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
+                    }
+                    // Other Types (like wallaet for amazon, paytm etc)
+                    else{
+                        sms = FinPlanSMSHandlerOthers.processForOthers(sms, allBankAccountsMap);
                     }
                 }
                 
@@ -144,15 +150,20 @@ public with sharing class FinPlanSMSHandler {
                             System.debug('Inside handleBankAccountBalanceUpdate for SA =>' + availableSABalanceString);                      
                             ba.FinPlan__Last_Balance__c = Double.valueOf(availableSABalanceString);
                         }
-                        else if(ba.Account_Code__c.endsWith('-CC')){   // Current Account
+                        else if(ba.Account_Code__c.endsWith('-CC')){   // Credit Card Account
                             String availableCCBalanceString = sms.FinPlan__CC_Available_Balance__c.replace(',', '');
                             System.debug('Inside handleBankAccountBalanceUpdate for CC =>' + availableCCBalanceString);                      
                             ba.FinPlan__CC_Available_Limit__c = Double.valueOf(availableCCBalanceString);
                         }
+                        else if(ba.Account_Code__c.endsWith('-WA')){   // Wallet Account (Like Amazon / Paytm etc)
+                            String availableWABalanceString = sms.SA_available_balance__c.replace(',', '');
+                            System.debug('Inside handleBankAccountBalanceUpdate for WA =>' + availableWABalanceString);                      
+                            ba.FinPlan__Last_Balance__c = Double.valueOf(availableWABalanceString);
+                        }
                         toBeUpdatedBankAccounts.add(ba);
-                        
+                            
                         // Also captur  e the updated balance and bank account name for further showing response
-                        String resultText = 'Bank Account Name : ' + ba.Name + ' Updated Balance : ' + sms.SA_available_balance__c + '. ';
+                        String resultText = 'Account Name : ' + ba.Name + ' Updated Balance : ' + sms.SA_available_balance__c + '. ';
                         balanceUpdateResponse = balanceUpdateResponse + resultText;
                     }
                 }
