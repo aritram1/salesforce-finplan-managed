@@ -3,22 +3,78 @@
     <fullName>Type__c</fullName>
     <externalId>false</externalId>
     <label>Type</label>
-    <required>false</required>
+    <required>true</required>
     <trackHistory>false</trackHistory>
     <trackTrending>false</trackTrending>
     <type>Picklist</type>
     <valueSet>
+        <restricted>true</restricted>
         <valueSetDefinition>
             <sorted>false</sorted>
+            <value>
+                <fullName>Bills</fullName>
+                <default>false</default>
+                <label>Bills</label>
+            </value>
+            <value>
+                <fullName>Grocery</fullName>
+                <default>false</default>
+                <label>Grocery</label>
+            </value>
+            <value>
+                <fullName>EMI</fullName>
+                <default>false</default>
+                <label>EMI</label>
+            </value>
+            <value>
+                <fullName>Entertainment</fullName>
+                <default>false</default>
+                <label>Entertainment</label>
+            </value>
+            <value>
+                <fullName>Food and Drinks</fullName>
+                <default>false</default>
+                <label>Food and Drinks</label>
+            </value>
+            <value>
+                <fullName>Fuel</fullName>
+                <default>false</default>
+                <label>Fuel</label>
+            </value>
+            <value>
+                <fullName>Health</fullName>
+                <default>false</default>
+                <label>Health</label>
+            </value>
+            <value>
+                <fullName>Investment</fullName>
+                <default>false</default>
+                <label>Investment</label>
+            </value>
+            <value>
+                <fullName>Other</fullName>
+                <default>false</default>
+                <label>Other</label>
+            </value>
             <value>
                 <fullName>Shopping</fullName>
                 <default>false</default>
                 <label>Shopping</label>
             </value>
             <value>
-                <fullName>Grocery</fullName>
+                <fullName>Transfer</fullName>
                 <default>false</default>
-                <label>Grocery</label>
+                <label>Transfer</label>
+            </value>
+            <value>
+                <fullName>Travel</fullName>
+                <default>false</default>
+                <label>Travel</label>
+            </value>
+            <value>
+                <fullName>Rent</fullName>
+                <default>false</default>
+                <label>Rent</label>
             </value>
         </valueSetDefinition>
     </valueSet>

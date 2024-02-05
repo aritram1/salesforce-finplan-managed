@@ -125,6 +125,16 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Beneficiary_Type__c</fieldItem>
+                <identifier>RecordFinPlan_Beneficiary_Type_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Received_At__c</fieldItem>
                 <identifier>RecordFinPlan_Received_At_cField</identifier>
             </fieldInstance>

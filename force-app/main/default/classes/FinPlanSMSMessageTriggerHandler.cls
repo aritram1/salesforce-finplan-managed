@@ -34,6 +34,7 @@ public with sharing class FinPlanSMSMessageTriggerHandler {
                     currentMessage.Related_To_Investment__c = enrichedMessage.Related_To_Investment__c;
                     currentMessage.Investment_Type__c = enrichedMessage.Investment_Type__c;
                     currentMessage.INV_Available_Balance__c = enrichedMessage.INV_Available_Balance__c;
+                    currentMessage.Beneficiary_Type__c = enrichedMessage.Beneficiary_Type__c;
 
                     // If the Payment reference is not available or the sms is not related to credit/debit etc.,
                     // set the paymetn reference to a random string

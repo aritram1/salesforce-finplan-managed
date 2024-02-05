@@ -8,8 +8,9 @@ public with sharing class FinPlanSMSHandler {
 
     public static List<FinPlan__SMS_Message__c> processedMessages;
     public static List<FinPlan__SMS_Message__c> lastBalanceUpdateSMSList;
-    public static Map<String, Bank_Account__c> allBankAccountsMap = new Map<String, Bank_Account__c>();
-    public static Map<String, Bank_Account__c> lastBalanceBankAccountsMap = new Map<String, Bank_Account__c>();
+    public static Map<String, FinPlan__Bank_Account__c> allBankAccountsMap = new Map<String, FinPlan__Bank_Account__c>();
+    public static Map<String, FinPlan__Beneficiary__c> allBeneficiariesMap = new Map<String, FinPlan__Beneficiary__c>();
+    public static Map<String, FinPlan__Bank_Account__c> lastBalanceBankAccountsMap = new Map<String, FinPlan__Bank_Account__c>();
 
     // Standard lists to do further actions
     public static List<FinPlan__SMS_Message__c> listToCreateBankAccountTransacations = new List<FinPlan__SMS_Message__c>();
@@ -18,12 +19,18 @@ public with sharing class FinPlanSMSHandler {
     public static List<FinPlan__SMS_Message__c> listOfAllowedRecords = new List<FinPlan__SMS_Message__c>();
     
     // Get all Bank accounts, make a map of code vs Id to set Bank account info later
-    public static void getAllBankAccounts(){
+    public static void getAllBankAccountsAndBeneficiaries(){
         for(Bank_Account__c ba : [SELECT Id, Finplan__Active__c, FinPlan__Account_Code__c, 
                                          FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, 
-                                         FinPlan__CC_Max_Limit__c, Name from Bank_Account__c]){
+                                         FinPlan__CC_Max_Limit__c, Name FROM Bank_Account__c]){
             allBankAccountsMap.put(ba.Finplan__Account_Code__c, ba);
             lastBalanceBankAccountsMap.put(ba.id, ba);
+        }
+
+        for(FinPlan__Beneficiary__c be : [SELECT Id, Name, FinPlan__Display_Name__c, FinPlan__Other_Names__c ,
+                                                 FinPlan__Phone__c, FinPlan__Type__c, FinPlan__UPI_Id__c 
+                                                 FROM FinPlan__Beneficiary__c]){
+            allBeneficiariesMap.put(be.FinPlan__Other_Names__c, be);
         }
     }
 
@@ -32,7 +39,7 @@ public with sharing class FinPlanSMSHandler {
         // initiate variables
         processedMessages = new List<FinPlan__SMS_Message__c>();
         lastBalanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
-        getAllBankAccounts();
+        getAllBankAccountsAndBeneficiaries();
 
         // The main loop starts
         for(FinPlan__SMS_Message__c sms : allMessages){
@@ -187,49 +194,30 @@ public with sharing class FinPlanSMSHandler {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public static FinPlan__SMS_Message__c fixBeneficiaryName(FinPlan__SMS_Message__c sms){
 
-        if(sms.beneficiary__c != null && sms.beneficiary__c != ''){
+        if(String.isNotEmpty(sms.beneficiary__c) && String.isNotBlank(sms.beneficiary__c)){ // may be overchecked :P
+
+            String beneficiaryName_UpperCase = sms.beneficiary__c.toUpperCase();
 
             // some abbreviations are corrected in case present in beneficiary names
-            if(sms.beneficiary__c == 'Icici Bank Credit Card Account 4xxx9006'){
-                sms.beneficiary__c = 'ICICI Bank Credit Card Account 4xxx9006';
+            if(allBeneficiariesMap.containsKey(beneficiaryName_UpperCase)){
+                sms.beneficiary__c = allBeneficiariesMap.get(beneficiaryName_UpperCase).FinPlan__Display_Name__c;
+                sms.beneficiary_type__c = allBeneficiariesMap.get(beneficiaryName_UpperCase).Type__c;
             }
-            if(sms.beneficiary__c.toUpperCase() == 'CONCEN'){
-                sms.beneficiary__c = 'Concentrix Catalyst';
-            }
-            else if(sms.beneficiary__c.toUpperCase() == 'AMAZON PAY INDI'){
-                sms.beneficiary__c = 'Amazon Pay India';
-            }
-            else if(sms.beneficiary__c.toUpperCase() == 'FLIPKART INTERN'){
-                sms.beneficiary__c = 'Flipkart';
-            }
-            else if(sms.beneficiary__c.toUpperCase() == 'SBI ATM WITHDRAWAL'){
-                sms.beneficiary__c = 'SBI ATM withdrawal';
-            }
-            else if(sms.beneficiary__c.toUpperCase() == 'HDFC ATM WITHDRAWAL'){
-                sms.beneficiary__c = 'HDFC ATM withdrawal';
-            }
-            else if(sms.beneficiary__c.toUpperCase().contains('NFS*')){ // NFS means National Financial Switch (NFS), A Leading ATM Network
+
+            if(beneficiaryName_UpperCase.contains('NFS*')){ // NFS means National Financial Switch (NFS), A Leading ATM Network
                 sms.beneficiary__c = 'ICICI ATM Withdrawal';
             }
-            else if(sms.beneficiary__c.toUpperCase().contains('INFOBIL')){
+            else if(beneficiaryName_UpperCase.contains('INFOBIL')){
                 sms.beneficiary__c = 'ICICI CC Bill';
-            }
-            else if(sms.beneficiary__c.toUpperCase() == 'SBIMOPS'){
-                sms.beneficiary__c = 'Kolkata Metro Recharge';
-            }
-            else if(sms.beneficiary__c.toUpperCase() == 'A/C xxxxxxx6414'){
-                sms.beneficiary__c = 'Dr. Sanyal';
             }
 
             // Investment related beneficiary names
-            else if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
+            if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
                 sms.Related_To_Investment__c = true;
-                sms.beneficiary__c = 'CBDTTAX';
                 sms.Investment_Type__c = 'Advance Tax';
             }
             else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARINGCORP')){
                 sms.Related_To_Investment__c = true;
-                sms.beneficiary__c = 'NPS';
                 sms.Investment_Type__c = 'NPS';
             }
 

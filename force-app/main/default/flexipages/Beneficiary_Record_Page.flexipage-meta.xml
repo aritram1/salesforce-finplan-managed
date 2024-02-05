@@ -102,8 +102,28 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
+                <fieldItem>Record.Name</fieldItem>
+                <identifier>RecordNameField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
                 <fieldItem>Record.Phone__c</fieldItem>
                 <identifier>RecordFinPlan_Phone_cField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.Type__c</fieldItem>
+                <identifier>RecordFinPlan_Type_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-ecd908a2-5cb3-42d4-ab33-34451d5e6628</name>
@@ -116,8 +136,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.OwnerId</fieldItem>
-                <identifier>RecordOwnerIdField</identifier>
+                <fieldItem>Record.Display_Name__c</fieldItem>
+                <identifier>RecordFinPlan_Display_Name_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -126,8 +146,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Type__c</fieldItem>
-                <identifier>RecordFinPlan_Type_cField</identifier>
+                <fieldItem>Record.Other_Names__c</fieldItem>
+                <identifier>RecordFinPlan_Other_Names_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -190,6 +210,16 @@
                 </fieldInstanceProperties>
                 <fieldItem>Record.LastModifiedById</fieldItem>
                 <identifier>RecordLastModifiedByIdField</identifier>
+            </fieldInstance>
+        </itemInstances>
+        <itemInstances>
+            <fieldInstance>
+                <fieldInstanceProperties>
+                    <name>uiBehavior</name>
+                    <value>none</value>
+                </fieldInstanceProperties>
+                <fieldItem>Record.OwnerId</fieldItem>
+                <identifier>RecordOwnerIdField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-be8f428c-6bf3-4780-bdb9-ed92e12ad286</name>
