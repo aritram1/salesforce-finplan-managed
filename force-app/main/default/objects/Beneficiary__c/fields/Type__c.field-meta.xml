@@ -12,14 +12,29 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
+                <fullName>Aquarium</fullName>
+                <default>false</default>
+                <label>Aquarium</label>
+            </value>
+            <value>
+                <fullName>ATM Withdrawal</fullName>
+                <default>false</default>
+                <label>ATM Withdrawal</label>
+            </value>
+            <value>
                 <fullName>Bills</fullName>
                 <default>false</default>
                 <label>Bills</label>
             </value>
             <value>
-                <fullName>Grocery</fullName>
+                <fullName>Broker</fullName>
                 <default>false</default>
-                <label>Grocery</label>
+                <label>Broker</label>
+            </value>
+            <value>
+                <fullName>Dress</fullName>
+                <default>false</default>
+                <label>Dress</label>
             </value>
             <value>
                 <fullName>EMI</fullName>
@@ -42,6 +57,11 @@
                 <label>Fuel</label>
             </value>
             <value>
+                <fullName>Grocery</fullName>
+                <default>false</default>
+                <label>Grocery</label>
+            </value>
+            <value>
                 <fullName>Health</fullName>
                 <default>false</default>
                 <label>Health</label>
@@ -52,9 +72,24 @@
                 <label>Investment</label>
             </value>
             <value>
+                <fullName>Medicine</fullName>
+                <default>false</default>
+                <label>Medicine</label>
+            </value>
+            <value>
                 <fullName>Other</fullName>
                 <default>false</default>
                 <label>Other</label>
+            </value>
+            <value>
+                <fullName>OTT</fullName>
+                <default>false</default>
+                <label>OTT</label>
+            </value>
+            <value>
+                <fullName>Rent</fullName>
+                <default>false</default>
+                <label>Rent</label>
             </value>
             <value>
                 <fullName>Shopping</fullName>
@@ -72,9 +107,9 @@
                 <label>Travel</label>
             </value>
             <value>
-                <fullName>Rent</fullName>
+                <fullName>Salary</fullName>
                 <default>false</default>
-                <label>Rent</label>
+                <label>Salary</label>
             </value>
         </valueSetDefinition>
     </valueSet>

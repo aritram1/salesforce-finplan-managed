@@ -196,21 +196,26 @@ public with sharing class FinPlanSMSHandler {
 
         if(String.isNotEmpty(sms.beneficiary__c) && String.isNotBlank(sms.beneficiary__c)){ // may be overchecked :P
 
-            String beneficiaryName_UpperCase = sms.beneficiary__c.toUpperCase();
+            // If the name contains a dash (-), take the first part upto the dash only
+            if(sms.beneficiary__c.contains('-')){
+                sms.beneficiary__c = sms.beneficiary__c.split('-')[0];
+            }
 
             // some abbreviations are corrected in case present in beneficiary names
-            if(allBeneficiariesMap.containsKey(beneficiaryName_UpperCase)){
-                sms.beneficiary__c = allBeneficiariesMap.get(beneficiaryName_UpperCase).FinPlan__Display_Name__c;
-                sms.beneficiary_type__c = allBeneficiariesMap.get(beneficiaryName_UpperCase).Type__c;
+            String beneficiaryNameUpperCase = sms.beneficiary__c.toUpperCase();
+            if(allBeneficiariesMap.containsKey(beneficiaryNameUpperCase)){
+                sms.beneficiary__c = allBeneficiariesMap.get(beneficiaryNameUpperCase).FinPlan__Display_Name__c;
+                sms.beneficiary_type__c = allBeneficiariesMap.get(beneficiaryNameUpperCase).Type__c;
             }
 
-            if(beneficiaryName_UpperCase.contains('NFS*')){ // NFS means National Financial Switch (NFS), A Leading ATM Network
+            // Some scenarios where we require to check by usin gcontain and not havign a adirect match in names
+            if(beneficiaryNameUpperCase.contains('NFS*')){ 
+                // NFS means National Financial Switch (NFS), A Leading ATM Network
                 sms.beneficiary__c = 'ICICI ATM Withdrawal';
             }
-            else if(beneficiaryName_UpperCase.contains('INFOBIL')){
+            else if(beneficiaryNameUpperCase.contains('INFOBIL')){
                 sms.beneficiary__c = 'ICICI CC Bill';
             }
-
             // Investment related beneficiary names
             if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
                 sms.Related_To_Investment__c = true;
@@ -220,7 +225,6 @@ public with sharing class FinPlanSMSHandler {
                 sms.Related_To_Investment__c = true;
                 sms.Investment_Type__c = 'NPS';
             }
-
             // Clean up VPA and A/c related beneficiary names
             else if(sms.beneficiary__c.contains('a/c linked to VPA')){
                 sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();

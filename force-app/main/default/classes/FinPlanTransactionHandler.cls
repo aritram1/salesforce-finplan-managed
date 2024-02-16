@@ -89,6 +89,7 @@ public with sharing class FinPlanTransactionHandler {
                     tr.FinPlan__Payment_Via__c = sms.Payment_Via__c;
                     tr.FinPlan__Payment_Reference__c = sms.Payment_Reference__c;
                     tr.FinPlan__Amount__c = Double.valueOf(sms.amount_value__c.replace(',', ''));
+                    tr.FinPlan__Beneficiary_Type__c = sms.Beneficiary_Type__c;
 
                     bankTransactionsList.add(tr);
 

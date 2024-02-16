@@ -18,7 +18,7 @@ global with sharing class FinPlanApproveSMSAPIController {
                                     CC_Available_Balance__c, Payment_Reference__c, Payment_Via__c ,
                                     SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, 
                                     Type__c, Device__c, Related_To_Investment__c, Investment_Type__c,
-                                    INV_Available_Balance__c
+                                    INV_Available_Balance__c, Beneficiary_Type__c
                                     FROM SMS_Message__c WHERE id IN :recordIds];
             
             // A. To save storage delete if any unapproved ones, promotional ones etc. are left in system //////////////////
