@@ -101,7 +101,6 @@ public with sharing class FinPlanSMSHandlerBank {
         // debit3 UPI where sms starts like 
         // UPDATE: ....
         else if(sms.content__c.contains('debited from HDFC Bank XX9560')){
-            System.debug('Hi here!!');
             sms.amount_value__c = contentArray[2].replace(',', '');
             sms.type__c = 'debit';
             sms.Payment_Via__c = 'UPI';

@@ -82,7 +82,7 @@ public with sharing class FinPlanSMSHandler {
                     else if(sms.Sender__c.contains('EPF') || sms.Sender__c.contains('NPS')) { // TBC Urgent Implementation INVESTMENT_SMS_SENDERS.contains(sms.Sender__c)){
                         sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
                     }
-                    // Other Types (like wallaet for amazon, paytm etc)
+                    // Other Types (like wallet for Amazon, Paytm, phonePe etc)
                     else{
                         sms = FinPlanSMSHandlerOthers.processForOthers(sms, allBankAccountsMap);
                     }
@@ -109,15 +109,17 @@ public with sharing class FinPlanSMSHandler {
                 }
 
                 // Fix some specific beneficiary names to correct sms typos / provide better abbreviations
-                sms = fixBeneficiaryName(sms);
+                if(sms.beneficiary__c != null){
+                    sms = fixBeneficiaryName(sms);
+                }
             }
+
             catch(Exception e){
-                throw e;
-                // // Get the detail error Info and Log the error
-                // String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
-                // FinPlanLogger.logError(new FinPlanException(errorMessage), TAG, 
-                //     'C: '+ sms.content__c + '||S: ' + sms.sender__c + '||R: ' + sms.FinPlan__Received_At__c
-                // );
+                // throw e;
+                // Get the detail error Info and Log the error
+                String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
+                String smsContent = sms.content__c + ' || Sender : ' + sms.sender__c + ' || Received At: ' + sms.FinPlan__Received_At__c;
+                FinPlanLogger.logError(new FinPlanException(errorMessage), TAG, smsContent);
             }
 
             processedMessages.add(sms);
@@ -199,25 +201,35 @@ public with sharing class FinPlanSMSHandler {
 
         if(String.isNotEmpty(sms.beneficiary__c) && String.isNotBlank(sms.beneficiary__c)){ // may be overchecked :P
 
-            // If the name contains a dash (-), take the first part upto the dash only
+            // If the name contains a dash (-), use specific fixes
             if(sms.beneficiary__c.contains('-')){
-                sms.beneficiary__c = sms.beneficiary__c.split('-')[0];
+                if(sms.beneficiary__c.toUpperCase().contains('CONCENTRIX')){
+                    sms.beneficiary__c = 'Concen'; // This is a specific fix
+                }
+                else if(sms.beneficiary__c.toUpperCase().contains('YESB0000001')){
+                    sms.beneficiary__c = 'Wise'; // This is a specific fix
+                }
+                else{
+                    sms.beneficiary__c = sms.beneficiary__c.split('-')[1].trim();
+                }
             }
 
-            // some abbreviations are corrected in case present in beneficiary names
+            // Correct the beneficiary names from the list of all beneficiaries in the System
             String beneficiaryNameUpperCase = sms.beneficiary__c.toUpperCase();
             if(allBeneficiariesMap.containsKey(beneficiaryNameUpperCase)){
                 sms.beneficiary__c = allBeneficiariesMap.get(beneficiaryNameUpperCase).FinPlan__Display_Name__c;
                 sms.beneficiary_type__c = allBeneficiariesMap.get(beneficiaryNameUpperCase).Type__c;
             }
 
-            // Some scenarios where we require to check by usin gcontain and not havign a adirect match in names
+            // Some scenarios where we require to check by usin gcontain and not having a adirect match in names
             if(beneficiaryNameUpperCase.contains('NFS*')){ 
-                // NFS means National Financial Switch (NFS), A Leading ATM Network
-                sms.beneficiary__c = 'ICICI ATM Withdrawal';
+                sms.beneficiary__c = 'ICICI ATM Withdrawal'; // NFS means National Financial Switch (NFS), A Leading ATM Network
             }
             else if(beneficiaryNameUpperCase.contains('INFOBIL')){
-                sms.beneficiary__c = 'ICICI CC Bill';
+                // If the bill is paid in Aug month, the bill is generated for July month
+                // So 1 month is deducted from Transaction_date__c during calculation below
+                String timeFrame = Datetime.newInstance(sms.Transaction_Date__c.addMonths(-1), Time.newInstance(0, 0, 0, 0)).format('MMM-yy'); // CC Bill 
+                sms.beneficiary__c = 'ICICI CC Bill for ' + timeFrame;
             }
             // Investment related beneficiary names
             if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
