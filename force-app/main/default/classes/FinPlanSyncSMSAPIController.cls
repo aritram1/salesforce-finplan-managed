@@ -71,6 +71,7 @@ global with sharing class FinPlanSyncSMSAPIController {
 
             // Also log the error to the System Logs
             FinPlanLogger.logError(ex, TAG);
+            throw ex;
         }
         return apiResponse;
     }

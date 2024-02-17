@@ -112,9 +112,12 @@ public with sharing class FinPlanSMSHandler {
                 sms = fixBeneficiaryName(sms);
             }
             catch(Exception e){
-                // Get the detail error Info and Log the error
-                String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
-                FinPlanLogger.logError(new FinPlanException(errorMessage), TAG, sms.content__c);
+                throw e;
+                // // Get the detail error Info and Log the error
+                // String errorMessage = FinPlanLogger.getDetailedErrorMessage(e);
+                // FinPlanLogger.logError(new FinPlanException(errorMessage), TAG, 
+                //     'C: '+ sms.content__c + '||S: ' + sms.sender__c + '||R: ' + sms.FinPlan__Received_At__c
+                // );
             }
 
             processedMessages.add(sms);

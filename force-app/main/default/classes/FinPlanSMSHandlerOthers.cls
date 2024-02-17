@@ -21,10 +21,10 @@ public with sharing class FinPlanSMSHandlerOthers {
             }
         }
 
-        if(sms.amount_value__c.endsWith('.')){
+        if((sms.amount_value__c != null) && (sms.amount_value__c.endsWith('.'))){
             sms.amount_value__c = sms.amount_value__c.substring(0, sms.amount_value__c.length() - 1);
         }
-        if(sms.SA_Available_Balance__c.endsWith('.')){
+        if((sms.SA_Available_Balance__c != null) && sms.SA_Available_Balance__c.endsWith('.')){
             sms.SA_Available_Balance__c = sms.SA_Available_Balance__c.substring(0, sms.SA_Available_Balance__c.length() - 1);
         }
 

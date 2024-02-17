@@ -9,6 +9,13 @@ global with sharing class FinPlanPermanentDeleteAPIController {
         try{
             String message = '';
 
+            // Delete logs
+            List<FinPlan__System_Log__c> logs = [SELECT id from FinPlan__System_Log__c];
+            delete logs;
+            if(logs.size() > 0){
+                Database.emptyRecycleBin(logs);     
+            }       
+            
             // Delete messages
             List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c where FinPlan__Device__c = :deviceId];
             if(messagesToDelete != null && messagesToDelete.size() > 0){

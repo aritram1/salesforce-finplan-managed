@@ -101,6 +101,7 @@ public with sharing class FinPlanSMSHandlerBank {
         // debit3 UPI where sms starts like 
         // UPDATE: ....
         else if(sms.content__c.contains('debited from HDFC Bank XX9560')){
+            System.debug('Hi here!!');
             sms.amount_value__c = contentArray[2].replace(',', '');
             sms.type__c = 'debit';
             sms.Payment_Via__c = 'UPI';
@@ -148,7 +149,21 @@ public with sharing class FinPlanSMSHandlerBank {
                     sms.Payment_Reference__c = content.split('STARTBRACKETIMPS Ref No')[1].split('ENDBRACKET Avl bal:')[0];
                 }
             }
+        }
+        // debit 7
+        else if(sms.content__c.startsWith('Amt Sent Rs.')){
             
+            // Extra 2 steps since specifically these messages are using new line within them. 
+            // So that needs to be replaced with a space for better handling
+            sms.content__c = sms.content__c.replace('\n', ' '); 
+            contentArray = sms.content__c.split(' ');
+            
+            sms.amount_value__c = contentArray[2].replace('Rs.', '');
+            sms.type__c = 'debit';
+            sms.beneficiary__c = sms.content__c.split(' To ')[1].split(' On ')[0].trim();
+            sms.Beneficiary__c = toCamelCase(sms.Beneficiary__c);
+            sms.Payment_Via__c = 'UPI';
+            sms.Payment_Reference__c = sms.content__c.split('Ref ')[1].split('Not You')[0].trim();
         }
         // atm withdrawal
         else if(sms.content__c.contains('ve withdrawn Rs.')){
