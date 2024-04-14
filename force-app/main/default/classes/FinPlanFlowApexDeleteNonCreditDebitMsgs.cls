@@ -1,4 +1,4 @@
-public with sharing class FinPlanFlowApexActions {
+public with sharing class FinPlanFlowApexDeleteNonCreditDebitMsgs {
     
     // Invocable method that can be called from a Salesforce Flow
     @InvocableMethod(label='Delete Non Credit/Debit Messages' 
@@ -10,4 +10,5 @@ public with sharing class FinPlanFlowApexActions {
             Database.emptyRecycleBin(messagesToDelete);
         }
     }
+
 }

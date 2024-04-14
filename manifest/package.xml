@@ -12,7 +12,9 @@
 		<members>FinPlanTransactionHandler</members>
 		<members>FinPlanPermanentDeleteAPIController</members>
 		<members>FinPlanSMSMessageTriggerHandler</members>
-		<members>FinPlanFlowApexActions</members>
+		<members>FinPlanFlowApexDeleteCreditDebitMsgs</members>
+		<members>FinPlanFlowApexDeleteNonCreditDebitMsgs</members>
+
 		<!-- old code-->
 		<members>InvestmentTransactionTriggerHandler</members>
 		<members>RefreshInvestmentDataController</members>
@@ -22,8 +24,13 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
+		<!-- old -->
 		<members>FinPlan__FinPlan_Delete_Non_Credit_Debit_Messages_After_1_Min</members>
 		<members>Process_The_SMS_Message_PE2</members>
+		
+		<!-- new -->
+		<members>FinPlan_Create_SMS_from_PE</members>
+		<members>Finplan_Flow_On_SMS_Message</members>
 		<name>Flow</name>
 	</types>
 	<types>
