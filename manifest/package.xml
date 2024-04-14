@@ -12,7 +12,7 @@
 		<members>FinPlanTransactionHandler</members>
 		<members>FinPlanPermanentDeleteAPIController</members>
 		<members>FinPlanSMSMessageTriggerHandler</members>
-		
+		<members>FinPlanFlowApexActions</members>
 		<!-- old code-->
 		<members>InvestmentTransactionTriggerHandler</members>
 		<members>RefreshInvestmentDataController</members>

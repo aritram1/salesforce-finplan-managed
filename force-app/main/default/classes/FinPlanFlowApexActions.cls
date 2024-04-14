@@ -1,0 +1,13 @@
+public with sharing class FinPlanFlowApexActions {
+    
+    // Invocable method that can be called from a Salesforce Flow
+    @InvocableMethod(label='Delete Non Credit/Debit Messages' 
+                     description='Deletes messages permanently')
+    public static void deleteNonCreditDebitMessages(List<String> deviceIds) {
+        List<SMS_Message__c> messagesToDelete = [SELECT Id FROM SMS_Message__c where FinPlan__Device__c = :deviceIds[0]];
+        if(messagesToDelete != null && messagesToDelete.size() > 0){
+            Database.delete(messagesToDelete, false);
+            Database.emptyRecycleBin(messagesToDelete);
+        }
+    }
+}
