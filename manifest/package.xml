@@ -23,6 +23,7 @@
 	</types>
 	<types>
 		<members>FinPlan_Delete_Non_Credit_Debit_Messages_After_1_Min</members>
+		<members>Process_The_SMS_Message_PE2</members>
 		<name>Flow</name>
 	</types>
 	<types>
@@ -53,6 +54,8 @@
 		<members>SMS_Message__c</members>
 		<members>System_Log__c</members>
 		<members>Beneficiary__c</members>
+		<!-- Platform Events --> 
+		<members>FinPlan__SMS_Message_PE__e</members>
 		<name>CustomObject</name>
 	</types>
 	<types>

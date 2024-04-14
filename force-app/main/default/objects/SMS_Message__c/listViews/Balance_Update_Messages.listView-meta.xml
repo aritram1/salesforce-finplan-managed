@@ -3,6 +3,7 @@
     <fullName>Balance_Update_Messages</fullName>
     <columns>NAME</columns>
     <columns>Beneficiary__c</columns>
+    <columns>Amount_Value__c</columns>
     <columns>Create_Transaction__c</columns>
     <columns>Received_At__c</columns>
     <columns>Type__c</columns>

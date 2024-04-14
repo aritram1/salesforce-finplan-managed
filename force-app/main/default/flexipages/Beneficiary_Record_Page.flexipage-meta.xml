@@ -112,8 +112,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Phone__c</fieldItem>
-                <identifier>RecordFinPlan_Phone_cField</identifier>
+                <fieldItem>Record.Type__c</fieldItem>
+                <identifier>RecordFinPlan_Type_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>
@@ -122,8 +122,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Type__c</fieldItem>
-                <identifier>RecordFinPlan_Type_cField</identifier>
+                <fieldItem>Record.External_Id__c</fieldItem>
+                <identifier>RecordFinPlan_External_Id_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <name>Facet-ecd908a2-5cb3-42d4-ab33-34451d5e6628</name>
@@ -136,8 +136,8 @@
                     <name>uiBehavior</name>
                     <value>none</value>
                 </fieldInstanceProperties>
-                <fieldItem>Record.Display_Name__c</fieldItem>
-                <identifier>RecordFinPlan_Display_Name_cField</identifier>
+                <fieldItem>Record.Phone__c</fieldItem>
+                <identifier>RecordFinPlan_Phone_cField</identifier>
             </fieldInstance>
         </itemInstances>
         <itemInstances>

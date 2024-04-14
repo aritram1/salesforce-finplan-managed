@@ -1,13 +1,13 @@
 public with sharing class FinPlanSMSHandlerBank {
 
-    public static FinPlan__SMS_Message__c processForBanks(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
-        if(sms.Sender__c.contains('HDFC')){
+    public static FinPlan__SMS_Message__c processForBanks(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap, String bankCode){
+        if(bankCode == 'HDFC-SA'){
             sms = processForHDFCBank(sms, allBankAccountsMap);
         }
-        else if(sms.Sender__c.contains('ICICI')){
+        else if(bankCode == 'ICICI-SA'){
             sms = processForICICIBank(sms, allBankAccountsMap);
         }
-        else if(sms.Sender__c.contains('SBI')){
+        else if(bankCode == 'SBI-SA'){
             sms = processForSBIBank(sms, allBankAccountsMap);
         }
         return sms;

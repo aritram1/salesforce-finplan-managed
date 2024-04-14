@@ -11,6 +11,39 @@ public with sharing class FinPlanTransactionHandler {
     public static Map<String, List<String>> dataMap = new Map<String, List<String>>();
     public static Map<String, FinPlan__Investment__c> existingInvestments = new Map<String, FinPlan__Investment__c>();
 
+    // This method is only to get called from a flow
+    // It eventually calls the next method only
+    // @InvocableMethod(label='Create Transactions' description='Creates transactions based on SMS messages')
+    // public static List<String> createTransactionsForFlow(List<String> msgIds){
+    //     List<FinPlan__SMS_Message__c> messageList = [SELECT id, Content__c, Approved__c, Amount_Value__c, Beneficiary__c ,
+    //                                                         CC_Available_Balance__c, Payment_Reference__c, Payment_Via__c ,
+    //                                                         SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, 
+    //                                                         Type__c, Device__c, Related_To_Investment__c, Investment_Type__c,
+    //                                                         INV_Available_Balance__c, Beneficiary_Type__c
+    //                                                         FROM SMS_Message__c where id IN :msgIds];
+    //     Map<String, Map<String, List<String>>> txnList = createTransactions(messageList);
+    //     List<String> result = new List<String>();
+    //     for(FinPlan__SMS_Message__c m : messageList){
+    //         result.add('hi');
+    //     }
+    //     return result;
+    // }
+
+    @InvocableMethod(label='Create Transactions2' description='Creates transactions based on SMS messages')
+    public static List<String> createTransactionsForFlow2(List<SMS_Message__c> messageList){
+        // List<FinPlan__SMS_Message__c> messageList = [SELECT id, Content__c, Approved__c, Amount_Value__c, Beneficiary__c ,
+        //                                                     CC_Available_Balance__c, Payment_Reference__c, Payment_Via__c ,
+        //                                                     SA_Available_Balance__c , Savings_or_CC_Account__c ,Transaction_Date__c, 
+        //                                                     Type__c, Device__c, Related_To_Investment__c, Investment_Type__c,
+        //                                                     INV_Available_Balance__c, Beneficiary_Type__c
+        //                                                     FROM SMS_Message__c where id IN :msgIds];
+        Map<String, Map<String, List<String>>> txnMap = createTransactions(messageList);
+        List<String> result = new List<String>();
+        for(String txnId : txnMap.get('data').get('bt')){
+            result.add(txnId);
+        }
+        return result;
+    }
 
     public static Map<String, Map<String, List<String>>> createTransactions(List<FinPlan__SMS_Message__c> messageList){
         // Get a list of existing investments and pass to next call : `processTransactions`

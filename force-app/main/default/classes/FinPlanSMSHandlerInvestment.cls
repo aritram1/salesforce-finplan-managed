@@ -1,23 +1,23 @@
 public with sharing class FinPlanSMSHandlerInvestment {
 
-    public static FinPlan__SMS_Message__c processForInvestments(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+    public static FinPlan__SMS_Message__c processForInvestments(FinPlan__SMS_Message__c sms, Map<String, FinPlan__Investment__c> allInvestmentsMap, String investmentCode){
         
         sms.Related_To_Investment__c = true;
         
-        if(sms.Sender__c.contains('NSE')){
-            sms = processForNSE(sms, allBankAccountsMap);
+        if(investmentCode == 'NSE'){
+            sms = processForNSE(sms, allInvestmentsMap);
         }
-        else if(sms.Sender__c.contains('EPF')){
-            sms = processForEPF(sms, allBankAccountsMap);
+        else if(investmentCode == 'EPF'){
+            sms = processForEPF(sms, allInvestmentsMap);
         }
-        else if(sms.Sender__c.contains('NPS')){
-            sms = processForNPS(sms, allBankAccountsMap);
+        else if(investmentCode == 'NPS'){
+            sms = processForNPS(sms, allInvestmentsMap);
         }
-        else if(sms.sender__c.contains('ITDCPC')){
-            sms = processForTax(sms, allBankAccountsMap);
+        else if(investmentCode == 'ITDCPC'){
+            sms = processForTax(sms, allInvestmentsMap);
         }
         else if(sms.Investment_Type__c == 'PPF'){
-            sms = processForPPF(sms, allBankAccountsMap);
+            sms = processForPPF(sms, allInvestmentsMap);
         }
         // else if(sms.Sender__c.contains('PPF')){
 
@@ -25,12 +25,12 @@ public with sharing class FinPlanSMSHandlerInvestment {
         return sms;
     }
 
-    public static FinPlan__SMS_Message__c processForTax(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+    public static FinPlan__SMS_Message__c processForTax(FinPlan__SMS_Message__c sms, Map<String, FinPlan__Investment__c> allInvestmentsMap){
         sms.type__c = 'income_tax';
         return sms;
     }
 
-    public static FinPlan__SMS_Message__c processForPPF(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+    public static FinPlan__SMS_Message__c processForPPF(FinPlan__SMS_Message__c sms, Map<String, FinPlan__Investment__c> allInvestmentsMap){
         sms.type__c = 'ppf';
         sms.amount_value__c = sms.content__c.split(' ')[5];
         sms.INV_Available_Balance__c = sms.content__c.split('Avl Bal INR')[1].split('-')[0].replace(',', '').trim();
@@ -38,12 +38,12 @@ public with sharing class FinPlanSMSHandlerInvestment {
         return sms;
     }
 
-    public static FinPlan__SMS_Message__c processForNSE(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+    public static FinPlan__SMS_Message__c processForNSE(FinPlan__SMS_Message__c sms, Map<String, FinPlan__Investment__c> allInvestmentsMap){
         List<String> contentArray = sms.content__c?.split(' ');
         return sms;
     }
 
-    public static FinPlan__SMS_Message__c processForEPF(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+    public static FinPlan__SMS_Message__c processForEPF(FinPlan__SMS_Message__c sms, Map<String, FinPlan__Investment__c> allInvestmentsMap){
         List<String> contentArray = sms.content__c?.split(' ');
         if(sms.content__c.contains('your passbook balance against')){
             sms.Investment_Type__c = 'EPF';
@@ -74,7 +74,7 @@ public with sharing class FinPlanSMSHandlerInvestment {
         return sms;
     }
 
-    public static FinPlan__SMS_Message__c processForNPS(FinPlan__SMS_Message__c sms, Map<String, Bank_Account__c> allBankAccountsMap){
+    public static FinPlan__SMS_Message__c processForNPS(FinPlan__SMS_Message__c sms, Map<String, FinPlan__Investment__c> allInvestmentsMap){
         List<String> contentArray = sms.content__c?.split(' ');
         if(sms.content__c.startsWith('Investment value in NPS Tier I (PRAN-XX8815)')){
             sms.Investment_Type__c = 'NPS';

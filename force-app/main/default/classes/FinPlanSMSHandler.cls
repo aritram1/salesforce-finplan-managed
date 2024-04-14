@@ -10,6 +10,8 @@ public with sharing class FinPlanSMSHandler {
     public static List<FinPlan__SMS_Message__c> lastBalanceUpdateSMSList;
     public static Map<String, FinPlan__Bank_Account__c> allBankAccountsMap = new Map<String, FinPlan__Bank_Account__c>();
     public static Map<String, FinPlan__Beneficiary__c> allBeneficiariesMap = new Map<String, FinPlan__Beneficiary__c>();
+    public static Map<String, FinPlan__Investment__c> allInvestmentsMap = new Map<String, FinPlan__Investment__c>();
+    
     public static Map<String, FinPlan__Bank_Account__c> lastBalanceBankAccountsMap = new Map<String, FinPlan__Bank_Account__c>();
 
     // Standard lists to do further actions
@@ -27,10 +29,17 @@ public with sharing class FinPlanSMSHandler {
             lastBalanceBankAccountsMap.put(ba.id, ba);
         }
 
-        for(FinPlan__Beneficiary__c be : [SELECT Id, Name, FinPlan__Display_Name__c, FinPlan__Other_Names__c ,
-                                                 FinPlan__Phone__c, FinPlan__Type__c, FinPlan__UPI_Id__c 
+        // Get list of investments
+        for(Investment__c inv : [SELECT Id, Name FROM Investment__c]){
+            allInvestmentsMap.put(inv.Id, inv);
+        }        
+
+        // Get list of beneficiaries
+        for(FinPlan__Beneficiary__c be : [SELECT Id, Name, FinPlan__Other_Names__c ,
+                                                 FinPlan__Phone__c, FinPlan__Type__c, FinPlan__UPI_Id__c,
+                                                 FinPlan__External_Id__c
                                                  FROM FinPlan__Beneficiary__c]){
-            allBeneficiariesMap.put(be.FinPlan__Other_Names__c, be);
+            allBeneficiariesMap.put(be.FinPlan__External_Id__c, be);
         }
     }
 
@@ -67,20 +76,30 @@ public with sharing class FinPlanSMSHandler {
                 }
                 // Credit / Debit / Balance Update
                 else{ 
-                    // Bank Types
-                    if(sms.Sender__c.contains('HDFC') || sms.Sender__c.contains('ICICI') || sms.Sender__c.contains('SBI')){ // TBC Urgent Implementation  BANK_SMS_SENDERS.contains(sms.Sender__c)){
-                        if(sms.Sender__c.contains('SBI') && sms.content__c.contains(PPF_4DIGITS)){ // PPF
-                            sms.Investment_Type__c = 'PPF';
-                            sms.Related_To_Investment__c = true;
-                            sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
-                        }
-                        else{
-                            sms = FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap);
-                        }
+
+                    // Case 1 : HDFC  SA
+                    if(sms.Sender__c.contains('HDFC')){ // TBC Urgent Implementation  BANK_SMS_SENDERS.contains(sms.Sender__c)){
+                        sms = FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap, 'HDFC-SA');
                     }
-                    // Investment Types
-                    else if(sms.Sender__c.contains('EPF') || sms.Sender__c.contains('NPS')) { // TBC Urgent Implementation INVESTMENT_SMS_SENDERS.contains(sms.Sender__c)){
-                        sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allBankAccountsMap);
+                    // Case 2 : ICICI SA
+                    else if(sms.Sender__c.contains('ICICI')){
+                        sms = FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap, 'ICICI-SA');
+                    }
+                    // Case 3 : SBI SA
+                    else if(sms.Sender__c.contains('SBI') && !sms.content__c.contains(PPF_4DIGITS)){
+                        sms = FinPlanSMSHandlerBank.processForBanks(sms, allBankAccountsMap, 'SBI-SA');
+                    }
+                    // Case 4 : SBI PPF
+                    else if(sms.Sender__c.contains('SBI') && sms.content__c.contains(PPF_4DIGITS)){
+                        // sms.Investment_Type__c = 'PPF';
+                        // sms.Related_To_Investment__c = true;
+                        sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allInvestmentsMap, 'PPF');
+                    }
+                    // Case 5 : NPS
+                    else if(sms.Sender__c.contains('NPS')){
+                        // sms.Investment_Type__c = 'NPS';
+                        // sms.Related_To_Investment__c = true;
+                        sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allInvestmentsMap, 'NPS'); 
                     }
                     // Other Types (like wallet for Amazon, Paytm, phonePe etc)
                     else{
@@ -207,18 +226,20 @@ public with sharing class FinPlanSMSHandler {
                     sms.beneficiary__c = 'Concen'; // This is a specific fix
                 }
                 else if(sms.beneficiary__c.toUpperCase().contains('YESB0000001')){
-                    sms.beneficiary__c = 'Wise'; // This is a specific fix
+                    sms.beneficiary__c = 'Transferwise'; // This is a specific fix
                 }
                 else{
-                    sms.beneficiary__c = sms.beneficiary__c.split('-')[1].trim();
+                    sms.beneficiary__c = sms.beneficiary__c.split('-')[2].trim();
                 }
             }
 
             // Correct the beneficiary names from the list of all beneficiaries in the System
             String beneficiaryNameUpperCase = sms.beneficiary__c.toUpperCase();
-            if(allBeneficiariesMap.containsKey(beneficiaryNameUpperCase)){
-                sms.beneficiary__c = allBeneficiariesMap.get(beneficiaryNameUpperCase).FinPlan__Display_Name__c;
-                sms.beneficiary_type__c = allBeneficiariesMap.get(beneficiaryNameUpperCase).Type__c;
+            for(String extId : allBeneficiariesMap.keySet()){
+                if(extId.toUpperCase().contains(beneficiaryNameUpperCase)){
+                    sms.beneficiary__c = allBeneficiariesMap.get(extId).Name;
+                    break;
+                }
             }
 
             // Some scenarios where we require to check by usin gcontain and not having a adirect match in names
