@@ -22,7 +22,7 @@
 		<name>ApexClass</name>
 	</types>
 	<types>
-		<members>FinPlan_Delete_Non_Credit_Debit_Messages_After_1_Min</members>
+		<members>FinPlan__FinPlan_Delete_Non_Credit_Debit_Messages_After_1_Min</members>
 		<members>Process_The_SMS_Message_PE2</members>
 		<name>Flow</name>
 	</types>

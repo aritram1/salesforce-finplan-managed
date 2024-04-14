@@ -118,6 +118,7 @@
         </rules>
     </decisions>
     <decisions>
+        <description>Is the SMS Created? If yes, end the process for now.</description>
         <name>End_The_process</name>
         <label>End The process</label>
         <locationX>176</locationX>
@@ -125,7 +126,7 @@
         <defaultConnector>
             <targetReference>Assign_Values_to_Variables</targetReference>
         </defaultConnector>
-        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
         <rules>
             <name>Yes</name>
             <conditionLogic>and</conditionLogic>
@@ -211,7 +212,7 @@
         <object>SMS_Message_PE__e</object>
         <triggerType>PlatformEvent</triggerType>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
     <variables>
         <name>SMS_CONTENT</name>
         <dataType>String</dataType>

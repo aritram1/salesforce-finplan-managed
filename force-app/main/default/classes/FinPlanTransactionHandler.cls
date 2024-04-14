@@ -42,8 +42,22 @@ public with sharing class FinPlanTransactionHandler {
         for(String txnId : txnMap.get('data').get('bt')){
             result.add(txnId);
         }
+        deleteSMSMessages(messageList);
         return result;
     }
+
+    public static void deleteSMSMessages(List<FinPlan__SMS_Message__c> messageList){
+        List<SMS_Message__c> txnMessages = new List<SMS_Message__c>();
+        for(SMS_Message__c msg : messageList){
+            if(msg.Type__c == 'credit' || msg.Type__c == 'debit'){
+                txnMessages.add(msg);
+            }
+        }
+        System.debug('Inside FinPlanTransactionHandler.deleteSMSMessages()' + txnMessages.size() + ' records are deleted!');
+        Database.delete(txnMessages, false);
+        Database.emptyRecycleBin(txnMessages);
+    }
+
 
     public static Map<String, Map<String, List<String>>> createTransactions(List<FinPlan__SMS_Message__c> messageList){
         // Get a list of existing investments and pass to next call : `processTransactions`

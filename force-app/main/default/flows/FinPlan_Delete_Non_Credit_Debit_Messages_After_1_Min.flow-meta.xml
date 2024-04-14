@@ -1,6 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>Delete Messages for Device CPH2413</description>
+        <name>Delete_Messages_for_Device_CPH2413</name>
+        <label>Delete Messages for Device CPH2413</label>
+        <locationX>308</locationX>
+        <locationY>276</locationY>
+        <actionName>FinPlanFlowApexActions</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>deviceIds</name>
+            <value>
+                <elementReference>CONST_DEVICE_ID</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>FinPlanFlowApexActions</nameSegment>
+        <versionSegment>1</versionSegment>
+    </actionCalls>
     <apiVersion>59.0</apiVersion>
+    <constants>
+        <description>Device Id specific flow.</description>
+        <name>CONST_DEVICE_ID</name>
+        <dataType>String</dataType>
+    </constants>
     <environments>Default</environments>
     <interviewLabel>FinPlan - Delete Non Credit/Debit Messages After 1 Min {!$Flow.CurrentDateTime}</interviewLabel>
     <label>FinPlan - Delete Non Credit/Debit Messages After 1 Min</label>
@@ -23,21 +46,6 @@
         </value>
     </processMetadataValues>
     <processType>AutoLaunchedFlow</processType>
-    <recordDeletes>
-        <name>Delete_Non_transactional_Messages</name>
-        <label>Delete Non transactional Messages</label>
-        <locationX>308</locationX>
-        <locationY>276</locationY>
-        <filterLogic>and</filterLogic>
-        <filters>
-            <field>Create_Transaction__c</field>
-            <operator>EqualTo</operator>
-            <value>
-                <booleanValue>false</booleanValue>
-            </value>
-        </filters>
-        <object>SMS_Message__c</object>
-    </recordDeletes>
     <start>
         <locationX>50</locationX>
         <locationY>0</locationY>
@@ -46,7 +54,7 @@
         <scheduledPaths>
             <name>Delete_Path</name>
             <connector>
-                <targetReference>Delete_Non_transactional_Messages</targetReference>
+                <targetReference>Delete_Messages_for_Device_CPH2413</targetReference>
             </connector>
             <label>Delete Path</label>
             <maxBatchSize>200</maxBatchSize>
@@ -57,5 +65,5 @@
         </scheduledPaths>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
 </Flow>
