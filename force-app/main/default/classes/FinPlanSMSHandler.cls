@@ -112,7 +112,7 @@ public with sharing class FinPlanSMSHandler {
                 ////////////////////////////////////////////////////////////////////////////////////////
                 
                 // Check if this sms is related to a financial transaction
-                if(sms.amount_value__c != null){
+                if(sms.amount_value__c != null && sms.type__c != 'balance_update'){
                     sms.Create_Transaction__c = true;
                 }
 
@@ -235,10 +235,16 @@ public with sharing class FinPlanSMSHandler {
 
             // Correct the beneficiary names from the list of all beneficiaries in the System
             String beneficiaryNameUpperCase = sms.beneficiary__c.toUpperCase();
-            for(String extId : allBeneficiariesMap.keySet()){
-                if(extId.toUpperCase().contains(beneficiaryNameUpperCase)){
-                    sms.beneficiary__c = allBeneficiariesMap.get(extId).Name;
+            for(String benefiaryExternalId : allBeneficiariesMap.keySet()){
+                if(benefiaryExternalId.toUpperCase().contains(beneficiaryNameUpperCase)){
+                    FinPlan__Beneficiary__c beneficiaryRecord = allBeneficiariesMap.get(benefiaryExternalId);
+                    sms.beneficiary__c = beneficiaryRecord.Name;
+                    sms.beneficiary_Type__c = beneficiaryRecord.FinPlan__Type__c;
                     break;
+                }
+                else{
+                    FinPlan__Beneficiary__c newBeneficiary = new FinPlan__Beneficiary__c();
+
                 }
             }
 

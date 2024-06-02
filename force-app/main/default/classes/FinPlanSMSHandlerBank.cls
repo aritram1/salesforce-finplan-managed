@@ -369,7 +369,7 @@ public with sharing class FinPlanSMSHandlerBank {
             sms.beneficiary__c = sms.content__c.split('. Available bal:')[0].split(' on ')[1].trim();
             sms.beneficiary__c = sms.beneficiary__c.substring(9, sms.beneficiary__c.length());
         }
-        // debit 4
+        // debit 4 (ICICI bank latest message changes)
         else if(sms.content__c.startsWith('ICICI Bank Acct XX360 debited for')){
             sms.savings_or_cc_account__c = allBankAccountsMap.get('ICICI-SA').Id;
             sms.amount_value__c = contentArray[7].replace(',' , '');
@@ -379,6 +379,9 @@ public with sharing class FinPlanSMSHandlerBank {
             }
             sms.type__c = 'debit';
             sms.beneficiary__c = sms.content__c.split(';')[1].split('credited')[0].trim();
+            if(String.isNotBlank(sms.beneficiary__c)){
+                sms.beneficiary__c = toCamelCase(sms.beneficiary__c);
+            }
         }
         return sms;
     }
