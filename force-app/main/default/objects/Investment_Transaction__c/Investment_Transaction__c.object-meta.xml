@@ -159,14 +159,14 @@
     <enableSharing>false</enableSharing>
     <enableStreamingApi>false</enableStreamingApi>
     <externalSharingModel>ControlledByParent</externalSharingModel>
-    <label>Investment Transaction</label>
+    <label>(Old) Investment Transaction</label>
     <nameField>
         <displayFormat>ITS-{000000}</displayFormat>
         <label>Investment Transaction Name</label>
         <trackHistory>false</trackHistory>
         <type>AutoNumber</type>
     </nameField>
-    <pluralLabel>Investment Transactions</pluralLabel>
+    <pluralLabel>(Old) Investment Transactions</pluralLabel>
     <recordTypeTrackHistory>false</recordTypeTrackHistory>
     <searchLayouts></searchLayouts>
     <sharingModel>ControlledByParent</sharingModel>

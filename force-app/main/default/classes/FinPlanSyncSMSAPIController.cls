@@ -18,9 +18,9 @@ global with sharing class FinPlanSyncSMSAPIController {
     // This method processes the post request and syncs the messages
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     @HttpPost
-    global static Map<String, String> processPostRequests(List<Map<String, String>> records) {
+    global static Map<String, String> processPostRequests(List<Map<String, String>> records, String deviceId) {
         apiResponse = new Map<String, String>();
-        apiResponse = syncMessages(records);
+        apiResponse = syncMessages(records, deviceId);
         return apiResponse;
     }
 
@@ -31,14 +31,14 @@ global with sharing class FinPlanSyncSMSAPIController {
     // 4 - Creates Bank/Investment Transaction records, as applicable, from messages
     // 5 - After transactions are created, delete messages [to save sf storage ;)]
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    global static Map<String, String> syncMessages(List<Map<String, String>> records) {
+    global static Map<String, String> syncMessages(List<Map<String, String>> records, String deviceId) {
         balanceUpdateSMSList = new List<FinPlan__SMS_Message__c>();
         try{
             
             apiResponse.put('data', ''); // Create success response - can be optimized to return better json. TBD
             
             // Step 1 : Deletes existing messages/transactions
-            deleteResponse = deleteAllExistingAndClearRecycleBin();
+            deleteResponse = deleteAllExistingAndClearRecycleBin(deviceId);
             apiResponse.put('data', apiResponse.get('data') + '|| deleteResponse=>' + deleteResponse);
 
             // Step 2 : Inserts the New Messages
@@ -71,6 +71,7 @@ global with sharing class FinPlanSyncSMSAPIController {
 
             // Also log the error to the System Logs
             FinPlanLogger.logError(ex, TAG);
+            // throw ex;
         }
         return apiResponse;
     }
@@ -97,8 +98,8 @@ global with sharing class FinPlanSyncSMSAPIController {
         return response;
     }
 
-    global static String deleteAllExistingAndClearRecycleBin(){
-        String response = String.valueOf(FinPlanPermanentDeleteAPIController.permanentlyDeleteMessagesAndTransactions());
+    global static String deleteAllExistingAndClearRecycleBin(String deviceId){
+        String response = String.valueOf(FinPlanPermanentDeleteAPIController.permanentlyDeleteMessagesAndTransactions(deviceId));
         return response;
     }
 

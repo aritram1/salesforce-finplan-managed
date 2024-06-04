@@ -4,6 +4,7 @@
     <columns>NAME</columns>
     <columns>Amount_Value__c</columns>
     <columns>Beneficiary__c</columns>
+    <columns>Beneficiary_Type__c</columns>
     <columns>Type__c</columns>
     <columns>Formula_Amount__c</columns>
     <columns>Approved__c</columns>

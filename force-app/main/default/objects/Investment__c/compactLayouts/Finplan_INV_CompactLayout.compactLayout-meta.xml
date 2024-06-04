@@ -3,6 +3,6 @@
     <fullName>Finplan_INV_CompactLayout</fullName>
     <fields>Name</fields>
     <fields>Invested_Amount__c</fields>
-    <fields>Investment_Date__c</fields>
+    <fields>Last_Investment_Date__c</fields>
     <label>Finplan_INV_CompactLayout</label>
 </CompactLayout>

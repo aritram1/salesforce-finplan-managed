@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Investment_Messages</fullName>
+    <columns>NAME</columns>
+    <columns>Sender__c</columns>
+    <columns>Type__c</columns>
+    <columns>Content__c</columns>
+    <columns>Amount_Value__c</columns>
+    <columns>SA_Available_Balance__c</columns>
+    <columns>Savings_or_CC_Account__c</columns>
+    <columns>Beneficiary__c</columns>
+    <columns>Received_At__c</columns>
+    <columns>Create_Transaction__c</columns>
+    <columns>Investment_Type__c</columns>
+    <columns>INV_Available_Balance__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Related_To_Investment__c</field>
+        <operation>equals</operation>
+        <value>1</value>
+    </filters>
+    <label>Investment Messages</label>
+</ListView>

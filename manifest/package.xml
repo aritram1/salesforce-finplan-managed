@@ -8,17 +8,35 @@
 		<members>FinPlanSMSHandlerInvestment</members>
 		<members>FinPlanException</members>
 		<members>FinPlanLogger</members>
+		<members>FinPlanUtil</members>
 		<members>FinPlanTransactionHandler</members>
 		<members>FinPlanPermanentDeleteAPIController</members>
 		<members>FinPlanSMSMessageTriggerHandler</members>
+		<members>FinPlanFlowApexDeleteCreditDebitMsgs</members>
+		<members>FinPlanFlowApexDeleteNonCreditDebitMsgs</members>
+
+		<!-- old code-->
+		<members>InvestmentTransactionTriggerHandler</members>
+		<members>RefreshInvestmentDataController</members>
+		<members>Scheduler</members>
+		<members>FutureController</members>
+
 		<name>ApexClass</name>
 	</types>
 	<types>
-		<members>FinPlan_Delete_Non_Credit_Debit_Messages_After_1_Min</members>
+		<!-- old -->
+		<members>FinPlan__FinPlan_Delete_Non_Credit_Debit_Messages_After_1_Min</members>
+		<members>Process_The_SMS_Message_PE2</members>
+		
+		<!-- new -->
+		<members>FinPlan_Create_SMS_from_PE</members>
+		<members>Finplan_Flow_On_SMS_Message</members>
 		<name>Flow</name>
 	</types>
 	<types>
 		<members>triggerOnSMSMessage</members>
+		<!-- old code-->
+		<members>triggerOnInvestmentTransaction</members>
 		<name>ApexTrigger</name>
 	</types>
 	<types>
@@ -38,9 +56,13 @@
 		<members>Investment_Instituition__c</members>
 		<members>Investment_Portfolio__c</members>
 		<members>Investment_Transaction__c</members>
+		<members>Investment_Transaction2__c</members>
 		<members>Investment__c</members>
 		<members>SMS_Message__c</members>
 		<members>System_Log__c</members>
+		<members>Beneficiary__c</members>
+		<!-- Platform Events --> 
+		<members>FinPlan__SMS_Message_PE__e</members>
 		<name>CustomObject</name>
 	</types>
 	<types>
@@ -68,7 +90,17 @@
 		<members>Home_Page_Default1</members>
 		<members>SMS_Message_Record_Page</members>
 		<members>System_Log_Record_Page</members>
+		<members>Beneficiary_Record_Page</members>
+		<members>Investment_Transaction_Record_Page</members>
+		<members>Investment_Record_Page</members>
 		<name>FlexiPage</name>
+	</types>
+	<types>
+		<members>Bank_Transaction__c-Bank Transaction Layout</members>
+		<members>Beneficiary__c-Beneficiary Layout</members>
+		<members>SMS_Message__c-SMS Message Layout</members>
+		<members>Investment__c-Investment Layout</members>
+		<name>Layout</name>
 	</types>
 	<types>
 		<members>FinPlanReports/New_SMS_Messages_Report</members>

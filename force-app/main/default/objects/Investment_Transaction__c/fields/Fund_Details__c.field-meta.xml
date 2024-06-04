@@ -5,7 +5,6 @@
     <externalId>false</externalId>
     <label>Fund Details</label>
     <referenceTo>Fund__c</referenceTo>
-    <relationshipLabel>Investment Transactions</relationshipLabel>
     <relationshipName>Investment_Transactions</relationshipName>
     <required>false</required>
     <trackHistory>false</trackHistory>
