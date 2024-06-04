@@ -48,7 +48,7 @@ public with sharing class FinPlanTransactionHandler {
     public static void deleteCreditDebitSMSMessages(List<FinPlan__SMS_Message__c> messageList){
         List<SMS_Message__c> txnMessages = new List<SMS_Message__c>();
         for(SMS_Message__c msg : messageList){
-            if(msg.Type__c == 'credit' || msg.Type__c == 'debit'){
+            if(msg.Type__c == 'Credit' || msg.Type__c == 'Debit'){
                 txnMessages.add(msg);
             }
         }
@@ -126,7 +126,7 @@ public with sharing class FinPlanTransactionHandler {
                 else{
                     FinPlan__Bank_Transaction__c tr = new FinPlan__Bank_Transaction__c();
                     tr.FinPlan__Created_From__c = 'SMS';
-                    tr.FinPlan__Type__c = (sms.Type__c == 'credit') ? 'Credit' : 'Debit';
+                    tr.FinPlan__Type__c = (sms.Type__c == 'Credit') ? 'Credit' : 'Debit';
                     tr.FinPlan__Device__c = sms.FinPlan__Device__c;
                     tr.FinPlan__Content__c = sms.FinPlan__content__c.length() <=255 ? sms.FinPlan__content__c :  sms.FinPlan__content__c.substring(0,255);
                     tr.FinPlan__Beneficiary_Name__c = sms.Beneficiary__c;

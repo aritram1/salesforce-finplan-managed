@@ -101,7 +101,7 @@ public with sharing class FinPlanSMSHandler {
                         // sms.Related_To_Investment__c = true;
                         sms = FinPlanSMSHandlerInvestment.processForInvestments(sms, allInvestmentsMap, 'NPS'); 
                     }
-                    // Other Types (like wallet for Amazon, Paytm, phonePe etc)
+                    // Other Types (like wallets for Amazon, Paytm, phonePe etc)
                     else{
                         sms = FinPlanSMSHandlerOthers.processForOthers(sms, allBankAccountsMap);
                     }
@@ -156,6 +156,8 @@ public with sharing class FinPlanSMSHandler {
         System.debug('inputSMSList value inside handleBankAccountBalanceUpdate =>' + inputSMSList);
         System.debug('inputSMSList value inside handleBankAccountBalanceUpdate size =>' + inputSMSList.size());
         
+        Boolean updateCCAccount = false;
+
         // The input list can contain more than one sms and we need the latest ones for each bank account
         Map<String, FinPlan__SMS_Message__c> uniqueMap = new Map<String, FinPlan__SMS_Message__c>();
         for(FinPlan__SMS_Message__c message : inputSMSList){
@@ -180,6 +182,15 @@ public with sharing class FinPlanSMSHandler {
                             availableSABalanceString = availableSABalanceString.endsWith('.') ? availableSABalanceString.substring(0, availableSABalanceString.length() - 1) : availableSABalanceString;
                             System.debug('Inside handleBankAccountBalanceUpdate for SA =>' + availableSABalanceString);                      
                             ba.FinPlan__Last_Balance__c = Double.valueOf(availableSABalanceString);
+                            
+                            // In case this sms provides info on a credit card bill paid, 
+                            // then bank account would be a savings account
+                            // but we also need to update the CC account that the 
+                            // bill is paid on this date, with this amount
+                            // The flag is marked as true here.
+                            if(sms.content__c.toUpperCase().contains('INFOBIL')){
+                                updateCCAccount = true;
+                            }
                         }
                         else if(ba.Account_Code__c.endsWith('-CC')){   // Credit Card Account
                             String availableCCBalanceString = sms.FinPlan__CC_Available_Balance__c.replace(',', '');
@@ -192,8 +203,21 @@ public with sharing class FinPlanSMSHandler {
                             ba.FinPlan__Last_Balance__c = Double.valueOf(availableWABalanceString);
                         }
                         toBeUpdatedBankAccounts.add(ba);
+                        
+                        // See above comment
+                        // In case the sms is about paying a CC bill, then we need to specifically
+                        // update the CC bank account with two information
+                        // 1 - What is the amount paid (i.e.e FinPlan__CC_Last_Paid_Amount__c)
+                        // 2 - When it was paid (i.e. FinPlan__CC_Last_Bill_Paid_Date__c)
+                        if(updateCCAccount){
+                            Bank_Account__c ccAccount = allBankAccountsMap.get('ICICI-CC');
+                            ccAccount.FinPlan__CC_Last_Bill_Paid_Date__c = sms.FinPlan__Transaction_Date__c;
+                            ccAccount.FinPlan__CC_Last_Paid_Amount__c = Double.valueOf(sms.FinPlan__Amount_Value__c);
+                            toBeUpdatedBankAccounts.add(ccAccount);
+                        }
                             
-                        // Also captur  e the updated balance and bank account name for further showing response
+                        // For debug/response purpose, capture the updated balance and bank account name 
+                        // to in ldue the same in the API response
                         String resultText = 'Account Name : ' + ba.Name + ' Updated Balance : ' + sms.SA_available_balance__c + '. ';
                         balanceUpdateResponse = balanceUpdateResponse + resultText;
                     }
