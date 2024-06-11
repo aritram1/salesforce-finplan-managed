@@ -20,7 +20,6 @@ public with sharing class FinPlanSMSHandler {
     public static List<FinPlan__SMS_Message__c> listOfRejectedRecords = new List<FinPlan__SMS_Message__c>();
     public static List<FinPlan__SMS_Message__c> listOfAllowedRecords = new List<FinPlan__SMS_Message__c>();
     
-    // Get all Bank accounts, make a map of code vs Id to set Bank account info later
     public static void getAllBankAccountsAndBeneficiaries(){
         for(Bank_Account__c ba : [SELECT Id, Finplan__Active__c, FinPlan__Account_Code__c, 
                                          FinPlan__Last_Balance__c, FinPlan__CC_Available_Limit__c, 
@@ -111,12 +110,14 @@ public with sharing class FinPlanSMSHandler {
                 // Few final checks to classify messages further
                 ////////////////////////////////////////////////////////////////////////////////////////
                 
-                // Check if this sms is related to a financial transaction
-                if(sms.amount_value__c != null && sms.type__c != 'balance_update'){
+                // Check if this sms is related to credit / debit type transactions
+                if(sms.amount_value__c != null && 
+                    (sms.type__c.toUpperCase() == 'CREDIT' || sms.type__c.toUpperCase() == 'DEBIT'))
+                {
                     sms.Create_Transaction__c = true;
                 }
 
-                // Identify if this helps to update balance, set flags accordingly
+                // Check if this sms is related to updating balance at SA or CC
                 if(String.isNotBlank(sms.CC_Available_Balance__c) || String.isNotBlank(sms.SA_available_balance__c)){
                     sms.Balance_Update__c = true;
                     lastBalanceUpdateSMSList.add(sms);
@@ -129,7 +130,7 @@ public with sharing class FinPlanSMSHandler {
 
                 // Fix some specific beneficiary names to correct sms typos / provide better abbreviations
                 if(sms.beneficiary__c != null){
-                    sms = fixBeneficiaryName(sms);
+                    sms = FinPlanBeneficiaryHandler.fixBeneficiaryName(sms, allBeneficiariesMap);
                 }
             }
 
@@ -217,7 +218,7 @@ public with sharing class FinPlanSMSHandler {
                         }
                             
                         // For debug/response purpose, capture the updated balance and bank account name 
-                        // to in ldue the same in the API response
+                        // to include the same in the API response
                         String resultText = 'Account Name : ' + ba.Name + ' Updated Balance : ' + sms.SA_available_balance__c + '. ';
                         balanceUpdateResponse = balanceUpdateResponse + resultText;
                     }
@@ -237,75 +238,5 @@ public with sharing class FinPlanSMSHandler {
         return balanceUpdateResponse;
     }
     // End method
-
-    // This method fixes if there is any typo in beneficiary name or some abbreviations are missed
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public static FinPlan__SMS_Message__c fixBeneficiaryName(FinPlan__SMS_Message__c sms){
-
-        if(String.isNotEmpty(sms.beneficiary__c) && String.isNotBlank(sms.beneficiary__c)){ // may be overchecked :P
-
-            // If the name contains a dash (-), use specific fixes
-            if(sms.beneficiary__c.contains('-')){
-                if(sms.beneficiary__c.toUpperCase().contains('CONCENTRIX')){
-                    sms.beneficiary__c = 'Concen'; // This is a specific fix
-                }
-                else if(sms.beneficiary__c.toUpperCase().contains('YESB0000001')){
-                    sms.beneficiary__c = 'Transferwise'; // This is a specific fix
-                }
-                else{
-                    sms.beneficiary__c = sms.beneficiary__c.split('-')[2].trim();
-                }
-            }
-
-            // Correct the beneficiary names from the list of all beneficiaries in the System
-            String beneficiaryNameUpperCase = sms.beneficiary__c.toUpperCase();
-            for(String benefiaryExternalId : allBeneficiariesMap.keySet()){
-                if(benefiaryExternalId.toUpperCase().contains(beneficiaryNameUpperCase)){
-                    FinPlan__Beneficiary__c beneficiaryRecord = allBeneficiariesMap.get(benefiaryExternalId);
-                    sms.beneficiary__c = beneficiaryRecord.Name;
-                    sms.beneficiary_Type__c = beneficiaryRecord.FinPlan__Type__c;
-                    break;
-                }
-                else{
-                    FinPlan__Beneficiary__c newBeneficiary = new FinPlan__Beneficiary__c();
-
-                }
-            }
-
-            // Some scenarios where we require to check by usin gcontain and not having a adirect match in names
-            if(beneficiaryNameUpperCase.contains('NFS*')){ 
-                sms.beneficiary__c = 'ICICI ATM Withdrawal'; // NFS means National Financial Switch (NFS), A Leading ATM Network
-            }
-            else if(beneficiaryNameUpperCase.contains('INFOBIL')){
-                // If the bill is paid in Aug month, the bill is generated for July month
-                // So 1 month is deducted from Transaction_date__c during calculation below
-                String timeFrame = Datetime.newInstance(sms.Transaction_Date__c.addMonths(-1), Time.newInstance(0, 0, 0, 0)).format('MMM-yy'); // CC Bill 
-                sms.beneficiary__c = 'ICICI CC Bill for ' + timeFrame;
-            }
-            // Investment related beneficiary names
-            if(sms.beneficiary__c.toUpperCase().contains('CBDT')){
-                sms.Related_To_Investment__c = true;
-                sms.Investment_Type__c = 'Advance Tax';
-            }
-            else if(sms.beneficiary__c.toUpperCase().startsWith('INDIANCLEARINGCORP')){
-                sms.Related_To_Investment__c = true;
-                sms.Investment_Type__c = 'NPS';
-            }
-            // Clean up VPA and A/c related beneficiary names
-            else if(sms.beneficiary__c.contains('a/c linked to VPA')){
-                sms.beneficiary__c = sms.beneficiary__c.replace('a/c linked to VPA', '')?.trim();
-            }
-            else if(sms.beneficiary__c.toUpperCase().startsWith('VPA')){
-                sms.beneficiary__c = sms.beneficiary__c.replace('Vpa ', '').replace('VPA ', '')?.trim();
-            }
-            else if(sms.beneficiary__c.contains('A/c Linked to mobile No')){
-                sms.beneficiary__c = sms.beneficiary__c.replace('A/c Linked to mobile No', 'UPI @')?.trim();
-            }
-        }
-
-        return sms;
-
-    }
-
 
 }
