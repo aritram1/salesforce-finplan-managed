@@ -1,3 +1,13 @@
 <template>
-    
+    Hello Page 5
+    <lightning-button 
+        variant="brand" label="Brand" title="Save" icon-name="utility:save" 
+        onclick={handleClick} class="slds-m-left_x-small">
+    </lightning-button>
+    <lightning-datatable
+        key-field=id
+        data={data}
+        columns={columns}
+        onrowaction={handleRowAction}>
+    </lightning-datatable>
 </template>
