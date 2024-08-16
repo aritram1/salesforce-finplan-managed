@@ -108,5 +108,12 @@
 		<members>FinPlanReports/Savings_Account_Balance_Report</members>
 		<name>Report</name>
 	</types>
+	<types>
+		<members>LwcAppPage1</members>
+		<members>LwcAppPage2</members>
+		<members>LwcAppPage3</members>
+		<members>LwcAppPage4</members>
+		<members>LwcAppPage5</members>
+	</types>
 	<version>58.0</version>
 </Package>
