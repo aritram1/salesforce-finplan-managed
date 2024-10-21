@@ -124,7 +124,11 @@
 		<name>Layout</name>
 	</types>
 	<types>
-		<members>lwcPortfolioOverview</members>
+		<members>LwcAppPage1</members>
+		<members>LwcAppPage2</members>
+		<members>LwcAppPage3</members>
+		<members>LwcAppPage4</members>
+		<members>LwcAppPage5</members>
 		<name>LightningComponentBundle</name>
 	</types>
 	<types>
