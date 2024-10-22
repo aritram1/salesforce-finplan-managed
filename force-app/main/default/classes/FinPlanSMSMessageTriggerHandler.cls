@@ -36,14 +36,16 @@ public with sharing class FinPlanSMSMessageTriggerHandler {
                     currentMessage.INV_Available_Balance__c = enrichedMessage.INV_Available_Balance__c;
                     currentMessage.Beneficiary_Type__c = enrichedMessage.Beneficiary_Type__c;
 
-                    // If the Payment reference is not available or the sms is not related to credit/debit etc.,
-                    // set the paymetn reference to a random string
+                    // If the Payment reference is not available or applicable to the specific sms,
+                    // assign a 6 character long random string as unique identifer of the sms
                     if(String.isBlank(currentMessage.Payment_Reference__c)){
                         currentMessage.Payment_Reference__c = 'random' + String.valueOf((Integer)(Math.random() * 900000) + 100000);
                     }
                     
                     // Populate an external id for the sms records from available
                     currentMessage.External_Id__c = currentMessage.Payment_Reference__c + '|' + currentMessage.Transaction_Date__c;
+
+                    currentMessage.Masked_Content__c = FinPlanUtil.getMaskedContent(currentMessage);
                 }
             }   
                 
